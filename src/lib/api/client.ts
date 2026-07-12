@@ -5,10 +5,10 @@ type ApiClientOptions = {
     body?:unknown;
 };
 
-export async function apiClient(
+export async function apiClient<TResponse>(
   path: string,
   options: ApiClientOptions = {},
-) {
+):Promise<TResponse> {
   const response = await fetch(`${env.apiBaseUrl}${path}`, {
     method: options.method ?? "GET",
     credentials: "include",
@@ -17,5 +17,5 @@ export async function apiClient(
     },
     body: options.body ? JSON.stringify(options.body) : undefined,
   });
-return response.json();
+return response.json() as Promise<TResponse>;
 }

@@ -1,4 +1,4 @@
-import { env } from "process";
+ import { env } from "@/lib/env";
 
 type ApiClientOptions = {
     method?: "GET" | "POST"|"PUT"|"DELETE";

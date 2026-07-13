@@ -1,6 +1,6 @@
 "use client";
 
-import { login } from "@/lib/api/auth/auth";
+import { getMe, login } from "@/lib/api/auth/auth";
 import { useState } from "react";
 
 export default function LoginPage() {
@@ -12,7 +12,10 @@ export default function LoginPage() {
       email,
       password,
     });
-    console.log(response)
+
+    const me = await getMe();
+
+    console.log(me);
   }
 
   return (

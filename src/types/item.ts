@@ -4,7 +4,7 @@ export type ItemResponse = {
     id :number;
     name: string;
     quantity:number;
-    minquantity:number;
+    minQuantity:number;
     category:ItemCategory;
     locationId:number | null;
     locationName:string | null;

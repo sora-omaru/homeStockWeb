@@ -1,41 +1,44 @@
 "use client";
 
 import { getMe, login } from "@/lib/api/auth/auth";
-import { useState } from "react";
+import Link from "next/link";
+import { FormEvent, useState } from "react";
+import styles from "./page.module.scss";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  async function handleLogin() {
-    const response = await login({
-      email,
-      password,
-    });
+  async function handleLogin(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
 
+    await login({ email, password });
     const me = await getMe();
-
     console.log(me);
   }
 
   return (
-    <main>
-      <h1>Login</h1>
-      <input
-        type="email"
-        value={email}
-        placeholder="メールアドレス"
-        onChange={(event) => setEmail(event.target.value)}
-      />
+    <main className={styles.main}>
+      <section className={styles.card}>
+        <Link href="/" className={styles.backLink}>← Home Stock</Link>
+        <p className={styles.eyebrow}>WELCOME BACK</p>
+        <h1 className={styles.title}>ログイン</h1>
+        <p className={styles.description}>おうちのストックを確認しましょう。</p>
 
-      <input
-        type="password"
-        value={password}
-        placeholder="パスワード"
-        onChange={(event) => setPassword(event.target.value)}
-      />
-
-      <button onClick={handleLogin}>Loginボタン</button>
+        <form className={styles.form} onSubmit={handleLogin}>
+          <label className={styles.field}>
+            メールアドレス
+            <input className={styles.input} type="email" value={email} placeholder="name@example.com" autoComplete="email" required onChange={(event) => setEmail(event.target.value)} />
+          </label>
+          <label className={styles.field}>
+            パスワード
+            <input className={styles.input} type="password" value={password} placeholder="パスワードを入力" autoComplete="current-password" required onChange={(event) => setPassword(event.target.value)} />
+          </label>
+          <button className={styles.submit} type="submit">
+            ログイン
+          </button>
+        </form>
+      </section>
     </main>
   );
 }

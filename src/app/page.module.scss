@@ -1,0 +1,137 @@
+$emerald-600: #059669;
+$emerald-700: #047857;
+$emerald-950: #022c22;
+
+@mixin focus-ring {
+  &:focus-visible {
+    outline: 2px solid $emerald-600;
+    outline-offset: 3px;
+  }
+}
+
+.main {
+  position: relative;
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  overflow: hidden;
+  padding: 3rem 1.25rem;
+}
+
+.glow {
+  position: absolute;
+  width: 20rem;
+  height: 20rem;
+  border-radius: 50%;
+  background: rgb(52 211 153 / 25%);
+  filter: blur(64px);
+  pointer-events: none;
+
+  &First {
+    top: 3rem;
+    left: -6rem;
+  }
+
+  &Second {
+    right: -4rem;
+    bottom: 3rem;
+    width: 24rem;
+    height: 24rem;
+    background: rgb(45 212 191 / 20%);
+  }
+}
+
+.hero {
+  position: relative;
+  width: 100%;
+  max-width: 64rem;
+  overflow: hidden;
+  padding: 3.5rem;
+  border: 1px solid rgb(255 255 255 / 80%);
+  border-radius: 2rem;
+  background: rgb(255 255 255 / 65%);
+  box-shadow: 0 28px 80px -32px rgb(4 120 87 / 55%);
+  backdrop-filter: blur(24px);
+}
+
+.eyebrow {
+  margin: 0;
+  color: $emerald-600;
+  font-size: 0.875rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+}
+
+.title {
+  max-width: 48rem;
+  margin: 1.25rem 0 0;
+  color: $emerald-950;
+  // font-size: clamp(2.5rem, 7vw, 3.75rem);
+  font-weight: 800;
+  line-height: 1.25;
+  // letter-spacing: -0.035em;
+}
+
+.description {
+  max-width: 36rem;
+  margin: 1.5rem 0 0;
+  color: rgb(2 44 34 / 65%);
+  font-size: 1.125rem;
+  line-height: 2;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 2.25rem;
+}
+
+.button {
+  @include focus-ring;
+
+  padding: 0.875rem 1.5rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-align: center;
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &Primary {
+    color: white;
+    background: linear-gradient(90deg, $emerald-600, #0d9488);
+    box-shadow: 0 10px 24px -8px rgb(4 120 87 / 35%);
+
+    &:hover {
+      box-shadow: 0 16px 28px -10px rgb(4 120 87 / 45%);
+    }
+  }
+
+  &Secondary {
+    border: 1px solid #a7f3d0;
+    color: #065f46;
+    background: rgb(255 255 255 / 70%);
+
+    &:hover {
+      background: white;
+    }
+  }
+}
+
+@media (max-width: 639px) {
+  .hero {
+    padding: 2rem;
+  }
+
+  .description {
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+}

@@ -26,15 +26,29 @@ function BoxIcon({ className = "" }: { className?: string }) {
       stroke="currentColor"
       strokeWidth="1.8"
     >
-      <path strokeLinecap="round" strokeLinejoin="round" d="m21 8-9 5-9-5m9 5v9m8-13.5v7a2 2 0 0 1-1 1.73l-6 3.5a2 2 0 0 1-2 0l-6-3.5A2 2 0 0 1 4 15.5v-7a2 2 0 0 1 1-1.73l6-3.5a2 2 0 0 1 2 0l6 3.5a2 2 0 0 1 1 1.73Z" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="m21 8-9 5-9-5m9 5v9m8-13.5v7a2 2 0 0 1-1 1.73l-6 3.5a2 2 0 0 1-2 0l-6-3.5A2 2 0 0 1 4 15.5v-7a2 2 0 0 1 1-1.73l6-3.5a2 2 0 0 1 2 0l6 3.5a2 2 0 0 1 1 1.73Z"
+      />
     </svg>
   );
 }
 
 function LocationIcon() {
   return (
-    <svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 21s7-5.2 7-12a7 7 0 1 0-14 0c0 6.8 7 12 7 12Z" />
+    <svg
+      aria-hidden="true"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth="1.8"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 21s7-5.2 7-12a7 7 0 1 0-14 0c0 6.8 7 12 7 12Z"
+      />
       <circle cx="12" cy="9" r="2.3" />
     </svg>
   );
@@ -42,7 +56,13 @@ function LocationIcon() {
 
 function CalendarIcon() {
   return (
-    <svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8">
+    <svg
+      aria-hidden="true"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth="1.8"
+    >
       <rect x="3" y="5" width="18" height="16" rx="2" />
       <path strokeLinecap="round" d="M8 3v4m8-4v4M3 10h18" />
     </svg>
@@ -62,7 +82,8 @@ function formatDate(value: string) {
 }
 
 function ItemCard({ item }: { item: ItemResponse }) {
-  const isLowStock = item.quantity <= item.minQuantity;
+  const isOutOfStock = item.quantity === 0;
+  const isLowStock = item.quantity > 0 && item.quantity <= item.minQuantity;
   const targetQuantity = Math.max(item.minQuantity * 2, item.quantity, 1);
   const stockPercentage = Math.min((item.quantity / targetQuantity) * 100, 100);
 
@@ -74,9 +95,7 @@ function ItemCard({ item }: { item: ItemResponse }) {
             <BoxIcon className={styles.itemIconSvg} />
           </span>
           <div className={styles.itemText}>
-            <p className={styles.category}>
-              {categoryLabels[item.category]}
-            </p>
+            <p className={styles.category}>{categoryLabels[item.category]}</p>
             <h2 className={styles.itemName} title={item.name}>
               {item.name}
             </h2>
@@ -84,12 +103,10 @@ function ItemCard({ item }: { item: ItemResponse }) {
         </div>
         <span
           className={`${styles.status} ${
-            isLowStock
-              ? styles.statusLow
-              : styles.statusGood
+            isLowStock ? styles.statusLow : styles.statusGood
           }`}
         >
-          {isLowStock ? "在庫なし" : "在庫あり"}
+          {isOutOfStock ? "在庫なし" : isLowStock ? "残りわずか" : "在庫あり"}
         </span>
       </div>
 
@@ -116,20 +133,22 @@ function ItemCard({ item }: { item: ItemResponse }) {
 
       <div className={styles.meta}>
         <p className={styles.metaRow}>
-          <span className={styles.metaIcon}><LocationIcon /></span>
+          <span className={styles.metaIcon}>
+            <LocationIcon />
+          </span>
           <span>{item.locationName ?? "保管場所 未設定"}</span>
         </p>
         <p className={styles.metaRow}>
-          <span className={styles.metaIcon}><CalendarIcon /></span>
-          <span>{item.expirationDate ? `期限 ${formatDate(item.expirationDate)}` : "期限 未設定"}</span>
+          <span className={styles.metaIcon}>
+            <CalendarIcon />
+          </span>
+          <span>
+            {item.expirationDate
+              ? `期限 ${formatDate(item.expirationDate)}`
+              : "期限 未設定"}
+          </span>
         </p>
       </div>
-
-      {item.memo && (
-        <p className={styles.memo}>
-          {item.memo}
-        </p>
-      )}
     </article>
   );
 }
@@ -177,7 +196,10 @@ export default function ItemsPage() {
   return (
     <main className={styles.page}>
       <div aria-hidden="true" className={`${styles.glow} ${styles.glowLeft}`} />
-      <div aria-hidden="true" className={`${styles.glow} ${styles.glowRight}`} />
+      <div
+        aria-hidden="true"
+        className={`${styles.glow} ${styles.glowRight}`}
+      />
 
       <div className={styles.container}>
         <nav className={styles.nav} aria-label="メインナビゲーション">
@@ -187,9 +209,7 @@ export default function ItemsPage() {
             </span>
             <span className={styles.brandName}>Home Stock</span>
           </Link>
-          <span className={styles.navBadge}>
-            STOCK MANAGER
-          </span>
+          <span className={styles.navBadge}>STOCK MANAGER</span>
         </nav>
 
         <header className={styles.header}>
@@ -209,7 +229,11 @@ export default function ItemsPage() {
         </header>
 
         {isLoading ? (
-          <section className={styles.grid} aria-label="読み込み中" aria-busy="true">
+          <section
+            className={styles.grid}
+            aria-label="読み込み中"
+            aria-busy="true"
+          >
             {[0, 1, 2].map((item) => (
               <div key={item} className={styles.skeleton}>
                 <div className={styles.skeletonTitle} />
@@ -231,11 +255,15 @@ export default function ItemsPage() {
           <section className={`${styles.state} ${styles.stateEmpty}`}>
             <BoxIcon className={styles.emptyIcon} />
             <h2 className={styles.stateTitle}>Itemはまだありません</h2>
-            <p className={styles.stateText}>登録すると、ここにカードで表示されます。</p>
+            <p className={styles.stateText}>
+              登録すると、ここにカードで表示されます。
+            </p>
           </section>
         ) : (
           <section className={styles.grid} aria-label="Item一覧">
-            {items.map((item) => <ItemCard key={item.id} item={item} />)}
+            {items.map((item) => (
+              <ItemCard key={item.id} item={item} />
+            ))}
           </section>
         )}
       </div>

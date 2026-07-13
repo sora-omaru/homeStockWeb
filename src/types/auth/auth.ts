@@ -10,6 +10,6 @@ export type UserAuthResponse = {
 };
 
 export type MeResponse = {
-  pulicId: string;
-  displayname: string;
+  publicId: string;
+  displayName: string;
 };

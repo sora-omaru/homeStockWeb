@@ -8,3 +8,8 @@ export type UserAuthResponse = {
   displayName: string;
   message: string;
 };
+
+export type MeResponse = {
+  pulicId: string;
+  displayname: string;
+};

@@ -1,6 +1,7 @@
 import type { ItemCategory } from "@/types/item-category";
 import type { ItemResponse } from "@/types/item";
 import styles from "./itemsCard.module.scss";
+import Link from "next/link";
 
 const categoryLabels: Record<ItemCategory, string> = {
   FOOD: "食品",
@@ -82,69 +83,75 @@ export default function ItemCard({ item }: { item: ItemResponse }) {
   const stockPercentage = Math.min((item.quantity / targetQuantity) * 100, 100);
 
   return (
-    <article className={styles.card}>
-      <div className={styles.cardHeader}>
-        <div className={styles.itemIdentity}>
-          <span className={styles.itemIcon}>
-            <BoxIcon />
-          </span>
-          <div className={styles.itemText}>
-            <p className={styles.category}>{categoryLabels[item.category]}</p>
-            <h2 className={styles.itemName} title={item.name}>
-              {item.name}
-            </h2>
+    <Link href={`/items/${item.id}`} className={styles.cardLink}>
+      <article className={styles.card}>
+        <div className={styles.cardHeader}>
+          <div className={styles.itemIdentity}>
+            <span className={styles.itemIcon}>
+              <BoxIcon />
+            </span>
+            <div className={styles.itemText}>
+              <p className={styles.category}>{categoryLabels[item.category]}</p>
+              <h2 className={styles.itemName} title={item.name}>
+                {item.name}
+              </h2>
+            </div>
           </div>
+          <span
+            className={`${styles.status} ${
+              isOutOfStock
+                ? styles.statusNone
+                : isLowStock
+                  ? styles.statusLow
+                  : styles.statusGood
+            }`}
+          >
+            {isOutOfStock ? "在庫なし" : isLowStock ? "残りわずか" : "在庫あり"}
+          </span>
         </div>
-        <span
-          className={`${styles.status} ${
-            isOutOfStock ? styles.statusNone :isLowStock ? styles.statusLow : styles.statusGood
-          }`}
-        >
-          {isOutOfStock ? "在庫なし" : isLowStock ? "残りわずか" : "在庫あり"}
-        </span>
-      </div>
 
-      <div className={styles.stockPanel}>
-        <div className={styles.stockTop}>
-          <div>
-            <p className={styles.stockLabel}>現在の在庫</p>
-            <p className={styles.quantity}>
-              {item.quantity}
-              <span className={styles.unit}>個</span>
+        <div className={styles.stockPanel}>
+          <div className={styles.stockTop}>
+            <div>
+              <p className={styles.stockLabel}>現在の在庫</p>
+              <p className={styles.quantity}>
+                {item.quantity}
+                <span className={styles.unit}>個</span>
+              </p>
+            </div>
+            <p className={styles.minimum}>
+              最低在庫 <strong>{item.minQuantity}個</strong>
             </p>
           </div>
-          <p className={styles.minimum}>
-            最低在庫 <strong>{item.minQuantity}個</strong>
+          <div className={styles.progress}>
+            <div
+              className={`${styles.progressBar} ${
+                isLowStock ? styles.progressBarLow : styles.progressBarGood
+              }`}
+              style={{ width: `${stockPercentage}%` }}
+            />
+          </div>
+        </div>
+
+        <div className={styles.meta}>
+          <p className={styles.metaRow}>
+            <span className={styles.metaIcon}>
+              <LocationIcon />
+            </span>
+            <span>{item.locationName ?? "保管場所 未設定"}</span>
+          </p>
+          <p className={styles.metaRow}>
+            <span className={styles.metaIcon}>
+              <CalendarIcon />
+            </span>
+            <span>
+              {item.expirationDate
+                ? `期限 ${formatDate(item.expirationDate)}`
+                : "期限 未設定"}
+            </span>
           </p>
         </div>
-        <div className={styles.progress}>
-          <div
-            className={`${styles.progressBar} ${
-              isLowStock ? styles.progressBarLow : styles.progressBarGood
-            }`}
-            style={{ width: `${stockPercentage}%` }}
-          />
-        </div>
-      </div>
-
-      <div className={styles.meta}>
-        <p className={styles.metaRow}>
-          <span className={styles.metaIcon}>
-            <LocationIcon />
-          </span>
-          <span>{item.locationName ?? "保管場所 未設定"}</span>
-        </p>
-        <p className={styles.metaRow}>
-          <span className={styles.metaIcon}>
-            <CalendarIcon />
-          </span>
-          <span>
-            {item.expirationDate
-              ? `期限 ${formatDate(item.expirationDate)}`
-              : "期限 未設定"}
-          </span>
-        </p>
-      </div>
-    </article>
+      </article>
+    </Link>
   );
 }

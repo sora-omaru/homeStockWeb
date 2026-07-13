@@ -97,7 +97,7 @@ export default function ItemCard({ item }: { item: ItemResponse }) {
         </div>
         <span
           className={`${styles.status} ${
-            isLowStock ? styles.statusLow : styles.statusGood
+            isOutOfStock ? styles.statusNone :isLowStock ? styles.statusLow : styles.statusGood
           }`}
         >
           {isOutOfStock ? "在庫なし" : isLowStock ? "残りわずか" : "在庫あり"}

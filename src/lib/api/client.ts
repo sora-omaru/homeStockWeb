@@ -11,6 +11,7 @@ export async function apiClient<TResponse>(
 ):Promise<TResponse> {
   const response = await fetch(`${env.apiBaseUrl}${path}`, {
     method: options.method ?? "GET",
+    //これのおかげでaccess_token(CookieName)が自動で送られる
     credentials: "include",
     headers: {
       "Content-Type": "application/json",

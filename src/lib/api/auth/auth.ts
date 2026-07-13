@@ -4,6 +4,8 @@ import type {
     UserAuthResponse,
 } from "@/types/auth/auth"
 
-export async function Login(request:LoginRequest):Promise<UserAuthResponse>{
-    return apiClient<UserAuthResponse>("/api/v1/login")
+export async function login(request:LoginRequest):Promise<UserAuthResponse>{
+ 
+ 
+    return apiClient<UserAuthResponse>("/api/v1/auth/login",{method:"POST",body:request})
 }

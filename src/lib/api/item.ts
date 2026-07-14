@@ -5,6 +5,9 @@ export async function getItems(): Promise<ItemResponse[]> {
   return apiClient<ItemResponse[]>("/api/v1/items");
 }
 
-export async function getItem(id: number): Promise<ItemResponse> {
-  return apiClient<ItemResponse>(`/api/v1/items/${id}`);
+export async function getItem(
+  id: number,
+  signal: AbortSignal,
+): Promise<ItemResponse> {
+  return apiClient<ItemResponse>(`/api/v1/items/${id}`, { signal });
 }

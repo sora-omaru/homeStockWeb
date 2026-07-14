@@ -3,7 +3,7 @@
 import { getItem } from "@/lib/api/item";
 import { ItemResponse } from "@/types/item";
 import { useParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function ItemPage() {
   const [item, setItem] = useState<ItemResponse | null>(null);
@@ -19,38 +19,42 @@ export default function ItemPage() {
       return;
     }
     //画面遷移時にアンマウント後の画面のstateに干渉しないように定義する
-    let isCancelled = false;
+    // let isCancelled = false;
+    //こちらでも同じことができるためこちらに置き換え
+    const controller = new AbortController();
 
     async function loadItem() {
       try {
-        const response = await getItem(itemId);
-        if (!isCancelled) {
-          setItem(response);
-        }
+        const response = await getItem(itemId, controller.signal);
+        // if (!isCancelled) {
+        setItem(response);
+        // }
       } catch (error) {
         console.error(error);
-        if (!isCancelled) {
-          setErrorMessage("Itemの読み込みに失敗しました");
-        }
+        // if (!isCancelled) {
+        setErrorMessage("Itemの読み込みに失敗しました");
+        // }
       } finally {
-        if (!isCancelled) {
-          setIsLoading(false);
-        }
+        // if (!isCancelled) {
+        setIsLoading(false);
+        // }
       }
     }
     loadItem();
-
     return () => {
-      isCancelled = true;
+      controller.abort(); //クリーンアップ時にキャンセル
     };
+    // return () => {
+    //   isCancelled = true;
+    // };
   }, [itemId, isInvalidId]);
 
   async function retryItem() {
     setIsLoading(true);
     setErrorMessage(null);
-
+    const controller = new AbortController();
     try {
-      const response = await getItem(itemId);
+      const response = await getItem(itemId, controller.signal);
       setItem(response);
     } catch (error) {
       console.error(error);

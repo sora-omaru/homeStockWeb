@@ -1,14 +1,15 @@
- import { env } from "@/lib/env";
+import { env } from "@/lib/env";
 
 type ApiClientOptions = {
-    method?: "GET" | "POST"|"PUT"|"DELETE";
-    body?:unknown;
+  method?: "GET" | "POST" | "PUT" | "DELETE";
+  body?: unknown;
+  signal?: AbortSignal;
 };
 
 export async function apiClient<TResponse>(
   path: string,
   options: ApiClientOptions = {},
-):Promise<TResponse> {
+): Promise<TResponse> {
   const response = await fetch(`${env.apiBaseUrl}${path}`, {
     method: options.method ?? "GET",
     //これのおかげでaccess_token(CookieName)が自動で送られる
@@ -17,6 +18,7 @@ export async function apiClient<TResponse>(
       "Content-Type": "application/json",
     },
     body: options.body ? JSON.stringify(options.body) : undefined,
+    signal: options.signal,
   });
-return response.json() as Promise<TResponse>;
+  return response.json() as Promise<TResponse>;
 }

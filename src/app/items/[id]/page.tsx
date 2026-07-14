@@ -83,5 +83,45 @@ export default function ItemPage() {
     );
   }
 
-  return <p>{item?.name}</p>;
+  return (
+    <main>
+      <header>
+        <h1>{item?.name}</h1>
+      </header>
+
+      <section>
+        <dl>
+          <div>
+            <dt>カテゴリ</dt>
+            <dd>{item?.category}</dd>
+          </div>
+
+          <div>
+            <dt>数量</dt>
+            <dd>{item?.quantity}個</dd>
+          </div>
+
+          <div>
+            <dt>最低在庫数</dt>
+            <dd>{item?.minQuantity}個</dd>
+          </div>
+
+          <div>
+            <dt>保管場所</dt>
+            <dd>{item?.locationName ?? "未設定"}</dd>
+          </div>
+
+          <div>
+            <dt>賞味期限</dt>
+            <dd>{item?.expirationDate ?? "未設定"}</dd>
+          </div>
+
+          <div>
+            <dt>メモ</dt>
+            <dd>{item?.memo ?? "なし"}</dd>
+          </div>
+        </dl>
+      </section>
+    </main>
+  );
 }

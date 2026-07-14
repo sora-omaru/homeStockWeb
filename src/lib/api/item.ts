@@ -7,7 +7,7 @@ export async function getItems(): Promise<ItemResponse[]> {
 
 export async function getItem(
   id: number,
-  signal: AbortSignal,
+  signal?: AbortSignal,
 ): Promise<ItemResponse> {
   return apiClient<ItemResponse>(`/api/v1/items/${id}`, { signal });
 }

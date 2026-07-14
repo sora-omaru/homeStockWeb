@@ -52,9 +52,8 @@ export default function ItemPage() {
   async function retryItem() {
     setIsLoading(true);
     setErrorMessage(null);
-    const controller = new AbortController();
     try {
-      const response = await getItem(itemId, controller.signal);
+      const response = await getItem(itemId);
       setItem(response);
     } catch (error) {
       console.error(error);

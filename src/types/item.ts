@@ -12,3 +12,12 @@ export type ItemResponse = {
     memo:string|null;
 };
 
+export type UpdateItemRequest = {
+  name: string;
+  quantity: number;
+  minQuantity: number;
+  category: ItemCategory;
+  locationId: number | null;
+  expirationDate: string | null;
+  memo: string | null;
+};

@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const categoryLabels: Record<ItemCategory, string> = {
   FOOD: "食品",
-  DRINK: "飲料",
+  DRINK: "飲み物",
   DAILY_GOODS: "日用品",
   SEASONING: "調味料",
   MEDICINE: "医薬品",

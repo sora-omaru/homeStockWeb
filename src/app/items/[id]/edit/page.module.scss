@@ -48,6 +48,10 @@ $slate-800: #1e293b;
 .detailRow:nth-child(even) { padding-left: 1.5rem; border-left: 1px solid $emerald-100; }
 .detailRow dt { margin-bottom: .45rem; color: $emerald-700; font-size: .75rem; font-weight: 700; }
 .detailRow dd { overflow-wrap: anywhere; margin: 0; color: $slate-800; font-size: .95rem; line-height: 1.6; }
+.formControl { width: 100%; box-sizing: border-box; padding: .7rem .8rem; border: 1px solid $emerald-200; border-radius: .75rem; color: $slate-800; background: rgb(255 255 255 / 85%); font: inherit; transition: border-color 180ms ease, box-shadow 180ms ease; }
+.formControl:focus { border-color: $emerald-500; outline: 0; box-shadow: 0 0 0 3px rgb(16 185 129 / 15%); }
+.formControl::placeholder { color: $slate-500; }
+.memoInput { min-height: 6.5rem; resize: vertical; }
 .memoRow { grid-column: 1 / -1; padding-right: .5rem !important; padding-left: .5rem !important; border-left: 0 !important; }
 
 .state { padding: 4rem 1.5rem; text-align: center; }
@@ -74,6 +78,6 @@ $slate-800: #1e293b;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .backLink svg, .retry { transition: none; }
+  .backLink svg, .retry, .formControl { transition: none; }
   .skeleton { animation: none; }
 }

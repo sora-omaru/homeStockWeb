@@ -3,6 +3,7 @@
 import { getItem, updateItem } from "@/lib/api/item";
 import type { ItemResponse } from "@/types/item";
 import { useCallback, useEffect, useState } from "react";
+import { getItemUpdateErrorMessage } from "../_lib/item-edit-error";
 import {
   initialItemFormValues,
   toItemFormValues,
@@ -98,9 +99,7 @@ export function useItemEdit(itemId: number) {
       setSuccessMessage("Itemを更新しました");
     } catch (error) {
       console.error(error);
-      setSubmitError(
-        "Itemの更新に失敗しました。時間をおいて再度お試しください。",
-      );
+      setSubmitError(getItemUpdateErrorMessage(error));
     } finally {
       setIsSubmitting(false);
     }

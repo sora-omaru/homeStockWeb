@@ -8,7 +8,7 @@ $emerald-950: #022c22;
 $slate-500: #64748b;
 $slate-800: #1e293b;
 
-.page { position: relative; min-height: 100vh; overflow: hidden; padding: 3rem; }
+.page { position: relative; min-height: 100vh; overflow-x: hidden; padding: 3rem; }
 .container { position: relative; max-width: 56rem; margin: 0 auto; }
 .glow { position: absolute; width: 20rem; height: 20rem; border-radius: 50%; background: rgb(110 231 183 / 25%); filter: blur(64px); pointer-events: none; }
 .glowLeft { top: 4rem; left: -8rem; }
@@ -27,19 +27,30 @@ $slate-800: #1e293b;
 .card { padding: 2rem; }
 .cardHeader, .identity, .stockPanel { display: flex; align-items: center; }
 .cardHeader { justify-content: space-between; gap: 1.5rem; }
-.identity { min-width: 0; gap: 1rem; }
+.identity { min-width: 0; flex: 1; gap: 1rem; }
+.identityText { min-width: 0; flex: 1; }
 .itemIcon { display: grid; width: 3.5rem; height: 3.5rem; flex-shrink: 0; place-items: center; border: 1px solid $emerald-200; border-radius: 1.15rem; color: $emerald-700; background: linear-gradient(135deg, $emerald-100, #f0fdfa); }
 .itemIcon svg { width: 1.75rem; height: 1.75rem; }
 .eyebrow { margin: 0 0 .3rem; color: $emerald-600; font-size: .75rem; font-weight: 700; letter-spacing: .12em; }
+.fieldLabel { display: block; margin-bottom: .4rem; color: $slate-500; font-size: .75rem; font-weight: 700; }
+.nameInput { width: min(100%, 28rem); box-sizing: border-box; padding: .55rem .7rem; border: 1px solid transparent; border-radius: .7rem; color: $slate-800; background: transparent; font: inherit; font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 750; line-height: 1.15; letter-spacing: -.03em; transition: border-color 180ms ease, background 180ms ease, box-shadow 180ms ease; }
+.nameInput:hover { border-color: $emerald-200; background: rgb(255 255 255 / 70%); }
+.nameInput:focus { border-color: $emerald-500; outline: 0; background: white; box-shadow: 0 0 0 3px rgb(16 185 129 / 15%); }
 .title { overflow-wrap: anywhere; margin: 0; color: $slate-800; font-size: clamp(1.75rem, 5vw, 2.35rem); line-height: 1.15; letter-spacing: -.035em; }
 .status { flex-shrink: 0; padding: .35rem .75rem; border-radius: 999px; font-size: .75rem; font-weight: 700; }
 .statusNone { border: 1px solid #fecaca; color: #b91c1c; background: #fee2e2; }
 .statusLow { border: 1px solid #fde68a; color: #b45309; background: #fef3c7; }
 .statusGood { border: 1px solid $emerald-200; color: $emerald-700; background: $emerald-100; }
-.stockPanel { justify-content: space-between; gap: 2rem; margin-top: 2rem; padding: 1.25rem 1.5rem; border: 1px solid $emerald-100; border-radius: 1.25rem; background: rgb(236 253 245 / 80%); }
+.stockPanel { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 2rem; padding: 1.25rem 1.5rem; border: 1px solid $emerald-100; border-radius: 1.25rem; background: rgb(236 253 245 / 80%); }
+.stockField { min-width: 0; }
+.stockField + .stockField { padding-left: 1.5rem; border-left: 1px solid $emerald-200; }
 .stockLabel { margin: 0; color: $slate-500; font-size: .8rem; font-weight: 600; }
-.quantity { margin: .15rem 0 0; color: $emerald-800; font-size: 2.5rem; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
-.quantity span { margin-left: .3rem; color: $emerald-600; font-size: .9rem; }
+.numberControl { display: flex; align-items: baseline; gap: .4rem; margin-top: .3rem; }
+.numberControl span { color: $emerald-600; font-size: .9rem; font-weight: 700; }
+.quantity { width: 8rem; padding: .25rem .4rem; border: 1px solid transparent; border-radius: .65rem; color: $emerald-800; background: transparent; font: inherit; font-size: 2.25rem; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; transition: border-color 180ms ease, background 180ms ease, box-shadow 180ms ease; }
+.quantity:hover { border-color: $emerald-200; background: rgb(255 255 255 / 65%); }
+.quantity:focus { border-color: $emerald-500; outline: 0; background: white; box-shadow: 0 0 0 3px rgb(16 185 129 / 15%); }
+.minimumQuantity { color: $slate-800; }
 .minimum { margin: 0; color: $slate-500; font-size: .8rem; }
 .minimum strong { margin-left: .3rem; color: $slate-800; font-size: 1rem; font-variant-numeric: tabular-nums; }
 .details { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 2rem 0 0; border-top: 1px solid $emerald-100; }
@@ -51,8 +62,23 @@ $slate-800: #1e293b;
 .formControl { width: 100%; box-sizing: border-box; padding: .7rem .8rem; border: 1px solid $emerald-200; border-radius: .75rem; color: $slate-800; background: rgb(255 255 255 / 85%); font: inherit; transition: border-color 180ms ease, box-shadow 180ms ease; }
 .formControl:focus { border-color: $emerald-500; outline: 0; box-shadow: 0 0 0 3px rgb(16 185 129 / 15%); }
 .formControl::placeholder { color: $slate-500; }
+.formControl[readonly] { color: $slate-500; background: #f8fafc; cursor: not-allowed; }
+.fieldHint { display: block; margin-top: .4rem; color: $slate-500; font-size: .7rem; line-height: 1.4; }
 .memoInput { min-height: 6.5rem; resize: vertical; }
 .memoRow { grid-column: 1 / -1; padding-right: .5rem !important; padding-left: .5rem !important; border-left: 0 !important; }
+.formFooter { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; padding-top: 1.5rem; }
+.formMessage { min-width: 0; flex: 1; }
+.submitError, .submitSuccess { margin: 0; font-size: .85rem; font-weight: 700; line-height: 1.5; }
+.submitError { color: #b91c1c; }
+.submitSuccess { color: $emerald-700; }
+.actions { display: flex; align-items: center; justify-content: flex-end; gap: .75rem; }
+.cancelButton, .submitButton { display: inline-flex; min-height: 2.75rem; align-items: center; justify-content: center; box-sizing: border-box; padding: .7rem 1.25rem; border-radius: .85rem; font: inherit; font-size: .875rem; font-weight: 700; cursor: pointer; transition: background 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease; }
+.cancelButton { border: 1px solid $emerald-200; color: $emerald-800; background: white; }
+.cancelButton:hover { border-color: $emerald-500; background: $emerald-100; }
+.submitButton { min-width: 8.5rem; border: 1px solid $emerald-600; color: white; background: $emerald-600; box-shadow: 0 10px 20px -8px rgb(5 150 105 / 50%); }
+.submitButton:hover:not(:disabled) { transform: translateY(-1px); background: $emerald-700; box-shadow: 0 14px 24px -10px rgb(5 150 105 / 55%); }
+.submitButton:focus-visible, .cancelButton:focus-visible { outline: 3px solid rgb(16 185 129 / 25%); outline-offset: 2px; }
+.submitButton:disabled { opacity: .6; cursor: wait; box-shadow: none; }
 
 .state { padding: 4rem 1.5rem; text-align: center; }
 .errorIcon { display: grid; width: 3.5rem; height: 3.5rem; margin: 0 auto; place-items: center; border-radius: 1rem; color: #b45309; background: #fef3c7; font-size: 1.5rem; font-weight: 700; }
@@ -72,12 +98,16 @@ $slate-800: #1e293b;
   .brandName { display: none; }
   .card { padding: 1.25rem; }
   .cardHeader { align-items: flex-start; flex-direction: column; }
-  .stockPanel { align-items: flex-end; }
+  .identity { width: 100%; align-items: flex-start; }
+  .stockPanel { grid-template-columns: 1fr; }
+  .stockField + .stockField { padding-top: 1rem; padding-left: 0; border-top: 1px solid $emerald-200; border-left: 0; }
   .details { grid-template-columns: 1fr; }
   .detailRow, .detailRow:nth-child(odd), .detailRow:nth-child(even), .memoRow { grid-column: auto; padding: 1rem .25rem !important; border-left: 0 !important; }
+  .formFooter { align-items: stretch; flex-direction: column; }
+  .actions { display: grid; grid-template-columns: 1fr 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .backLink svg, .retry, .formControl { transition: none; }
+  .backLink svg, .retry, .formControl, .nameInput, .quantity, .cancelButton, .submitButton { transition: none; }
   .skeleton { animation: none; }
 }

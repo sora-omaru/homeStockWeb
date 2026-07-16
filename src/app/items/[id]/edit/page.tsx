@@ -72,12 +72,12 @@ function ItemPageLayout({ children }: { children: ReactNode }) {
   );
 }
 
-function getStockStatus(item: ItemResponse) {
-  if (item.quantity === 0) {
+function getStockStatus(quantity: number, minQuantity: number) {
+  if (quantity === 0) {
     return { label: "在庫なし", className: styles.statusNone };
   }
 
-  if (item.quantity <= item.minQuantity) {
+  if (quantity <= minQuantity) {
     return { label: "残りわずか", className: styles.statusLow };
   }
 
@@ -88,6 +88,9 @@ export default function ItemPage() {
   const [item, setItem] = useState<ItemResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState(0);
   const [minQuantity, setMinQuantity] = useState(0);
@@ -153,25 +156,34 @@ export default function ItemPage() {
 
   async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
+    setSubmitError(null);
+    setSuccessMessage(null);
+
     if (!category) {
-      setErrorMessage("カテゴリーを選択してください");
+      setSubmitError("カテゴリーを選択してください");
       return;
     }
 
+    setIsSubmitting(true);
     try {
       const response = await updateItem(itemId, {
         name,
         quantity,
         minQuantity,
         category,
-        locationId: null,
+        locationId,
         expirationDate: expirationDate || null,
         memo: memo || null,
       });
       applyItemForm(response);
+      setSuccessMessage("Itemを更新しました");
     } catch (error) {
       console.error(error);
-      setErrorMessage("Itemの更新に失敗しました");
+      setSubmitError(
+        "Itemの更新に失敗しました。時間をおいて再度お試しください。",
+      );
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -226,7 +238,7 @@ export default function ItemPage() {
     return null;
   }
 
-  const stockStatus = getStockStatus(item);
+  const stockStatus = getStockStatus(quantity, minQuantity);
 
   return (
     <ItemPageLayout>
@@ -236,13 +248,18 @@ export default function ItemPage() {
             <span className={styles.itemIcon}>
               <BoxIcon />
             </span>
-            <div>
-              <p className={styles.eyebrow}>{item.category}</p>
-              <label htmlFor="item-name">Itemの名前</label>
+            <div className={styles.identityText}>
+              <p className={styles.eyebrow}>ITEM EDIT</p>
+              <label className={styles.fieldLabel} htmlFor="item-name">
+                Itemの名前
+              </label>
               <input
                 id="item-name"
+                className={styles.nameInput}
                 type="text"
                 value={name}
+                required
+                autoComplete="off"
                 onChange={(event) => setName(event.target.value)}
               />
             </div>
@@ -253,28 +270,40 @@ export default function ItemPage() {
         </header>
 
         <section className={styles.stockPanel} aria-label="在庫数">
-          <div>
+          <div className={styles.stockField}>
             <label htmlFor="quantity" className={styles.stockLabel}>
               現在の在庫
             </label>
-            <input
-              id="quantity"
-              className={styles.quantity}
-              type="number"
-              value={quantity}
-              onChange={(e) => setQuantity(Number(e.target.value))}
-            />
+            <div className={styles.numberControl}>
+              <input
+                id="quantity"
+                className={styles.quantity}
+                type="number"
+                min="0"
+                value={quantity}
+                required
+                onChange={(e) => setQuantity(Number(e.target.value))}
+              />
+              <span>個</span>
+            </div>
           </div>
-          <label htmlFor="minQuantity" className={styles.minimum}>
-            最低在庫数 <strong>{item.minQuantity}個</strong>
-          </label>
-          <input
-            id="minQuantity"
-            className={styles.minQuantity}
-            type="number"
-            value={minQuantity}
-            onChange={(e) => setMinQuantity(Number(e.target.value))}
-          ></input>
+          <div className={styles.stockField}>
+            <label htmlFor="minQuantity" className={styles.stockLabel}>
+              最低在庫数
+            </label>
+            <div className={styles.numberControl}>
+              <input
+                id="minQuantity"
+                className={`${styles.quantity} ${styles.minimumQuantity}`}
+                type="number"
+                min="0"
+                value={minQuantity}
+                required
+                onChange={(e) => setMinQuantity(Number(e.target.value))}
+              />
+              <span>個</span>
+            </div>
+          </div>
         </section>
 
         <dl className={styles.details}>
@@ -313,6 +342,9 @@ export default function ItemPage() {
                 onChange={(event) => setLocationName(event.target.value)}
                 readOnly
               />
+              <span className={styles.fieldHint}>
+                保管場所の変更は場所設定から行えます
+              </span>
             </dd>
           </div>
           <div className={styles.detailRow}>
@@ -345,7 +377,27 @@ export default function ItemPage() {
             </dd>
           </div>
         </dl>
-        <button type="submit">更新する</button>
+
+        <div className={styles.formFooter}>
+          <div className={styles.formMessage} aria-live="polite">
+            {submitError && <p className={styles.submitError}>{submitError}</p>}
+            {successMessage && (
+              <p className={styles.submitSuccess}>{successMessage}</p>
+            )}
+          </div>
+          <div className={styles.actions}>
+            <Link href="/items" className={styles.cancelButton}>
+              キャンセル
+            </Link>
+            <button
+              className={styles.submitButton}
+              type="submit"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "更新中..." : "変更を保存"}
+            </button>
+          </div>
+        </div>
       </form>
     </ItemPageLayout>
   );

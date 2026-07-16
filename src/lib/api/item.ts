@@ -1,4 +1,4 @@
-import { ItemResponse } from "@/types/item";
+import { ItemResponse, UpdateItemRequest } from "@/types/item";
 import { apiClient } from "./client";
 
 export async function getItems(): Promise<ItemResponse[]> {
@@ -10,4 +10,15 @@ export async function getItem(
   signal?: AbortSignal,
 ): Promise<ItemResponse> {
   return apiClient<ItemResponse>(`/api/v1/items/${id}`, { signal });
+}
+
+
+export async function updateItem(
+  itemId: number,
+  request: UpdateItemRequest,
+): Promise<ItemResponse> {
+  return apiClient<ItemResponse>(`/api/v1/items/${itemId}`, {
+    method: "PUT",
+    body: request,
+  });
 }

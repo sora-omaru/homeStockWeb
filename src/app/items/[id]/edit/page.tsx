@@ -7,6 +7,8 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useCallback, useEffect, useState, type ReactNode } from "react";
 import styles from "./page.module.scss";
+import { ApiError } from "@/lib/api/error/api-error";
+import { ErrorCode } from "@/lib/api/error/errocode";
 
 function BoxIcon({ className = "" }: { className?: string }) {
   return (
@@ -99,6 +101,7 @@ export default function ItemPage() {
   const [locationName, setLocationName] = useState("");
   const [expirationDate, setExpirationDate] = useState("");
   const [memo, setMemo] = useState("");
+  const [nameError, setNameError] = useState<string | null>(null);
 
   const params = useParams<{ id: string }>();
   const itemId = Number(params.id);
@@ -158,6 +161,7 @@ export default function ItemPage() {
     event.preventDefault();
     setSubmitError(null);
     setSuccessMessage(null);
+    setNameError(null);
 
     if (!category) {
       setSubmitError("カテゴリーを選択してください");
@@ -179,6 +183,17 @@ export default function ItemPage() {
       setSuccessMessage("Itemを更新しました");
     } catch (error) {
       console.error(error);
+
+      if (error instanceof ApiError) {
+        if (error.code === ErrorCode.ITEM_ALREADY_EXISTS) {
+          setNameError(error.message);
+          return;
+        }
+
+        setSubmitError(error.message);
+        return;
+      }
+
       setSubmitError(
         "Itemの更新に失敗しました。時間をおいて再度お試しください。",
       );
@@ -253,6 +268,7 @@ export default function ItemPage() {
               <label className={styles.fieldLabel} htmlFor="item-name">
                 Itemの名前
               </label>
+              <p>{nameError}</p>
               <input
                 id="item-name"
                 className={styles.nameInput}

@@ -1,21 +1,12 @@
 "use client";
 
-import { getItem } from "@/lib/api/item";
-import type { ItemCategory } from "@/types/item-category";
+import { getItem, updateItem } from "@/lib/api/item";
 import type { ItemResponse } from "@/types/item";
+import type { ItemCategory } from "@/types/item-category";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useCallback, useEffect, useState, type ReactNode } from "react";
 import styles from "./page.module.scss";
-export type UpdateItemRequest = {
-  name: string;
-  quantity: number;
-  minQuantity: number;
-  category: ItemCategory;
-  locationId: number | null;
-  expirationDate: string | null;
-  memo: string | null;
-};
 
 function BoxIcon({ className = "" }: { className?: string }) {
   return (
@@ -110,9 +101,6 @@ export default function ItemPage() {
   const itemId = Number(params.id);
   const isInvalidId = !Number.isInteger(itemId) || itemId <= 0;
 
-
-
-  
   const applyItemForm = useCallback((response: ItemResponse) => {
     setItem(response);
 
@@ -162,10 +150,29 @@ export default function ItemPage() {
       setIsLoading(false);
     }
   }
-  
 
-  function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (!category) {
+      setErrorMessage("カテゴリーを選択してください");
+      return;
+    }
+
+    try {
+      const response = await updateItem(itemId, {
+        name,
+        quantity,
+        minQuantity,
+        category,
+        locationId: null,
+        expirationDate: expirationDate || null,
+        memo: memo || null,
+      });
+      applyItemForm(response);
+    } catch (error) {
+      console.error(error);
+      setErrorMessage("Itemの更新に失敗しました");
+    }
   }
 
   if (isInvalidId) {
@@ -338,6 +345,7 @@ export default function ItemPage() {
             </dd>
           </div>
         </dl>
+        <button type="submit">更新する</button>
       </form>
     </ItemPageLayout>
   );

@@ -1,64 +1,92 @@
 "use client";
+
 import { ApiError } from "@/lib/api/error/api-error";
 import { ErrorCode } from "@/lib/api/error/errocode";
 import { createItem } from "@/lib/api/item";
 import { ItemCategory } from "@/types/item-category";
+import Link from "next/link";
 import { SubmitEvent, useState } from "react";
+import styles from "./page.module.scss";
+
+function BoxIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth="1.8"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="m21 8-9 5-9-5m9 5v9m8-13.5v7a2 2 0 0 1-1 1.73l-6 3.5a2 2 0 0 1-2 0l-6-3.5A2 2 0 0 1 4 15.5v-7a2 2 0 0 1 1-1.73l6-3.5a2 2 0 0 1 2 0l6 3.5a2 2 0 0 1 1 1.73Z"
+      />
+    </svg>
+  );
+}
+
+function ArrowLeftIcon() {
+  return (
+    <svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m15 18-6-6 6-6" />
+    </svg>
+  );
+}
 
 export default function NewItem() {
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [minQuantity, setMinQuantity] = useState(0);
   const [category, setCategory] = useState<ItemCategory | "">("");
-//   const [locationId, setLicationId] = useState();
-  const [expirationDate, setExpirationDate] = useState<string>("");
-  const [memo, setMemo] = useState<string>("");
+  const [expirationDate, setExpirationDate] = useState("");
+  const [memo, setMemo] = useState("");
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [nameError, setNameError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
   async function submit() {
     setSubmitError(null);
     setNameError(null);
     setSuccessMessage(null);
+
     if (category === "") {
       setSubmitError("カテゴリーを選択してください");
       return;
     }
+
     setIsLoading(true);
 
     try {
       await createItem({
-        name: name,
-        quantity: quantity,
-        minQuantity: minQuantity,
-        category: category,
+        name,
+        quantity,
+        minQuantity,
+        category,
         locationId: null,
         expirationDate: expirationDate || null,
         memo: memo || null,
       });
-      //入力後初期化する
       setName("");
       setQuantity(1);
       setMinQuantity(0);
       setCategory("");
       setExpirationDate("");
       setMemo("");
-      setSuccessMessage("登録できました！");
+      setSuccessMessage("Itemを登録しました！");
     } catch (error) {
-      // 1. ApiErrorではない予期しないエラー
       if (!(error instanceof ApiError)) {
         setSubmitError("Itemの作成に失敗しました。再度お試しください");
         return;
       }
 
-      // 2. Item名が重複しているエラー
       if (error.code === ErrorCode.ITEM_ALREADY_EXISTS) {
         setNameError(error.message || "同じ名前のItemがすでに存在します。");
         return;
       }
 
-      // 3. それ以外のApiError
       setSubmitError(error.message);
     } finally {
       setIsLoading(false);
@@ -69,61 +97,183 @@ export default function NewItem() {
     event.preventDefault();
     void submit();
   }
+
   return (
-    <>
-      {submitError && <p>{submitError}</p>}
-      {successMessage && <p>{successMessage}</p>}
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        {nameError && <p>{nameError}</p>}
-        <input
-          type="number"
-          value={quantity}
-          min={1}
-          placeholder="量を入力してください"
-          onChange={(e) => setQuantity(Number(e.target.value))}
-        />
-        <input
-          type="number"
-          value={minQuantity}
-          min={0}
-          placeholder="最低量を入力してください"
-          onChange={(e) => setMinQuantity(Number(e.target.value))}
-        />
+    <main className={styles.page}>
+      <div aria-hidden="true" className={`${styles.glow} ${styles.glowLeft}`} />
+      <div aria-hidden="true" className={`${styles.glow} ${styles.glowRight}`} />
 
-        <select
-          id="item-category"
-          value={category}
-          onChange={(event) =>
-            setCategory(event.target.value as ItemCategory | "")
-          }
-        >
-          <option value="">--1つ選択してください--</option>
-          <option value="FOOD">食品</option>
-          <option value="DRINK">飲み物</option>
-          <option value="DAILY_GOODS">日用品</option>
-          <option value="SEASONING">調味料</option>
-          <option value="MEDICINE">医薬品</option>
-          <option value="OTHER">その他</option>
-        </select>
-        <button type="submit" disabled={isLoading}>
-          {isLoading ? "送信中..." : "作成"}
-        </button>
+      <div className={styles.container}>
+        <nav className={styles.nav} aria-label="メインナビゲーション">
+          <Link href="/" className={styles.brand}>
+            <span className={styles.logo}>
+              <BoxIcon className={styles.logoIcon} />
+            </span>
+            <span className={styles.brandName}>Home Stock</span>
+          </Link>
+          <span className={styles.navBadge}>NEW ITEM</span>
+        </nav>
 
-        <input
-          type="date"
-          value={expirationDate}
-          onChange={(event) => setExpirationDate(event.target.value)}
-        />
-        <textarea
-          value={memo}
-          onChange={(event) => setMemo(event.target.value)}
-        />
-      </form>
-    </>
+        <Link href="/items" className={styles.backLink}>
+          <ArrowLeftIcon />
+          Item一覧へ戻る
+        </Link>
+
+        <header className={styles.header}>
+          <p className={styles.eyebrow}>ADD TO PANTRY</p>
+          <h1 className={styles.title}>新しいItemを登録</h1>
+          <p className={styles.intro}>
+            おうちにあるものを登録して、在庫の管理をはじめましょう。
+          </p>
+        </header>
+
+        <form className={styles.card} onSubmit={handleSubmit} aria-busy={isLoading}>
+          <section className={styles.section}>
+            <div className={styles.sectionHeading}>
+              <span className={styles.step}>01</span>
+              <div>
+                <h2>基本情報</h2>
+                <p>Itemの名前とカテゴリを入力してください。</p>
+              </div>
+            </div>
+
+            <div className={styles.fieldGrid}>
+              <div className={`${styles.field} ${styles.fieldWide}`}>
+                <label htmlFor="item-name">
+                  Itemの名前 <span className={styles.required}>必須</span>
+                </label>
+                <input
+                  id="item-name"
+                  className={`${styles.control} ${nameError ? styles.invalid : ""}`}
+                  type="text"
+                  value={name}
+                  placeholder="例：ティッシュペーパー"
+                  required
+                  autoComplete="off"
+                  aria-invalid={Boolean(nameError)}
+                  aria-describedby={nameError ? "item-name-error" : undefined}
+                  onChange={(event) => setName(event.target.value)}
+                />
+                {nameError && (
+                  <p id="item-name-error" className={styles.fieldError} role="alert">
+                    {nameError}
+                  </p>
+                )}
+              </div>
+
+              <div className={styles.field}>
+                <label htmlFor="item-category">
+                  カテゴリ <span className={styles.required}>必須</span>
+                </label>
+                <select
+                  id="item-category"
+                  className={styles.control}
+                  value={category}
+                  required
+                  onChange={(event) => setCategory(event.target.value as ItemCategory | "")}
+                >
+                  <option value="">選択してください</option>
+                  <option value="FOOD">食品</option>
+                  <option value="DRINK">飲み物</option>
+                  <option value="DAILY_GOODS">日用品</option>
+                  <option value="SEASONING">調味料</option>
+                  <option value="MEDICINE">医薬品</option>
+                  <option value="OTHER">その他</option>
+                </select>
+              </div>
+            </div>
+          </section>
+
+          <section className={styles.section}>
+            <div className={styles.sectionHeading}>
+              <span className={styles.step}>02</span>
+              <div>
+                <h2>在庫数</h2>
+                <p>現在の数と、買い足す目安を設定できます。</p>
+              </div>
+            </div>
+
+            <div className={styles.stockPanel}>
+              <div className={styles.stockField}>
+                <label htmlFor="quantity">現在の在庫</label>
+                <div className={styles.numberControl}>
+                  <input
+                    id="quantity"
+                    type="number"
+                    value={quantity}
+                    min={1}
+                    required
+                    onChange={(event) => setQuantity(Number(event.target.value))}
+                  />
+                  <span>個</span>
+                </div>
+              </div>
+              <div className={styles.stockField}>
+                <label htmlFor="min-quantity">最低在庫数</label>
+                <div className={styles.numberControl}>
+                  <input
+                    id="min-quantity"
+                    type="number"
+                    value={minQuantity}
+                    min={0}
+                    required
+                    onChange={(event) => setMinQuantity(Number(event.target.value))}
+                  />
+                  <span>個</span>
+                </div>
+                <p className={styles.hint}>この数になる前に買い足す目安です</p>
+              </div>
+            </div>
+          </section>
+
+          <section className={styles.section}>
+            <div className={styles.sectionHeading}>
+              <span className={styles.step}>03</span>
+              <div>
+                <h2>追加情報</h2>
+                <p>必要な場合だけ入力してください。</p>
+              </div>
+            </div>
+
+            <div className={styles.fieldGrid}>
+              <div className={styles.field}>
+                <label htmlFor="expiration-date">賞味期限・使用期限</label>
+                <input
+                  id="expiration-date"
+                  className={styles.control}
+                  type="date"
+                  value={expirationDate}
+                  onChange={(event) => setExpirationDate(event.target.value)}
+                />
+              </div>
+              <div className={`${styles.field} ${styles.fieldWide}`}>
+                <label htmlFor="item-memo">メモ</label>
+                <textarea
+                  id="item-memo"
+                  className={`${styles.control} ${styles.textarea}`}
+                  value={memo}
+                  rows={4}
+                  placeholder="保管場所や購入時のメモなど"
+                  onChange={(event) => setMemo(event.target.value)}
+                />
+              </div>
+            </div>
+          </section>
+
+          <footer className={styles.footer}>
+            <div className={styles.message} aria-live="polite">
+              {submitError && <p className={styles.submitError}>{submitError}</p>}
+              {successMessage && <p className={styles.submitSuccess}>{successMessage}</p>}
+            </div>
+            <div className={styles.actions}>
+              <Link href="/items" className={styles.cancelButton}>キャンセル</Link>
+              <button className={styles.submitButton} type="submit" disabled={isLoading}>
+                {isLoading ? "登録中..." : "Itemを登録"}
+              </button>
+            </div>
+          </footer>
+        </form>
+      </div>
+    </main>
   );
 }

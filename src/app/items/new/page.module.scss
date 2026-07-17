@@ -1,0 +1,252 @@
+$emerald-50: #ecfdf5;
+$emerald-100: #d1fae5;
+$emerald-200: #a7f3d0;
+$emerald-500: #10b981;
+$emerald-600: #059669;
+$emerald-700: #047857;
+$emerald-800: #065f46;
+$emerald-950: #022c22;
+$slate-400: #94a3b8;
+$slate-500: #64748b;
+$slate-800: #1e293b;
+
+.page {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  padding: 3rem;
+}
+
+.container {
+  position: relative;
+  max-width: 58rem;
+  margin: 0 auto;
+}
+
+.glow {
+  position: absolute;
+  width: 20rem;
+  height: 20rem;
+  border-radius: 50%;
+  background: rgb(110 231 183 / 25%);
+  filter: blur(64px);
+  pointer-events: none;
+}
+
+.glowLeft { top: 4rem; left: -8rem; }
+.glowRight {
+  right: -7rem;
+  bottom: 8%;
+  width: 25rem;
+  height: 25rem;
+  background: rgb(94 234 212 / 25%);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2.5rem;
+}
+
+.brand { display: flex; align-items: center; gap: 0.75rem; color: $emerald-950; }
+.logo {
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  place-items: center;
+  border-radius: 1rem;
+  color: white;
+  background: $emerald-600;
+  box-shadow: 0 10px 20px -8px rgb(4 120 87 / 40%);
+}
+.logoIcon { width: 1.25rem; height: 1.25rem; }
+.brandName { font-weight: 700; letter-spacing: -0.025em; }
+.navBadge {
+  padding: 0.5rem 0.875rem;
+  border: 1px solid rgb(4 120 87 / 10%);
+  border-radius: 999px;
+  color: $emerald-800;
+  background: rgb(255 255 255 / 55%);
+  font-size: 0.75rem;
+  font-weight: 700;
+  backdrop-filter: blur(8px);
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 1.25rem;
+  color: $emerald-700;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+.backLink svg { width: 1.15rem; height: 1.15rem; transition: transform 180ms ease; }
+.backLink:hover svg { transform: translateX(-3px); }
+
+.header { margin-bottom: 2rem; }
+.eyebrow {
+  margin: 0 0 0.5rem;
+  color: $emerald-700;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+.title {
+  margin: 0;
+  color: $emerald-950;
+  font-size: clamp(2rem, 6vw, 2.75rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+.intro { margin: 0.75rem 0 0; color: rgb(6 78 59 / 65%); line-height: 1.6; }
+
+.card {
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 85%);
+  border-radius: 1.75rem;
+  background: rgb(255 255 255 / 88%);
+  box-shadow: 0 24px 60px -32px rgb(4 120 87 / 55%);
+  backdrop-filter: blur(10px);
+}
+
+.section { padding: 2rem; }
+.section + .section { border-top: 1px solid $emerald-100; }
+.sectionHeading { display: flex; align-items: flex-start; gap: 0.875rem; margin-bottom: 1.5rem; }
+.step {
+  display: grid;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: 0.75rem;
+  color: $emerald-700;
+  background: $emerald-100;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+.sectionHeading h2 { margin: 0; color: $slate-800; font-size: 1rem; }
+.sectionHeading p { margin: 0.3rem 0 0; color: $slate-500; font-size: 0.78rem; line-height: 1.4; }
+
+.fieldGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+.fieldWide { grid-column: 1 / -1; }
+.field label,
+.stockField label { display: block; margin-bottom: 0.5rem; color: $slate-800; font-size: 0.8rem; font-weight: 700; }
+.required {
+  margin-left: 0.35rem;
+  padding: 0.15rem 0.4rem;
+  border-radius: 999px;
+  color: $emerald-700;
+  background: $emerald-100;
+  font-size: 0.62rem;
+  vertical-align: 0.08rem;
+}
+.control {
+  width: 100%;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid $emerald-200;
+  border-radius: 0.8rem;
+  color: $slate-800;
+  background: rgb(255 255 255 / 90%);
+  font: inherit;
+  transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+.control:hover { border-color: $emerald-500; }
+.control:focus { border-color: $emerald-500; outline: 0; background: white; box-shadow: 0 0 0 3px rgb(16 185 129 / 15%); }
+.control::placeholder { color: $slate-400; }
+.invalid { border-color: #f87171; }
+.invalid:focus { border-color: #ef4444; box-shadow: 0 0 0 3px rgb(239 68 68 / 12%); }
+.fieldError { margin: 0.45rem 0 0; color: #b91c1c; font-size: 0.75rem; font-weight: 700; }
+.textarea { min-height: 6.5rem; resize: vertical; line-height: 1.6; }
+
+.stockPanel {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid $emerald-100;
+  border-radius: 1.25rem;
+  background: rgb(236 253 245 / 80%);
+}
+.stockField + .stockField { padding-left: 1.5rem; border-left: 1px solid $emerald-200; }
+.stockField label { color: $slate-500; }
+.numberControl { display: flex; align-items: baseline; gap: 0.4rem; }
+.numberControl input {
+  width: 8rem;
+  padding: 0.3rem 0.4rem;
+  border: 1px solid transparent;
+  border-radius: 0.65rem;
+  color: $emerald-800;
+  background: transparent;
+  font-size: 2.2rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+.numberControl input:hover { border-color: $emerald-200; background: rgb(255 255 255 / 65%); }
+.numberControl input:focus { border-color: $emerald-500; outline: 0; background: white; box-shadow: 0 0 0 3px rgb(16 185 129 / 15%); }
+.numberControl span { color: $emerald-600; font-size: 0.9rem; font-weight: 700; }
+.hint { margin: 0.35rem 0 0; color: $slate-500; font-size: 0.68rem; }
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.25rem 2rem;
+  border-top: 1px solid $emerald-100;
+  background: rgb(236 253 245 / 55%);
+}
+.message { min-width: 0; flex: 1; }
+.submitError,
+.submitSuccess { margin: 0; font-size: 0.82rem; font-weight: 700; line-height: 1.5; }
+.submitError { color: #b91c1c; }
+.submitSuccess { color: $emerald-700; }
+.actions { display: flex; align-items: center; justify-content: flex-end; gap: 0.75rem; }
+.cancelButton,
+.submitButton {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1.25rem;
+  border-radius: 0.85rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+.cancelButton { border: 1px solid $emerald-200; color: $emerald-800; background: white; }
+.cancelButton:hover { border-color: $emerald-500; background: $emerald-100; }
+.submitButton {
+  min-width: 8.5rem;
+  border: 1px solid $emerald-600;
+  color: white;
+  background: $emerald-600;
+  box-shadow: 0 10px 20px -8px rgb(5 150 105 / 50%);
+}
+.submitButton:hover:not(:disabled) { transform: translateY(-1px); background: $emerald-700; }
+.submitButton:disabled { opacity: 0.6; cursor: wait; box-shadow: none; }
+
+@media (max-width: 639px) {
+  .page { padding: 2rem 1.25rem; }
+  .brandName { display: none; }
+  .nav { margin-bottom: 2rem; }
+  .section { padding: 1.5rem 1.25rem; }
+  .fieldGrid,
+  .stockPanel { grid-template-columns: 1fr; }
+  .fieldWide { grid-column: auto; }
+  .stockPanel { padding: 1.15rem; }
+  .stockField + .stockField { padding-top: 1rem; padding-left: 0; border-top: 1px solid $emerald-200; border-left: 0; }
+  .footer { align-items: stretch; flex-direction: column; padding: 1.25rem; }
+  .actions { display: grid; grid-template-columns: 1fr 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backLink svg,
+  .control,
+  .numberControl input,
+  .cancelButton,
+  .submitButton { transition: none; }
+}

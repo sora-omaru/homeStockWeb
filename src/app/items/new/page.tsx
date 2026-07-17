@@ -9,8 +9,8 @@ export default function NewItem() {
   const [minQuantity, setMinQuantity] = useState(0);
   const [category, setCategory] = useState<ItemCategory | "">("");
   const [locationId, setLicationId] = useState();
-  const [expirationDate, setExpiretionDate] = useState();
-  const [memo, setMemo] = useState();
+  const [expirationDate, setExpirationDate] = useState<string>("");
+  const [memo, setMemo] = useState<string>("");
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   async function submit() {
@@ -23,12 +23,12 @@ export default function NewItem() {
 
     const item = await createItem({
       name: name,
-      quantity: 0,
-      minQuantity: 0,
+      quantity: quantity,
+      minQuantity: minQuantity,
       category: category,
       locationId: null,
-      expirationDate: null,
-      memo: null,
+      expirationDate: expirationDate || null,
+      memo: memo || null,
     });
   }
 
@@ -74,6 +74,16 @@ export default function NewItem() {
         <option value="OTHER">その他</option>
       </select>
       <button type="submit">登録</button>
+
+      <input
+        type="date"
+        value={expirationDate}
+        onChange={(event) => setExpirationDate(event.target.value)}
+      />
+      <textarea
+        value={memo}
+        onChange={(event) => setMemo(event.target.value)}
+      />
     </form>
   );
 }

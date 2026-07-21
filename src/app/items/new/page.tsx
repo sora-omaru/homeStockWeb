@@ -5,8 +5,10 @@ import { ErrorCode } from "@/lib/api/error/errocode";
 import { createItem } from "@/lib/api/item";
 import { ItemCategory } from "@/types/item-category";
 import Link from "next/link";
-import { SubmitEvent, useState } from "react";
+import { SubmitEvent, useEffect, useState } from "react";
 import styles from "./page.module.scss";
+import { LocationResponseDto } from "@/types/location/location";
+import { getLocations } from "@/lib/api/location/location";
 
 function BoxIcon({ className = "" }: { className?: string }) {
   return (
@@ -29,8 +31,18 @@ function BoxIcon({ className = "" }: { className?: string }) {
 
 function ArrowLeftIcon() {
   return (
-    <svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m15 18-6-6 6-6" />
+    <svg
+      aria-hidden="true"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        d="m15 18-6-6 6-6"
+      />
     </svg>
   );
 }
@@ -46,6 +58,26 @@ export default function NewItem() {
   const [isLoading, setIsLoading] = useState(false);
   const [nameError, setNameError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [locations, setLocations] = useState<LocationResponseDto[]>([]);
+  const [isLocationsLoading, setIsLocationsLoading] = useState<boolean>(false);
+  const [locationsError, setLocationsError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setIsLocationsLoading(true);
+    setLocationsError(null);
+
+    const fetchLocations = async () => {
+      try {
+        await getLocations();
+      } catch (e) {
+        console.error(e);
+        setLocationsError("場所が取得できませんでした、再度お試しください");
+      } finally {
+        setIsLocationsLoading(false);
+      }
+    };
+    fetchLocations();
+  }, []);
 
   async function submit() {
     setSubmitError(null);
@@ -101,7 +133,10 @@ export default function NewItem() {
   return (
     <main className={styles.page}>
       <div aria-hidden="true" className={`${styles.glow} ${styles.glowLeft}`} />
-      <div aria-hidden="true" className={`${styles.glow} ${styles.glowRight}`} />
+      <div
+        aria-hidden="true"
+        className={`${styles.glow} ${styles.glowRight}`}
+      />
 
       <div className={styles.container}>
         <nav className={styles.nav} aria-label="メインナビゲーション">
@@ -127,7 +162,11 @@ export default function NewItem() {
           </p>
         </header>
 
-        <form className={styles.card} onSubmit={handleSubmit} aria-busy={isLoading}>
+        <form
+          className={styles.card}
+          onSubmit={handleSubmit}
+          aria-busy={isLoading}
+        >
           <section className={styles.section}>
             <div className={styles.sectionHeading}>
               <span className={styles.step}>01</span>
@@ -155,7 +194,11 @@ export default function NewItem() {
                   onChange={(event) => setName(event.target.value)}
                 />
                 {nameError && (
-                  <p id="item-name-error" className={styles.fieldError} role="alert">
+                  <p
+                    id="item-name-error"
+                    className={styles.fieldError}
+                    role="alert"
+                  >
                     {nameError}
                   </p>
                 )}
@@ -170,7 +213,9 @@ export default function NewItem() {
                   className={styles.control}
                   value={category}
                   required
-                  onChange={(event) => setCategory(event.target.value as ItemCategory | "")}
+                  onChange={(event) =>
+                    setCategory(event.target.value as ItemCategory | "")
+                  }
                 >
                   <option value="">選択してください</option>
                   <option value="FOOD">食品</option>
@@ -203,7 +248,9 @@ export default function NewItem() {
                     value={quantity}
                     min={1}
                     required
-                    onChange={(event) => setQuantity(Number(event.target.value))}
+                    onChange={(event) =>
+                      setQuantity(Number(event.target.value))
+                    }
                   />
                   <span>個</span>
                 </div>
@@ -217,7 +264,9 @@ export default function NewItem() {
                     value={minQuantity}
                     min={0}
                     required
-                    onChange={(event) => setMinQuantity(Number(event.target.value))}
+                    onChange={(event) =>
+                      setMinQuantity(Number(event.target.value))
+                    }
                   />
                   <span>個</span>
                 </div>
@@ -262,12 +311,22 @@ export default function NewItem() {
 
           <footer className={styles.footer}>
             <div className={styles.message} aria-live="polite">
-              {submitError && <p className={styles.submitError}>{submitError}</p>}
-              {successMessage && <p className={styles.submitSuccess}>{successMessage}</p>}
+              {submitError && (
+                <p className={styles.submitError}>{submitError}</p>
+              )}
+              {successMessage && (
+                <p className={styles.submitSuccess}>{successMessage}</p>
+              )}
             </div>
             <div className={styles.actions}>
-              <Link href="/items" className={styles.cancelButton}>キャンセル</Link>
-              <button className={styles.submitButton} type="submit" disabled={isLoading}>
+              <Link href="/items" className={styles.cancelButton}>
+                キャンセル
+              </Link>
+              <button
+                className={styles.submitButton}
+                type="submit"
+                disabled={isLoading}
+              >
                 {isLoading ? "登録中..." : "Itemを登録"}
               </button>
             </div>

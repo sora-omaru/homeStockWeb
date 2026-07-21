@@ -10,6 +10,7 @@ import styles from "./page.module.scss";
 import { LocationResponseDto } from "@/types/location/location";
 import { getLocations } from "@/lib/api/location/location";
 import LocationSelect from "@/app/component/locationSelect";
+import CategorySelect from "@/app/component/categorySelect";
 
 function BoxIcon({ className = "" }: { className?: string }) {
   return (
@@ -206,26 +207,11 @@ export default function NewItem() {
               </div>
 
               <div className={styles.field}>
-                <label htmlFor="item-category">
-                  カテゴリ <span className={styles.required}>必須</span>
-                </label>
-                <select
-                  id="item-category"
-                  className={styles.control}
+                <CategorySelect
                   value={category}
                   required
-                  onChange={(event) =>
-                    setCategory(event.target.value as ItemCategory | "")
-                  }
-                >
-                  <option value="">選択してください</option>
-                  <option value="FOOD">食品</option>
-                  <option value="DRINK">飲み物</option>
-                  <option value="DAILY_GOODS">日用品</option>
-                  <option value="SEASONING">調味料</option>
-                  <option value="MEDICINE">医薬品</option>
-                  <option value="OTHER">その他</option>
-                </select>
+                  onChange={setCategory}
+                />
               </div>
             </div>
           </section>

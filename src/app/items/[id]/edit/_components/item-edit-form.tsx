@@ -4,6 +4,8 @@ import type { SubmitEvent } from "react";
 import { getStockStatus, type ItemFormValues } from "../_lib/item-form";
 import styles from "../page.module.scss";
 import { BoxIcon } from "./icons";
+import LocationSelect from "@/app/component/locationSelect";
+import { LocationResponseDto } from "@/types/location/location";
 
 type ItemEditFormProps = {
   values: ItemFormValues;
@@ -15,6 +17,9 @@ type ItemEditFormProps = {
     value: ItemFormValues[Field],
   ) => void;
   onSubmit: () => Promise<void>;
+  locations: LocationResponseDto[];
+  isLocationsRoading: boolean;
+  locationsError: string | null;
 };
 
 const stockStatusLabels = {
@@ -36,6 +41,9 @@ export function ItemEditForm({
   successMessage,
   onChange,
   onSubmit,
+  locations,
+  isLocationsRoading,
+  locationsError,
 }: ItemEditFormProps) {
   const stockStatus = getStockStatus(values.quantity, values.minQuantity);
 
@@ -71,9 +79,7 @@ export function ItemEditForm({
             />
           </div>
         </div>
-        <span
-          className={`${styles.status} ${stockStatusClasses[stockStatus]}`}
-        >
+        <span className={`${styles.status} ${stockStatusClasses[stockStatus]}`}>
           {stockStatusLabels[stockStatus]}
         </span>
       </header>
@@ -143,6 +149,13 @@ export function ItemEditForm({
             </select>
           </dd>
         </div>
+        <LocationSelect
+          locations={locations}
+          value={values.locationId}
+          isLoading={isLocationsRoading}
+          error={locationsError}
+          onChange={(locationId)=>onChange("locationId",locationId)}
+        />
         <div className={styles.detailRow}>
           <dt>
             <label htmlFor="item-location">保管場所</label>

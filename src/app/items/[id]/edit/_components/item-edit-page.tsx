@@ -33,6 +33,9 @@ export function ItemEditPage({ itemId }: { itemId: number }) {
       successMessage={editor.successMessage}
       onChange={editor.changeField}
       onSubmit={editor.submit}
+      locations={editor.locations}
+      isLocationsRoading={editor.isLocationLoading}
+      locationsError={editor.locationError}//locationコンポーネント用
     />
   );
 }

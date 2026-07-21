@@ -9,6 +9,7 @@ import {
   toItemFormValues,
   type ItemFormValues,
 } from "../_lib/item-form";
+import { LocationResponseDto } from "@/types/location/location";
 
 export function useItemEdit(itemId: number) {
   const [formValues, setFormValues] = useState<ItemFormValues>(
@@ -20,6 +21,9 @@ export function useItemEdit(itemId: number) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [locations, setLocations] = useState<LocationResponseDto[]>([]);
+  const [locationError, setLocationError] = useState<string | null>(null);
+  const [isLocationLoading, setIsLocationLoading] = useState<boolean>(true);
   const isInvalidId = !Number.isInteger(itemId) || itemId <= 0;
 
   const applyItem = useCallback((item: ItemResponse) => {
@@ -107,6 +111,9 @@ export function useItemEdit(itemId: number) {
 
   return {
     formValues,
+    locations,
+    isLocationLoading,
+    locationError,
     hasItem,
     isInvalidId,
     isLoading,

@@ -11,6 +11,7 @@ type LocationSelectProps = {
   isLoading: boolean;
   error: string | null;
   onChange: (locationId: number | null) => void;
+  variant?: "default" | "compact";
 };
 export default function LocationSelect({
   locations,
@@ -18,6 +19,7 @@ export default function LocationSelect({
   isLoading,
   error,
   onChange,
+  variant = "default",
 }: LocationSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -42,7 +44,9 @@ export default function LocationSelect({
   }
 
   return (
-    <section className={styles.section}>
+    <section
+      className={`${styles.section} ${variant === "compact" ? styles.sectionCompact : ""}`}
+    >
       <div className={styles.heading}>
         <span className={styles.icon} aria-hidden="true">
           <svg

@@ -1,0 +1,145 @@
+$emerald-50: #ecfdf5;
+$emerald-100: #d1fae5;
+$emerald-200: #a7f3d0;
+$emerald-500: #10b981;
+$emerald-600: #059669;
+$emerald-800: #065f46;
+$slate-400: #94a3b8;
+$slate-800: #1e293b;
+
+.field {
+  position: relative;
+  min-width: 0;
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: $slate-800;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.required {
+  margin-left: 0.35rem;
+  padding: 0.15rem 0.4rem;
+  border-radius: 999px;
+  color: #047857;
+  background: $emerald-100;
+  font-size: 0.62rem;
+  vertical-align: 0.08rem;
+}
+
+.trigger {
+  display: flex;
+  width: 100%;
+  min-height: 2.85rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid $emerald-200;
+  border-radius: 0.8rem;
+  color: $slate-800;
+  background: rgb(255 255 255 / 90%);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+    color: $emerald-600;
+    transition: transform 180ms ease;
+  }
+
+  &:hover {
+    border-color: $emerald-500;
+  }
+
+  &:focus {
+    border-color: $emerald-500;
+    outline: 0;
+    background: white;
+    box-shadow: 0 0 0 3px rgb(16 185 129 / 15%);
+  }
+}
+
+.placeholder {
+  color: $slate-400;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.menu {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 0.35rem);
+  right: 0;
+  left: 0;
+  padding: 0.4rem;
+  border: 1px solid $emerald-200;
+  border-radius: 0.9rem;
+  background: white;
+  box-shadow: 0 18px 35px -18px rgb(4 120 87 / 45%);
+  animation: dropdown 140ms ease-out;
+}
+
+.option,
+.optionSelected {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 0.75rem;
+  border: 0;
+  border-radius: 0.65rem;
+  color: $slate-800;
+  background: transparent;
+  font-size: 0.82rem;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    background: $emerald-50;
+  }
+}
+
+.optionSelected {
+  color: $emerald-800;
+  background: $emerald-100;
+  font-weight: 700;
+}
+
+.check {
+  color: $emerald-600;
+  font-weight: 800;
+}
+
+@keyframes dropdown {
+  from {
+    opacity: 0;
+    transform: translateY(-0.35rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trigger,
+  .trigger svg {
+    transition: none;
+  }
+
+  .menu {
+    animation: none;
+  }
+}

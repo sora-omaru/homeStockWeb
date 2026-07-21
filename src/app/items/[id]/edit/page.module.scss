@@ -279,17 +279,6 @@ $slate-800: #1e293b;
 .minimumQuantity {
   color: $slate-800;
 }
-.minimum {
-  margin: 0;
-  color: $slate-500;
-  font-size: 0.8rem;
-}
-.minimum strong {
-  margin-left: 0.3rem;
-  color: $slate-800;
-  font-size: 1rem;
-  font-variant-numeric: tabular-nums;
-}
 .details {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

@@ -1,4 +1,3 @@
-import type { ItemCategory } from "@/types/item-category";
 import Link from "next/link";
 import type { SubmitEvent } from "react";
 import { getStockStatus, type ItemFormValues } from "../_lib/item-form";
@@ -6,6 +5,7 @@ import styles from "../page.module.scss";
 import { BoxIcon } from "./icons";
 import LocationSelect from "@/app/component/locationSelect";
 import { LocationResponseDto } from "@/types/location/location";
+import CategorySelect from "@/app/component/categorySelect";
 
 type ItemEditFormProps = {
   values: ItemFormValues;
@@ -127,34 +127,19 @@ export function ItemEditForm({
 
       <dl className={styles.details}>
         <div className={styles.detailRow}>
-          <dt>
-            <label htmlFor="item-category">カテゴリ</label>
-          </dt>
-          <dd>
-            <select
-              id="item-category"
-              className={styles.formControl}
-              value={values.category}
-              onChange={(event) =>
-                onChange("category", event.target.value as ItemCategory)
-              }
-            >
-              <option value="">--1つ選択してください--</option>
-              <option value="FOOD">食品</option>
-              <option value="DRINK">飲み物</option>
-              <option value="DAILY_GOODS">日用品</option>
-              <option value="SEASONING">調味料</option>
-              <option value="MEDICINE">医薬品</option>
-              <option value="OTHER">その他</option>
-            </select>
-          </dd>
+          <CategorySelect
+            value={values.category}
+            required
+            onChange={(category) => onChange("category", category)}
+          />
         </div>
         <LocationSelect
           locations={locations}
           value={values.locationId}
           isLoading={isLocationsRoading}
           error={locationsError}
-          onChange={(locationId)=>onChange("locationId",locationId)}
+          onChange={(locationId) => onChange("locationId", locationId)}
+          variant="compact"
         />
         <div className={styles.detailRow}>
           <dt>

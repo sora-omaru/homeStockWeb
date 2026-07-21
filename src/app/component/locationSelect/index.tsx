@@ -1,4 +1,9 @@
+"use client";
+
 import { LocationResponseDto } from "@/types/location/location";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import styles from "./locationSelect.module.scss";
 
 type LocationSelectProps = {
   locations: LocationResponseDto[];
@@ -7,7 +12,6 @@ type LocationSelectProps = {
   error: string | null;
   onChange: (locationId: number | null) => void;
 };
-//Location情報を読み込んで選択させるコンポーネント
 export default function LocationSelect({
   locations,
   value,
@@ -15,33 +19,137 @@ export default function LocationSelect({
   error,
   onChange,
 }: LocationSelectProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const isEmpty = !isLoading && !error && locations.length === 0;
+  const selectedLocation = locations.find((location) => location.id === value);
+  const isDisabled = isLoading || error !== null;
+
+  useEffect(() => {
+    function closeOnOutsideClick(event: MouseEvent) {
+      if (!dropdownRef.current?.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", closeOnOutsideClick);
+    return () => document.removeEventListener("mousedown", closeOnOutsideClick);
+  }, []);
+
+  function selectLocation(locationId: number | null) {
+    onChange(locationId);
+    setIsOpen(false);
+  }
+
   return (
-    <>
-      <select
-        name="location"
-        id="location"
-        disabled={isLoading || error !== null}
-        value={value ?? ""}
-        onChange={(e) => {
-          const nextValue = e.target.value;
-          console.log(nextValue);
-          onChange(nextValue === "" ? null : Number(nextValue));
-        }}
-      >
-        <option value="">保管場所 未設定</option>
+    <section className={styles.section}>
+      <div className={styles.heading}>
+        <span className={styles.icon} aria-hidden="true">
+          <svg
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth="1.8"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 21s6-5.1 6-11a6 6 0 1 0-12 0c0 5.9 6 11 6 11Z"
+            />
+            <circle cx="12" cy="10" r="2" />
+          </svg>
+        </span>
+        <div>
+          <h2>保管場所</h2>
+          <p>どこに置いているかを設定すると、あとから探しやすくなります。</p>
+        </div>
+      </div>
 
-        {locations.map((location) => (
-          <option key={location.id} value={location.id}>
-            {location.name}
-          </option>
-        ))}
-      </select>
+      <div className={styles.fieldRow}>
+        <div className={styles.field} ref={dropdownRef}>
+          <label htmlFor="location">保管場所を選択</label>
+          <button
+            className={styles.trigger}
+            type="button"
+            id="location"
+            disabled={isDisabled}
+            aria-haspopup="listbox"
+            aria-expanded={isOpen}
+            aria-controls="location-options"
+            aria-describedby="location-status"
+            onClick={() => setIsOpen((current) => !current)}
+            onKeyDown={(event) => {
+              if (event.key === "Escape") setIsOpen(false);
+            }}
+          >
+            <span>
+              {isLoading
+                ? "読み込み中..."
+                : selectedLocation?.name ?? "保管場所を設定しない"}
+            </span>
+            <svg
+              aria-hidden="true"
+              className={isOpen ? styles.chevronOpen : ""}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="m6 9 6 6 6-6" />
+            </svg>
+          </button>
 
-      {isLoading && <p>Locationを取得中...</p>}
-      {error && <p>{error}</p>}
-      {!isLoading && !error && locations.length === 0 && (
-        <p>Locationが登録されていません。</p>
-      )}
-    </>
+          {isOpen && (
+            <div className={styles.menu} id="location-options" role="listbox">
+              <button
+                type="button"
+                role="option"
+                aria-selected={value === null}
+                className={value === null ? styles.optionSelected : styles.option}
+                onClick={() => selectLocation(null)}
+              >
+                <span>保管場所を設定しない</span>
+                {value === null && <span className={styles.check}>✓</span>}
+              </button>
+
+              {locations.map((location) => (
+                <button
+                  key={location.id}
+                  type="button"
+                  role="option"
+                  aria-selected={value === location.id}
+                  className={
+                    value === location.id ? styles.optionSelected : styles.option
+                  }
+                  onClick={() => selectLocation(location.id)}
+                >
+                  <span>{location.name}</span>
+                  {value === location.id && <span className={styles.check}>✓</span>}
+                </button>
+              ))}
+
+              {isEmpty && (
+                <p className={styles.emptyMessage}>登録済みの保管場所はありません。</p>
+              )}
+
+              <Link href="/locations/new" className={styles.menuAddLink}>
+                <span aria-hidden="true">＋</span>
+                新しい保管場所を追加
+              </Link>
+            </div>
+          )}
+
+          <div id="location-status" className={styles.status} aria-live="polite">
+            {isLoading && <p>保管場所を読み込んでいます...</p>}
+            {error && <p className={styles.error}>{error}</p>}
+            {isEmpty && <p>登録済みの保管場所はありません。</p>}
+            {!isLoading && !error && !isEmpty && (
+              <p>{locations.length}件の保管場所から選べます。</p>
+            )}
+          </div>
+        </div>
+
+      </div>
+    </section>
   );
 }

@@ -9,6 +9,7 @@ import { SubmitEvent, useEffect, useState } from "react";
 import styles from "./page.module.scss";
 import { LocationResponseDto } from "@/types/location/location";
 import { getLocations } from "@/lib/api/location/location";
+import LocationSelect from "@/app/component/locationSelect";
 
 function BoxIcon({ className = "" }: { className?: string }) {
   return (
@@ -55,20 +56,20 @@ export default function NewItem() {
   const [expirationDate, setExpirationDate] = useState("");
   const [memo, setMemo] = useState("");
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [locationId, setLocationId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [nameError, setNameError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [locations, setLocations] = useState<LocationResponseDto[]>([]);
-  const [isLocationsLoading, setIsLocationsLoading] = useState<boolean>(false);
+  const [isLocationsLoading, setIsLocationsLoading] = useState<boolean>(true);
   const [locationsError, setLocationsError] = useState<string | null>(null);
 
   useEffect(() => {
-    setIsLocationsLoading(true);
-    setLocationsError(null);
-
     const fetchLocations = async () => {
       try {
-        await getLocations();
+        const response = await getLocations();
+
+        setLocations(response);
       } catch (e) {
         console.error(e);
         setLocationsError("場所が取得できませんでした、再度お試しください");
@@ -97,7 +98,7 @@ export default function NewItem() {
         quantity,
         minQuantity,
         category,
-        locationId: null,
+        locationId: locationId,
         expirationDate: expirationDate || null,
         memo: memo || null,
       });
@@ -229,6 +230,13 @@ export default function NewItem() {
             </div>
           </section>
 
+          <LocationSelect
+            locations={locations}
+            value={locationId}
+            isLoading={isLocationsLoading}
+            error={locationsError}
+            onChange={setLocationId}
+          />
           <section className={styles.section}>
             <div className={styles.sectionHeading}>
               <span className={styles.step}>02</span>

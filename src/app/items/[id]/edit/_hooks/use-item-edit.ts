@@ -10,6 +10,7 @@ import {
   type ItemFormValues,
 } from "../_lib/item-form";
 import { LocationResponseDto } from "@/types/location/location";
+import { getLocations } from "@/lib/api/location/location";
 
 export function useItemEdit(itemId: number) {
   const [formValues, setFormValues] = useState<ItemFormValues>(
@@ -52,6 +53,21 @@ export function useItemEdit(itemId: number) {
     void load();
     return () => controller.abort();
   }, [applyItem, isInvalidId, itemId]);
+
+  useEffect(() => {
+    async function loadLocations() {
+      try {
+        const response = await getLocations();
+        setLocations(response);
+      } catch (e) {
+        console.error(e);
+        setLocationError("場所が表示できません、再執行してください");
+      } finally {
+        setIsLocationLoading(false);
+      }
+    }
+    void loadLocations();
+  }, []);
 
   const changeField = useCallback(
     <Field extends keyof ItemFormValues>(

@@ -23,6 +23,7 @@ type ItemEditFormProps = {
   isLocationCreating: boolean;
   locationCreateError: string | null;
   onLocationCreate: (name: string) => Promise<boolean>;
+  onLocationCreateErrorClear: () => void;
 };
 
 const stockStatusLabels = {
@@ -50,6 +51,7 @@ export function ItemEditForm({
   isLocationCreating,
   locationCreateError,
   onLocationCreate,
+  onLocationCreateErrorClear
 }: ItemEditFormProps) {
   const stockStatus = getStockStatus(values.quantity, values.minQuantity);
 
@@ -149,6 +151,7 @@ export function ItemEditForm({
           isCreating={isLocationCreating}
           createError={locationCreateError}
           variant="compact"
+          onCreateErrorClear={onLocationCreateErrorClear}
         />
         <div className={styles.detailRow}>
           <dt>

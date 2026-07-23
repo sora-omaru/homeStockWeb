@@ -106,6 +106,9 @@ export default function NewItem() {
       setIsLocationCreating(false);
     }
   }
+  function clearCreateLocationError() {
+    setLocationCreateError(null);
+  }
 
   async function submit() {
     setSubmitError(null);
@@ -256,6 +259,7 @@ export default function NewItem() {
             onCreate={handleCreateLocation}
             isCreating={isLocationCreating}
             createError={locationCreateError}
+            onCreateErrorClear={clearCreateLocationError}
           />
           <section className={styles.section}>
             <div className={styles.sectionHeading}>

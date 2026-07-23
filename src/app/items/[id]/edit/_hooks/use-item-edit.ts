@@ -129,6 +129,9 @@ export function useItemEdit(itemId: number) {
       setIsSubmitting(false);
     }
   }
+  function clearCreateLocationError() {
+    setCreateLocationError(null);
+  }
 
   async function handleCreateLocation(name: string): Promise<boolean> {
     setCreateLocationError(null);
@@ -136,7 +139,6 @@ export function useItemEdit(itemId: number) {
 
     try {
       const createdLocation = await createLocation({ name });
-
       setLocations((crrentLocations) => [...crrentLocations, createdLocation]);
 
       changeField("locationId", createdLocation.id);
@@ -165,6 +167,7 @@ export function useItemEdit(itemId: number) {
     createLocation: handleCreateLocation,
     isLocationCreating,
     createLocationError,
+    clearCreateLocationError,
     changeField,
     retry,
     submit,

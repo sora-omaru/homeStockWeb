@@ -15,6 +15,7 @@ type LocationSelectProps = {
   isCreating: boolean;
   createError: string | null;
   variant?: "default" | "compact";
+  onCreateErrorClear: () => void;
 };
 export default function LocationSelect({
   locations,
@@ -26,6 +27,7 @@ export default function LocationSelect({
   isCreating,
   createError,
   variant = "default",
+  onCreateErrorClear,
 }: LocationSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -168,6 +170,7 @@ export default function LocationSelect({
                 className={styles.menuAddLink}
                 onClick={() => {
                   setIsOpen(false);
+                  onCreateErrorClear();
                   setIsCreateModalOpen(true);
                 }}
               >

@@ -38,6 +38,7 @@ export function ItemEditPage({ itemId }: { itemId: number }) {
       onLocationCreate={editor.createLocation}
       isLocationCreating={editor.isLocationCreating}
       locationCreateError={editor.createLocationError}
+      onLocationCreateErrorClear={editor.clearCreateLocationError}
       locationsError={editor.locationError} //locationコンポーネント用
     />
   );

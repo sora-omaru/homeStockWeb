@@ -35,7 +35,10 @@ export function ItemEditPage({ itemId }: { itemId: number }) {
       onSubmit={editor.submit}
       locations={editor.locations}
       isLocationsRoading={editor.isLocationLoading}
-      locationsError={editor.locationError}//locationコンポーネント用
+      onLocationCreate={editor.createLocation}
+      isLocationCreating={editor.isLocationCreating}
+      locationCreateError={editor.createLocationError}
+      locationsError={editor.locationError} //locationコンポーネント用
     />
   );
 }

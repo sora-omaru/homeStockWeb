@@ -10,7 +10,8 @@ import {
   type ItemFormValues,
 } from "../_lib/item-form";
 import { LocationResponseDto } from "@/types/location/location";
-import { getLocations } from "@/lib/api/location/location";
+import { createLocation, getLocations } from "@/lib/api/location/location";
+import { getLocationCreateErrorMessage } from "@/lib/api/error/error-location";
 
 export function useItemEdit(itemId: number) {
   const [formValues, setFormValues] = useState<ItemFormValues>(
@@ -25,6 +26,10 @@ export function useItemEdit(itemId: number) {
   const [locations, setLocations] = useState<LocationResponseDto[]>([]);
   const [locationError, setLocationError] = useState<string | null>(null);
   const [isLocationLoading, setIsLocationLoading] = useState<boolean>(true);
+  const [isLocationCreating, setIsLocationCreating] = useState(false);
+  const [createLocationError, setCreateLocationError] = useState<string | null>(
+    null,
+  );
   const isInvalidId = !Number.isInteger(itemId) || itemId <= 0;
 
   const applyItem = useCallback((item: ItemResponse) => {
@@ -125,6 +130,26 @@ export function useItemEdit(itemId: number) {
     }
   }
 
+  async function handleCreateLocation(name: string): Promise<boolean> {
+    setCreateLocationError(null);
+    setIsLocationCreating(true);
+
+    try {
+      const createdLocation = await createLocation({ name });
+
+      setLocations((crrentLocations) => [...crrentLocations, createdLocation]);
+
+      changeField("locationId", createdLocation.id);
+      return true;
+    } catch (error) {
+      console.error(error);
+      setCreateLocationError(getLocationCreateErrorMessage(error));
+      return false;
+    } finally {
+      setIsLocationCreating(false);
+    }
+  }
+
   return {
     formValues,
     locations,
@@ -137,6 +162,9 @@ export function useItemEdit(itemId: number) {
     isSubmitting,
     submitError,
     successMessage,
+    createLocation: handleCreateLocation,
+    isLocationCreating,
+    createLocationError,
     changeField,
     retry,
     submit,

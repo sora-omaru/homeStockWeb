@@ -20,6 +20,9 @@ type ItemEditFormProps = {
   locations: LocationResponseDto[];
   isLocationsRoading: boolean;
   locationsError: string | null;
+  isLocationCreating: boolean;
+  locationCreateError: string | null;
+  onLocationCreate: (name: string) => Promise<boolean>;
 };
 
 const stockStatusLabels = {
@@ -44,6 +47,9 @@ export function ItemEditForm({
   locations,
   isLocationsRoading,
   locationsError,
+  isLocationCreating,
+  locationCreateError,
+  onLocationCreate,
 }: ItemEditFormProps) {
   const stockStatus = getStockStatus(values.quantity, values.minQuantity);
 
@@ -139,6 +145,9 @@ export function ItemEditForm({
           isLoading={isLocationsRoading}
           error={locationsError}
           onChange={(locationId) => onChange("locationId", locationId)}
+          onCreate={onLocationCreate}
+          isCreating={isLocationCreating}
+          createError={locationCreateError}
           variant="compact"
         />
         <div className={styles.detailRow}>

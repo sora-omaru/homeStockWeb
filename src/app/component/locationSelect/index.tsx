@@ -1,9 +1,9 @@
 "use client";
 
 import { LocationResponseDto } from "@/types/location/location";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import styles from "./locationSelect.module.scss";
+import { LocationCreateModal } from "../locationCreateModal";
 
 type LocationSelectProps = {
   locations: LocationResponseDto[];
@@ -11,6 +11,9 @@ type LocationSelectProps = {
   isLoading: boolean;
   error: string | null;
   onChange: (locationId: number | null) => void;
+  onCreate: (name: string) => Promise<boolean>;
+  isCreating: boolean;
+  createError: string | null;
   variant?: "default" | "compact";
 };
 export default function LocationSelect({
@@ -19,9 +22,13 @@ export default function LocationSelect({
   isLoading,
   error,
   onChange,
+  onCreate,
+  isCreating,
+  createError,
   variant = "default",
 }: LocationSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const isEmpty = !isLoading && !error && locations.length === 0;
   const selectedLocation = locations.find((location) => location.id === value);
@@ -41,6 +48,14 @@ export default function LocationSelect({
   function selectLocation(locationId: number | null) {
     onChange(locationId);
     setIsOpen(false);
+  }
+
+  async function handleCreateLocation(name: string) {
+    const success = await onCreate(name);
+
+    if (success) {
+      setIsCreateModalOpen(false);
+    }
   }
 
   return (
@@ -89,7 +104,7 @@ export default function LocationSelect({
             <span>
               {isLoading
                 ? "読み込み中..."
-                : selectedLocation?.name ?? "保管場所を設定しない"}
+                : (selectedLocation?.name ?? "保管場所を設定しない")}
             </span>
             <svg
               aria-hidden="true"
@@ -99,7 +114,11 @@ export default function LocationSelect({
               stroke="currentColor"
               strokeWidth="2"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" d="m6 9 6 6 6-6" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m6 9 6 6 6-6"
+              />
             </svg>
           </button>
 
@@ -109,7 +128,9 @@ export default function LocationSelect({
                 type="button"
                 role="option"
                 aria-selected={value === null}
-                className={value === null ? styles.optionSelected : styles.option}
+                className={
+                  value === null ? styles.optionSelected : styles.option
+                }
                 onClick={() => selectLocation(null)}
               >
                 <span>保管場所を設定しない</span>
@@ -123,27 +144,44 @@ export default function LocationSelect({
                   role="option"
                   aria-selected={value === location.id}
                   className={
-                    value === location.id ? styles.optionSelected : styles.option
+                    value === location.id
+                      ? styles.optionSelected
+                      : styles.option
                   }
                   onClick={() => selectLocation(location.id)}
                 >
                   <span>{location.name}</span>
-                  {value === location.id && <span className={styles.check}>✓</span>}
+                  {value === location.id && (
+                    <span className={styles.check}>✓</span>
+                  )}
                 </button>
               ))}
 
               {isEmpty && (
-                <p className={styles.emptyMessage}>登録済みの保管場所はありません。</p>
+                <p className={styles.emptyMessage}>
+                  登録済みの保管場所はありません。
+                </p>
               )}
 
-              <Link href="/locations/new" className={styles.menuAddLink}>
+              <button
+                type="button"
+                className={styles.menuAddLink}
+                onClick={() => {
+                  setIsOpen(false);
+                  setIsCreateModalOpen(true);
+                }}
+              >
                 <span aria-hidden="true">＋</span>
                 新しい保管場所を追加
-              </Link>
+              </button>
             </div>
           )}
 
-          <div id="location-status" className={styles.status} aria-live="polite">
+          <div
+            id="location-status"
+            className={styles.status}
+            aria-live="polite"
+          >
             {isLoading && <p>保管場所を読み込んでいます...</p>}
             {error && <p className={styles.error}>{error}</p>}
             {isEmpty && <p>登録済みの保管場所はありません。</p>}
@@ -152,8 +190,14 @@ export default function LocationSelect({
             )}
           </div>
         </div>
-
       </div>
+      <LocationCreateModal
+        isOpen={isCreateModalOpen}
+        isSubmitting={isCreating}
+        error={createError}
+        onClose={() => setIsCreateModalOpen(false)}
+        onCreate={handleCreateLocation}
+      />
     </section>
   );
 }

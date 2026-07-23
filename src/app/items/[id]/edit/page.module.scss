@@ -331,21 +331,19 @@ $slate-800: #3b261b;
 .formControl::placeholder {
   color: $slate-500;
 }
-.formControl[readonly] {
-  color: $slate-500;
-  background: #f8fafc;
-  cursor: not-allowed;
-}
-.fieldHint {
-  display: block;
-  margin-top: 0.4rem;
-  color: $slate-500;
-  font-size: 0.7rem;
-  line-height: 1.4;
-}
 .memoInput {
   min-height: 6.5rem;
   resize: vertical;
+}
+.expirationRow {
+  grid-column: 1 / -1;
+  padding-right: 0.5rem !important;
+  padding-left: 0.5rem !important;
+  border-left: 0 !important;
+
+  .formControl {
+    max-width: calc(50% - 0.75rem);
+  }
 }
 .memoRow {
   grid-column: 1 / -1;
@@ -543,6 +541,9 @@ $slate-800: #3b261b;
     grid-column: auto;
     padding: 1rem 0.25rem !important;
     border-left: 0 !important;
+  }
+  .expirationRow .formControl {
+    max-width: none;
   }
   .formFooter {
     align-items: stretch;

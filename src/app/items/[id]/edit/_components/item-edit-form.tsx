@@ -141,37 +141,21 @@ export function ItemEditForm({
             onChange={(category) => onChange("category", category)}
           />
         </div>
-        <LocationSelect
-          locations={locations}
-          value={values.locationId}
-          isLoading={isLocationsRoading}
-          error={locationsError}
-          onChange={(locationId) => onChange("locationId", locationId)}
-          onCreate={onLocationCreate}
-          isCreating={isLocationCreating}
-          createError={locationCreateError}
-          variant="compact"
-          onCreateErrorClear={onLocationCreateErrorClear}
-        />
         <div className={styles.detailRow}>
-          <dt>
-            <label htmlFor="item-location">保管場所</label>
-          </dt>
-          <dd>
-            <input
-              id="item-location"
-              className={styles.formControl}
-              type="text"
-              value={values.locationName}
-              placeholder="例: キッチンの棚"
-              readOnly
-            />
-            <span className={styles.fieldHint}>
-              保管場所の変更は場所設定から行えます
-            </span>
-          </dd>
+          <LocationSelect
+            locations={locations}
+            value={values.locationId}
+            isLoading={isLocationsRoading}
+            error={locationsError}
+            onChange={(locationId) => onChange("locationId", locationId)}
+            onCreate={onLocationCreate}
+            isCreating={isLocationCreating}
+            createError={locationCreateError}
+            variant="compact"
+            onCreateErrorClear={onLocationCreateErrorClear}
+          />
         </div>
-        <div className={styles.detailRow}>
+        <div className={`${styles.detailRow} ${styles.expirationRow}`}>
           <dt>
             <label htmlFor="item-expiration-date">賞味期限</label>
           </dt>

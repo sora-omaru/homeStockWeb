@@ -7,7 +7,6 @@ export type ItemFormValues = {
   minQuantity: number;
   category: ItemCategory | "";
   locationId: number | null;
-  locationName: string;
   expirationDate: string;
   memo: string;
 };
@@ -18,7 +17,6 @@ export const initialItemFormValues: ItemFormValues = {
   minQuantity: 0,
   category: "",
   locationId: null,
-  locationName: "",
   expirationDate: "",
   memo: "",
 };
@@ -30,7 +28,6 @@ export function toItemFormValues(item: ItemResponse): ItemFormValues {
     minQuantity: item.minQuantity,
     category: item.category,
     locationId: item.locationId,
-    locationName: item.locationName ?? "",
     expirationDate: item.expirationDate?.split("T")[0] ?? "",
     memo: item.memo ?? "",
   };

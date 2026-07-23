@@ -8,7 +8,8 @@ import Link from "next/link";
 import { SubmitEvent, useEffect, useState } from "react";
 import styles from "./page.module.scss";
 import { LocationResponseDto } from "@/types/location/location";
-import { getLocations } from "@/lib/api/location/location";
+import { createLocation, getLocations } from "@/lib/api/location/location";
+import { getLocationCreateErrorMessage } from "@/lib/api/error/error-location";
 import LocationSelect from "@/app/component/locationSelect";
 import CategorySelect from "@/app/component/categorySelect";
 
@@ -64,6 +65,10 @@ export default function NewItem() {
   const [locations, setLocations] = useState<LocationResponseDto[]>([]);
   const [isLocationsLoading, setIsLocationsLoading] = useState<boolean>(true);
   const [locationsError, setLocationsError] = useState<string | null>(null);
+  const [isLocationCreating, setIsLocationCreating] = useState(false);
+  const [locationCreateError, setLocationCreateError] = useState<string | null>(
+    null,
+  );
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -80,6 +85,27 @@ export default function NewItem() {
     };
     fetchLocations();
   }, []);
+
+  async function handleCreateLocation(locationName: string): Promise<boolean> {
+    setLocationCreateError(null);
+    setIsLocationCreating(true);
+
+    try {
+      const createdLocation = await createLocation({ name: locationName });
+      setLocations((currentLocations) => [
+        ...currentLocations,
+        createdLocation,
+      ]);
+      setLocationId(createdLocation.id);
+      return true;
+    } catch (error) {
+      console.error(error);
+      setLocationCreateError(getLocationCreateErrorMessage(error));
+      return false;
+    } finally {
+      setIsLocationCreating(false);
+    }
+  }
 
   async function submit() {
     setSubmitError(null);
@@ -227,6 +253,9 @@ export default function NewItem() {
             isLoading={isLocationsLoading}
             error={locationsError}
             onChange={setLocationId}
+            onCreate={handleCreateLocation}
+            isCreating={isLocationCreating}
+            createError={locationCreateError}
           />
           <section className={styles.section}>
             <div className={styles.sectionHeading}>

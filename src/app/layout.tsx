@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.scss";
 
 export const metadata: Metadata = {
-  title: "Home Stock",
+  title: "Banana Stock",
   description: "おうちの在庫を、かんたん・きれいに管理。",
 };
 

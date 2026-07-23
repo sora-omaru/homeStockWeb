@@ -24,7 +24,7 @@ export default function LoginPage() {
     <main className={styles.main}>
       <section className={styles.card}>
         <Link href="/" className={styles.backLink}>
-          ← Home Stock
+          ← Banana Stock
         </Link>
         <p className={styles.eyebrow}>WELCOME BACK</p>
         <h1 className={styles.title}>ログイン</h1>

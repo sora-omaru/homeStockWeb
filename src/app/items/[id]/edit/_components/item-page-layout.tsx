@@ -18,7 +18,7 @@ export function ItemPageLayout({ children }: { children: ReactNode }) {
             <span className={styles.logo}>
               <BoxIcon className={styles.logoIcon} />
             </span>
-            <span className={styles.brandName}>Home Stock</span>
+            <span className={styles.brandName}>Banana Stock</span>
           </Link>
           <span className={styles.navBadge}>ITEM DETAIL</span>
         </nav>

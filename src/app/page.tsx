@@ -8,7 +8,7 @@ export default function Home() {
       <div aria-hidden="true" className={`${styles.glow} ${styles.glowSecond}`} />
 
       <section className={styles.hero}>
-        <p className={styles.eyebrow}>HOME STOCK</p>
+        <p className={styles.eyebrow}>BANANA STOCK</p>
         <h1 className={styles.title}>
           おうちの在庫を、<br />もっと心地よく。
         </h1>

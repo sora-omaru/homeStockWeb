@@ -1,6 +1,6 @@
-$emerald-600: #059669;
-$emerald-700: #047857;
-$emerald-950: #022c22;
+$emerald-600: #7a4327;
+$emerald-700: #60351f;
+$emerald-950: #2a160f;
 
 @mixin focus-ring {
   &:focus-visible {
@@ -23,7 +23,7 @@ $emerald-950: #022c22;
   width: 20rem;
   height: 20rem;
   border-radius: 50%;
-  background: rgb(52 211 153 / 25%);
+  background: rgb(255 216 76 / 38%);
   filter: blur(64px);
   pointer-events: none;
 
@@ -37,7 +37,7 @@ $emerald-950: #022c22;
     bottom: 3rem;
     width: 24rem;
     height: 24rem;
-    background: rgb(45 212 191 / 20%);
+    background: rgb(123 67 39 / 24%);
   }
 }
 
@@ -47,10 +47,10 @@ $emerald-950: #022c22;
   max-width: 64rem;
   overflow: hidden;
   padding: 3.5rem;
-  border: 1px solid rgb(255 255 255 / 80%);
+  border: 1px solid rgb(255 245 184 / 90%);
   border-radius: 2rem;
-  background: rgb(255 255 255 / 65%);
-  box-shadow: 0 28px 80px -32px rgb(4 120 87 / 55%);
+  background: rgb(255 251 232 / 78%);
+  box-shadow: 0 28px 80px -32px rgb(91 52 30 / 55%);
   backdrop-filter: blur(24px);
 }
 
@@ -75,7 +75,7 @@ $emerald-950: #022c22;
 .description {
   max-width: 36rem;
   margin: 1.5rem 0 0;
-  color: rgb(2 44 34 / 65%);
+  color: rgb(42 22 15 / 65%);
   font-size: 1.125rem;
   line-height: 2;
 }
@@ -102,17 +102,17 @@ $emerald-950: #022c22;
 
   &Primary {
     color: white;
-    background: linear-gradient(90deg, $emerald-600, #0d9488);
-    box-shadow: 0 10px 24px -8px rgb(4 120 87 / 35%);
+    background: linear-gradient(90deg, $emerald-600, #a96032);
+    box-shadow: 0 10px 24px -8px rgb(91 52 30 / 35%);
 
     &:hover {
-      box-shadow: 0 16px 28px -10px rgb(4 120 87 / 45%);
+      box-shadow: 0 16px 28px -10px rgb(91 52 30 / 45%);
     }
   }
 
   &Secondary {
-    border: 1px solid #a7f3d0;
-    color: #065f46;
+    border: 1px solid #f5d56b;
+    color: #4a2818;
     background: rgb(255 255 255 / 70%);
 
     &:hover {

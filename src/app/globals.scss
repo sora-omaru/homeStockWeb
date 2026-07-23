@@ -1,9 +1,9 @@
-$emerald-950: #022c22;
-$emerald-700: #047857;
+$emerald-950: #2a160f;
+$emerald-700: #60351f;
 
 :root {
-  --background: #ecfdf5;
-  --foreground: #102a24;
+  --background: #fff9db;
+  --foreground: #3b261b;
   --font-sans: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
 }
 
@@ -13,7 +13,7 @@ $emerald-700: #047857;
 
 html {
   min-height: 100%;
-  background: #d1fae5;
+  background: #f3c94f;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -22,9 +22,10 @@ body {
   min-height: 100vh;
   margin: 0;
   background:
-    radial-gradient(circle at 8% 8%, rgb(167 243 208 / 80%), transparent 28rem),
-    radial-gradient(circle at 92% 65%, rgb(153 246 228 / 65%), transparent 32rem),
-    linear-gradient(135deg, #ecfdf5 0%, #d1fae5 48%, #ccfbf1 100%);
+    radial-gradient(circle at 16px 16px, rgb(91 52 30 / 5%) 0 2px, transparent 2.5px) 0 0 / 32px 32px,
+    radial-gradient(circle at 8% 8%, rgb(255 231 128 / 80%), transparent 28rem),
+    radial-gradient(circle at 92% 65%, rgb(224 176 118 / 65%), transparent 32rem),
+    linear-gradient(135deg, #fffbe8 0%, #ffe781 48%, #edbb63 100%);
   color: var(--foreground);
   font-family: var(--font-sans);
 }
@@ -46,7 +47,7 @@ a {
 }
 
 ::selection {
-  background: #6ee7b7;
+  background: #f5d56b;
   color: $emerald-950;
 }
 

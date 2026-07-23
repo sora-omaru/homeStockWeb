@@ -139,6 +139,11 @@ export default function NewItem() {
         aria-hidden="true"
         className={`${styles.glow} ${styles.glowRight}`}
       />
+      <div aria-hidden="true" className={styles.sprinkles}>
+        {Array.from({ length: 18 }, (_, index) => (
+          <span key={index} />
+        ))}
+      </div>
 
       <div className={styles.container}>
         <nav className={styles.nav} aria-label="メインナビゲーション">

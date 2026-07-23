@@ -1,11 +1,11 @@
-$emerald-100: #d1fae5;
-$emerald-500: #10b981;
-$emerald-600: #059669;
-$emerald-700: #047857;
-$emerald-800: #065f46;
-$emerald-950: #022c22;
-$slate-500: #64748b;
-$slate-800: #1e293b;
+$emerald-100: #fff1a8;
+$emerald-500: #d69e2e;
+$emerald-600: #7a4327;
+$emerald-700: #60351f;
+$emerald-800: #4a2818;
+$emerald-950: #2a160f;
+$slate-500: #806a58;
+$slate-800: #3b261b;
 
 .page {
   position: relative;
@@ -19,7 +19,7 @@ $slate-800: #1e293b;
   width: 20rem;
   height: 20rem;
   border-radius: 50%;
-  background: rgb(110 231 183 / 25%);
+  background: rgb(255 222 89 / 25%);
   filter: blur(64px);
   pointer-events: none;
 
@@ -33,7 +33,7 @@ $slate-800: #1e293b;
     right: -6rem;
     width: 24rem;
     height: 24rem;
-    background: rgb(94 234 212 / 25%);
+    background: rgb(196 125 76 / 25%);
   }
 }
 
@@ -66,7 +66,7 @@ $slate-800: #1e293b;
   border-radius: 1rem;
   color: white;
   background: $emerald-600;
-  box-shadow: 0 10px 20px -8px rgb(4 120 87 / 40%);
+  box-shadow: 0 10px 20px -8px rgb(91 52 30 / 40%);
 }
 
 .logoIcon {
@@ -81,7 +81,7 @@ $slate-800: #1e293b;
 
 .navBadge {
   padding: 0.5rem 0.875rem;
-  border: 1px solid rgb(4 120 87 / 10%);
+  border: 1px solid rgb(91 52 30 / 10%);
   border-radius: 999px;
   color: $emerald-800;
   background: rgb(255 255 255 / 55%);
@@ -117,7 +117,7 @@ $slate-800: #1e293b;
 .intro {
   max-width: 36rem;
   margin: 0.75rem 0 0;
-  color: rgb(6 78 59 / 65%);
+  color: rgb(75 43 27 / 65%);
   font-size: 1rem;
   line-height: 1.5rem;
 }
@@ -170,7 +170,7 @@ $slate-800: #1e293b;
 .skeletonPanel,
 .skeletonLine {
   border-radius: 1rem;
-  background: rgb(209 250 229 / 75%);
+  background: rgb(255 241 168 / 75%);
 }
 
 .skeletonTitle {
@@ -195,13 +195,13 @@ $slate-800: #1e293b;
   border: 1px solid rgb(255 255 255 / 80%);
   border-radius: 1.5rem;
   background: rgb(255 255 255 / 80%);
-  box-shadow: 0 20px 40px -30px rgb(2 44 34 / 30%);
+  box-shadow: 0 20px 40px -30px rgb(42 22 15 / 30%);
   text-align: center;
   backdrop-filter: blur(8px);
 
   &Empty {
     border-style: dashed;
-    border-color: #6ee7b7;
+    border-color: #e9bd3e;
     background: rgb(255 255 255 / 55%);
     box-shadow: none;
   }
@@ -246,7 +246,7 @@ $slate-800: #1e293b;
   border-radius: 999px;
   color: white;
   background: $emerald-600;
-  box-shadow: 0 10px 20px -8px rgb(5 150 105 / 45%);
+  box-shadow: 0 10px 20px -8px rgb(122 67 39 / 45%);
   font-size: 0.875rem;
   font-weight: 700;
   cursor: pointer;

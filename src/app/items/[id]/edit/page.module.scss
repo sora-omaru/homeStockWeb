@@ -1,12 +1,12 @@
-$emerald-100: #d1fae5;
-$emerald-200: #a7f3d0;
-$emerald-500: #10b981;
-$emerald-600: #059669;
-$emerald-700: #047857;
-$emerald-800: #065f46;
-$emerald-950: #022c22;
-$slate-500: #64748b;
-$slate-800: #1e293b;
+$emerald-100: #fff1a8;
+$emerald-200: #f5d56b;
+$emerald-500: #d69e2e;
+$emerald-600: #7a4327;
+$emerald-700: #60351f;
+$emerald-800: #4a2818;
+$emerald-950: #2a160f;
+$slate-500: #806a58;
+$slate-800: #3b261b;
 
 .page {
   position: relative;
@@ -24,7 +24,7 @@ $slate-800: #1e293b;
   width: 20rem;
   height: 20rem;
   border-radius: 50%;
-  background: rgb(110 231 183 / 25%);
+  background: rgb(255 222 89 / 25%);
   filter: blur(64px);
   pointer-events: none;
 }
@@ -37,7 +37,7 @@ $slate-800: #1e293b;
   bottom: 5%;
   width: 24rem;
   height: 24rem;
-  background: rgb(94 234 212 / 25%);
+  background: rgb(196 125 76 / 25%);
 }
 .nav {
   display: flex;
@@ -59,7 +59,7 @@ $slate-800: #1e293b;
   border-radius: 1rem;
   color: white;
   background: $emerald-600;
-  box-shadow: 0 10px 20px -8px rgb(4 120 87 / 40%);
+  box-shadow: 0 10px 20px -8px rgb(91 52 30 / 40%);
 }
 .logoIcon {
   width: 1.25rem;
@@ -71,7 +71,7 @@ $slate-800: #1e293b;
 }
 .navBadge {
   padding: 0.5rem 0.875rem;
-  border: 1px solid rgb(4 120 87 / 10%);
+  border: 1px solid rgb(91 52 30 / 10%);
   border-radius: 999px;
   color: $emerald-800;
   background: rgb(255 255 255 / 55%);
@@ -103,7 +103,7 @@ $slate-800: #1e293b;
   border: 1px solid rgb(255 255 255 / 80%);
   border-radius: 1.75rem;
   background: rgb(255 255 255 / 88%);
-  box-shadow: 0 24px 60px -32px rgb(4 120 87 / 55%);
+  box-shadow: 0 24px 60px -32px rgb(91 52 30 / 55%);
   backdrop-filter: blur(10px);
 }
 .card {
@@ -137,7 +137,7 @@ $slate-800: #1e293b;
   border: 1px solid $emerald-200;
   border-radius: 1.15rem;
   color: $emerald-700;
-  background: linear-gradient(135deg, $emerald-100, #f0fdfa);
+  background: linear-gradient(135deg, $emerald-100, #fff8dc);
 }
 .itemIcon svg {
   width: 1.75rem;
@@ -183,7 +183,7 @@ $slate-800: #1e293b;
   border-color: $emerald-500;
   outline: 0;
   background: white;
-  box-shadow: 0 0 0 3px rgb(16 185 129 / 15%);
+  box-shadow: 0 0 0 3px rgb(214 158 46 / 15%);
 }
 .title {
   overflow-wrap: anywhere;
@@ -223,7 +223,7 @@ $slate-800: #1e293b;
   padding: 1.25rem 1.5rem;
   border: 1px solid $emerald-100;
   border-radius: 1.25rem;
-  background: rgb(236 253 245 / 80%);
+  background: rgb(255 249 219 / 80%);
 }
 .stockField {
   min-width: 0;
@@ -274,7 +274,7 @@ $slate-800: #1e293b;
   border-color: $emerald-500;
   outline: 0;
   background: white;
-  box-shadow: 0 0 0 3px rgb(16 185 129 / 15%);
+  box-shadow: 0 0 0 3px rgb(214 158 46 / 15%);
 }
 .minimumQuantity {
   color: $slate-800;
@@ -326,7 +326,7 @@ $slate-800: #1e293b;
 .formControl:focus {
   border-color: $emerald-500;
   outline: 0;
-  box-shadow: 0 0 0 3px rgb(16 185 129 / 15%);
+  box-shadow: 0 0 0 3px rgb(214 158 46 / 15%);
 }
 .formControl::placeholder {
   color: $slate-500;
@@ -416,16 +416,16 @@ $slate-800: #1e293b;
   border: 1px solid $emerald-600;
   color: white;
   background: $emerald-600;
-  box-shadow: 0 10px 20px -8px rgb(5 150 105 / 50%);
+  box-shadow: 0 10px 20px -8px rgb(122 67 39 / 50%);
 }
 .submitButton:hover:not(:disabled) {
   transform: translateY(-1px);
   background: $emerald-700;
-  box-shadow: 0 14px 24px -10px rgb(5 150 105 / 55%);
+  box-shadow: 0 14px 24px -10px rgb(122 67 39 / 55%);
 }
 .submitButton:focus-visible,
 .cancelButton:focus-visible {
-  outline: 3px solid rgb(16 185 129 / 25%);
+  outline: 3px solid rgb(214 158 46 / 25%);
   outline-offset: 2px;
 }
 .submitButton:disabled {
@@ -467,7 +467,7 @@ $slate-800: #1e293b;
   border-radius: 999px;
   color: white;
   background: $emerald-600;
-  box-shadow: 0 10px 20px -8px rgb(5 150 105 / 45%);
+  box-shadow: 0 10px 20px -8px rgb(122 67 39 / 45%);
   font-weight: 700;
   cursor: pointer;
   transition:
@@ -486,7 +486,7 @@ $slate-800: #1e293b;
 .skeletonStock,
 .skeletonGrid {
   border-radius: 1rem;
-  background: rgb(209 250 229 / 75%);
+  background: rgb(255 241 168 / 75%);
 }
 .skeletonHeading {
   width: 58%;

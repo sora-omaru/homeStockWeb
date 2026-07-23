@@ -173,14 +173,27 @@ $slate-800: #3b261b;
 
 .menuAddLink {
   display: flex;
+  width: 100%;
   align-items: center;
   gap: 0.35rem;
   margin-top: 0.35rem;
   padding: 0.7rem 0.75rem;
+  border: 0;
   border-top: 1px solid $emerald-100;
+  border-radius: 0 0 0.6rem 0.6rem;
   color: $emerald-700;
+  background: transparent;
+  font-family: inherit;
   font-size: 0.8rem;
   font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  transition: color 160ms ease, background 160ms ease;
+
+  span {
+    font-size: 1rem;
+    line-height: 1;
+  }
 
   &:hover {
     color: $emerald-800;
@@ -237,7 +250,8 @@ $slate-800: #3b261b;
 
 @media (prefers-reduced-motion: reduce) {
   .trigger,
-  .trigger svg {
+  .trigger svg,
+  .menuAddLink {
     transition: none;
   }
 

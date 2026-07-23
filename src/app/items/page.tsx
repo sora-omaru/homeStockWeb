@@ -93,12 +93,18 @@ export default function ItemsPage() {
               おうちにあるものを、すっきり見やすく。今の在庫をひと目で確認できます。
             </p>
           </div>
-          {!isLoading && !errorMessage && (
-            <div className={styles.count}>
-              <span className={styles.countNumber}>{items.length}</span>
-              <span>アイテム</span>
-            </div>
-          )}
+          <div className={styles.headerActions}>
+            {!isLoading && !errorMessage && (
+              <div className={styles.count}>
+                <span className={styles.countNumber}>{items.length}</span>
+                <span>アイテム</span>
+              </div>
+            )}
+            <Link href="/items/new" className={styles.addButton}>
+              <span aria-hidden="true">＋</span>
+              Itemを追加
+            </Link>
+          </div>
         </header>
 
         {isLoading ? (
@@ -131,6 +137,9 @@ export default function ItemsPage() {
             <p className={styles.stateText}>
               登録すると、ここにカードで表示されます。
             </p>
+            <Link href="/items/new" className={styles.emptyAddButton}>
+              最初のItemを登録
+            </Link>
           </section>
         ) : (
           <section className={styles.grid} aria-label="Item一覧">

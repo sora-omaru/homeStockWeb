@@ -6,6 +6,7 @@ import { ItemResponse } from "@/types/item";
 import { LocationResponseDto } from "@/types/location/location";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import ItemQuickModal from "../component/itemQuickCreateModal";
 import ItemCard from "./itemsCard";
 import styles from "./page.module.scss";
 
@@ -33,6 +34,18 @@ export default function ItemsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [locations, setLocations] = useState<LocationResponseDto[]>([]);
+  const [selectedLocation, setSelectedLocation] =
+    useState<LocationResponseDto | null>(null);
+  const [isQuickCreateModalOpen, setIsQuickCreateModalOpen] = useState(false);
+
+  function openQuickCreateModal(location: LocationResponseDto | null) {
+    setSelectedLocation(location);
+    setIsQuickCreateModalOpen(true);
+  }
+
+  function closeQuickCreateModal() {
+    setIsQuickCreateModalOpen(false);
+  }
 
   async function retryPageData() {
     setIsLoading(true);
@@ -79,8 +92,7 @@ export default function ItemsPage() {
 
   const knownLocationIds = new Set(locations.map((location) => location.id));
   const locationGroups = locations.map((location) => ({
-    id: String(location.id),
-    name: location.name,
+    location,
     items: items.filter((item) => item.locationId === location.id),
   }));
   const unassignedItems = items.filter(
@@ -88,13 +100,13 @@ export default function ItemsPage() {
       item.locationId === null || !knownLocationIds.has(item.locationId),
   );
 
-  if (unassignedItems.length > 0) {
-    locationGroups.push({
-      id: "unassigned",
-      name: "保管場所 未設定",
-      items: unassignedItems,
-    });
-  }
+  // if (unassignedItems.length > 0) {
+  //   locationGroups.push({
+  //     id: "unassigned",
+  //     name: "保管場所 未設定",
+  //     items: unassignedItems,
+  //   });
+  // }
 
   return (
     <main className={styles.page}>
@@ -163,16 +175,13 @@ export default function ItemsPage() {
               もう一度試す
             </button>
           </section>
-        ) : items.length === 0 ? (
+        ) : locations.length === 0 ? (
           <section className={`${styles.state} ${styles.stateEmpty}`}>
             <BoxIcon className={styles.emptyIcon} />
-            <h2 className={styles.stateTitle}>Itemはまだありません</h2>
+            <h2 className={styles.stateTitle}>保管場所がまだありません</h2>
             <p className={styles.stateText}>
-              登録すると、ここにカードで表示されます。
+              Itemを整理する保管場所を登録してください。
             </p>
-            <Link href="/items/new" className={styles.emptyAddButton}>
-              最初のItemを登録
-            </Link>
           </section>
         ) : (
           <section
@@ -180,56 +189,104 @@ export default function ItemsPage() {
             aria-label="LocationごとのItem一覧"
           >
             {locationGroups.map((group) => (
-                <section className={styles.locationSection} key={group.id}>
-                  <header className={styles.locationHeader}>
-                    <div className={styles.locationIdentity}>
-                      <span className={styles.locationIcon} aria-hidden="true">
-                        <svg
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth="1.8"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M12 21s7-5.2 7-12a7 7 0 1 0-14 0c0 6.8 7 12 7 12Z"
-                          />
-                          <circle cx="12" cy="9" r="2.3" />
-                        </svg>
-                      </span>
-                      <div>
-                        <p className={styles.locationLabel}>STORAGE</p>
-                        <h2 className={styles.locationTitle}>{group.name}</h2>
-                      </div>
-                      <span className={styles.locationCount}>
-                        {group.items.length}
-                      </span>
+              <section
+                className={styles.locationSection}
+                key={group.location.id}
+              >
+                <header className={styles.locationHeader}>
+                  <div className={styles.locationIdentity}>
+                    <span className={styles.locationIcon} aria-hidden="true">
+                      <svg
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M12 21s7-5.2 7-12a7 7 0 1 0-14 0c0 6.8 7 12 7 12Z"
+                        />
+                        <circle cx="12" cy="9" r="2.3" />
+                      </svg>
+                    </span>
+                    <div>
+                      <p className={styles.locationLabel}>STORAGE</p>
+                      <h2 className={styles.locationTitle}>
+                        {group.location.name}
+                      </h2>
                     </div>
+                    <span className={styles.locationCount}>
+                      {group.items.length}
+                    </span>
+                  </div>
 
-                    <Link href="/items/new" className={styles.groupAddButton}>
-                      <span aria-hidden="true">＋</span>
-                      Itemを追加
-                    </Link>
-                  </header>
+                  <button
+                    type="button"
+                    className={styles.groupAddButton}
+                    onClick={() => openQuickCreateModal(group.location)}
+                  >
+                    ＋追加
+                  </button>
+                </header>
 
-                  {group.items.length === 0 ? (
-                    <div className={styles.groupEmpty}>
-                      <BoxIcon className={styles.groupEmptyIcon} />
-                      <p>この保管場所にはItemがありません。</p>
-                    </div>
-                  ) : (
-                    <div className={styles.grid}>
-                      {group.items.map((item) => (
-                        <ItemCard key={item.id} item={item} />
-                      ))}
-                    </div>
-                  )}
-                </section>
-              ))}
+                {group.items.length === 0 ? (
+                  <div className={styles.groupEmpty}>
+                    <BoxIcon className={styles.groupEmptyIcon} />
+                    <p>この保管場所にはItemがありません。</p>
+                  </div>
+                ) : (
+                  <div className={styles.grid}>
+                    {group.items.map((item) => (
+                      <ItemCard key={item.id} item={item} />
+                    ))}
+                  </div>
+                )}
+              </section>
+            ))}
           </section>
         )}
       </div>
+      {unassignedItems.length > 0 && (
+        <section className={styles.locationSection}>
+          <header className={styles.locationHeader}>
+            <div className={styles.locationIdentity}>
+              <span className={styles.locationIcon} aria-hidden="true">
+                {/* SVG */}
+              </span>
+
+              <div>
+                <p className={styles.locationLabel}>STORAGE</p>
+                <h2 className={styles.locationTitle}>保管場所 未設定</h2>
+              </div>
+
+              <span className={styles.locationCount}>
+                {unassignedItems.length}
+              </span>
+            </div>
+
+            <button
+              type="button"
+              className={styles.groupAddButton}
+              onClick={() => openQuickCreateModal(null)}
+            >
+              <span aria-hidden="true">＋</span>
+              Itemを追加
+            </button>
+          </header>
+
+          <div className={styles.grid}>
+            {unassignedItems.map((item) => (
+              <ItemCard key={item.id} item={item} />
+            ))}
+          </div>
+        </section>
+      )}
+      <ItemQuickModal
+        isOpen={isQuickCreateModalOpen}
+        location={selectedLocation}
+        onClose={closeQuickCreateModal}
+      />
     </main>
   );
 }

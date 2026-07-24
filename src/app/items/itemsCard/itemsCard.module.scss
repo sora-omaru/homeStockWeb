@@ -87,8 +87,27 @@ $slate-800: #3b261b;
 }
 
 .cardLink {
-  text-decoration: none;
-  color: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 1rem;
+  color: $emerald-700;
+  font-size: 0.8rem;
+  font-weight: 700;
+  transition: color 160ms ease;
+
+  span {
+    transition: transform 160ms ease;
+  }
+
+  &:hover {
+    color: $emerald-800;
+
+    span {
+      transform: translateX(3px);
+    }
+  }
 }
 
 .status {
@@ -99,9 +118,9 @@ $slate-800: #3b261b;
   font-weight: 700;
 
   &None {
-    border: 1px solid #fde68a;
-    color: #d8191f;
-    background: rgb(220, 231, 13);
+    border: 1px solid #fecaca;
+    color: #b91c1c;
+    background: #fee2e2;
   }
 
   &Low {
@@ -162,7 +181,7 @@ $slate-800: #3b261b;
   text-align: right;
 
   strong {
-    color: #334155;
+    color: $slate-800;
     font-variant-numeric: tabular-nums;
   }
 }
@@ -192,7 +211,7 @@ $slate-800: #3b261b;
   display: grid;
   gap: 0.625rem;
   margin-top: 1.25rem;
-  color: #475569;
+  color: $slate-500;
   font-size: 0.875rem;
 }
 
@@ -228,7 +247,9 @@ $slate-800: #3b261b;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .card {
+  .card,
+  .cardLink,
+  .cardLink span {
     transition: none;
   }
 }

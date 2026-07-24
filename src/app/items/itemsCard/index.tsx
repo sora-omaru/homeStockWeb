@@ -83,7 +83,6 @@ export default function ItemCard({ item }: { item: ItemResponse }) {
   const stockPercentage = Math.min((item.quantity / targetQuantity) * 100, 100);
 
   return (
-
       <article className={styles.card}>
         <div className={styles.cardHeader}>
           <div className={styles.itemIdentity}>
@@ -151,8 +150,10 @@ export default function ItemCard({ item }: { item: ItemResponse }) {
             </span>
           </p>
         </div>
-            <Link href={`/items/${item.id}/edit`} className={styles.cardLink}>編集する</Link>
+        <Link href={`/items/${item.id}/edit`} className={styles.cardLink}>
+          編集する
+          <span aria-hidden="true">→</span>
+        </Link>
       </article>
-
   );
 }

@@ -1,7 +1,9 @@
 "use client";
 
 import { getItems } from "@/lib/api/item";
+import { getLocations } from "@/lib/api/location/location";
 import { ItemResponse } from "@/types/item";
+import { LocationResponseDto } from "@/types/location/location";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import ItemCard from "./itemsCard";
@@ -30,17 +32,23 @@ export default function ItemsPage() {
   const [items, setItems] = useState<ItemResponse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [locations, setLocations] = useState<LocationResponseDto[]>([]);
 
-  async function retryItems() {
+  async function retryPageData() {
     setIsLoading(true);
     setErrorMessage(null);
 
     try {
-      const response = await getItems();
-      setItems(response);
+      const [itemsResponse, locationsResponse] = await Promise.all([
+        getItems(),
+        getLocations(),
+      ]);
+
+      setItems(itemsResponse);
+      setLocations(locationsResponse);
     } catch (error) {
       console.error(error);
-      setErrorMessage("Item一覧の取得に失敗しました");
+      setErrorMessage("一覧の取得に失敗しました");
     } finally {
       setIsLoading(false);
     }
@@ -49,13 +57,16 @@ export default function ItemsPage() {
   useEffect(() => {
     let isActive = true;
 
-    getItems()
-      .then((response) => {
-        if (isActive) setItems(response);
+    Promise.all([getItems(), getLocations()])
+      .then(([itemsResponse, locationResponse]) => {
+        if (!isActive) return;
+
+        setItems(itemsResponse);
+        setLocations(locationResponse);
       })
       .catch((error: unknown) => {
         console.error(error);
-        if (isActive) setErrorMessage("Item一覧の取得に失敗しました");
+        if (isActive) setErrorMessage("一覧の取得に失敗しました");
       })
       .finally(() => {
         if (isActive) setIsLoading(false);
@@ -65,6 +76,25 @@ export default function ItemsPage() {
       isActive = false;
     };
   }, []);
+
+  const knownLocationIds = new Set(locations.map((location) => location.id));
+  const locationGroups = locations.map((location) => ({
+    id: String(location.id),
+    name: location.name,
+    items: items.filter((item) => item.locationId === location.id),
+  }));
+  const unassignedItems = items.filter(
+    (item) =>
+      item.locationId === null || !knownLocationIds.has(item.locationId),
+  );
+
+  if (unassignedItems.length > 0) {
+    locationGroups.push({
+      id: "unassigned",
+      name: "保管場所 未設定",
+      items: unassignedItems,
+    });
+  }
 
   return (
     <main className={styles.page}>
@@ -126,7 +156,10 @@ export default function ItemsPage() {
             <span className={styles.errorIcon}>!</span>
             <h2 className={styles.stateTitle}>読み込めませんでした</h2>
             <p className={styles.stateText}>{errorMessage}</p>
-            <button onClick={() => void retryItems()} className={styles.retry}>
+            <button
+              onClick={() => void retryPageData()}
+              className={styles.retry}
+            >
               もう一度試す
             </button>
           </section>
@@ -142,10 +175,58 @@ export default function ItemsPage() {
             </Link>
           </section>
         ) : (
-          <section className={styles.grid} aria-label="Item一覧">
-            {items.map((item) => (
-              <ItemCard key={item.id} item={item} />
-            ))}
+          <section
+            className={styles.locationList}
+            aria-label="LocationごとのItem一覧"
+          >
+            {locationGroups.map((group) => (
+                <section className={styles.locationSection} key={group.id}>
+                  <header className={styles.locationHeader}>
+                    <div className={styles.locationIdentity}>
+                      <span className={styles.locationIcon} aria-hidden="true">
+                        <svg
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M12 21s7-5.2 7-12a7 7 0 1 0-14 0c0 6.8 7 12 7 12Z"
+                          />
+                          <circle cx="12" cy="9" r="2.3" />
+                        </svg>
+                      </span>
+                      <div>
+                        <p className={styles.locationLabel}>STORAGE</p>
+                        <h2 className={styles.locationTitle}>{group.name}</h2>
+                      </div>
+                      <span className={styles.locationCount}>
+                        {group.items.length}
+                      </span>
+                    </div>
+
+                    <Link href="/items/new" className={styles.groupAddButton}>
+                      <span aria-hidden="true">＋</span>
+                      Itemを追加
+                    </Link>
+                  </header>
+
+                  {group.items.length === 0 ? (
+                    <div className={styles.groupEmpty}>
+                      <BoxIcon className={styles.groupEmptyIcon} />
+                      <p>この保管場所にはItemがありません。</p>
+                    </div>
+                  ) : (
+                    <div className={styles.grid}>
+                      {group.items.map((item) => (
+                        <ItemCard key={item.id} item={item} />
+                      ))}
+                    </div>
+                  )}
+                </section>
+              ))}
           </section>
         )}
       </div>

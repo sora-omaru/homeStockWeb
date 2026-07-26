@@ -144,16 +144,18 @@ $muted: #806a58;
 }
 
 .content {
+  margin-top: 1rem;
+  padding: 1.25rem;
+  border: 1px solid rgb(245 213 107 / 75%);
+  border-radius: 1rem;
+  color: $muted;
+  background: rgb(255 255 255 / 58%);
+}
+
+.formHeading {
   display: flex;
   align-items: center;
   gap: 0.9rem;
-  min-height: 7rem;
-  margin-top: 1rem;
-  padding: 1.25rem;
-  border: 1px dashed $banana-200;
-  border-radius: 1rem;
-  color: $muted;
-  background: rgb(255 255 255 / 48%);
 }
 
 .contentIcon {
@@ -178,6 +180,153 @@ $muted: #806a58;
   margin: 0.3rem 0 0;
   font-size: 0.78rem;
   line-height: 1.6;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 6.5rem;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px dashed $banana-200;
+}
+
+.field {
+  min-width: 0;
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: $ink;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+}
+
+.required {
+  margin-left: 0.35rem;
+  padding: 0.15rem 0.4rem;
+  border-radius: 999px;
+  color: $chocolate-600;
+  background: $banana-100;
+  font-size: 0.62rem;
+  vertical-align: 0.08rem;
+}
+
+.input {
+  width: 100%;
+  min-height: 2.85rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid $banana-200;
+  border-radius: 0.8rem;
+  color: $ink;
+  background: rgb(255 255 255 / 90%);
+  font: inherit;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    background 160ms ease;
+
+  &::placeholder {
+    color: #a58b78;
+  }
+
+  &:hover:not(:disabled) {
+    border-color: #d69e2e;
+  }
+
+  &:focus {
+    border-color: #d69e2e;
+    outline: 0;
+    background: white;
+    box-shadow: 0 0 0 3px rgb(214 158 46 / 15%);
+  }
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: wait;
+  }
+}
+
+.quantityInput {
+  text-align: center;
+}
+
+.categoryField,
+.error,
+.actions {
+  grid-column: 1 / -1;
+}
+
+.error {
+  margin: -0.2rem 0 0;
+  padding: 0.7rem 0.8rem;
+  border-radius: 0.7rem;
+  color: #9f1d1d;
+  background: #fff1f1;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.cancelButton,
+.submitButton {
+  display: inline-flex;
+  min-height: 2.7rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1.15rem;
+  border-radius: 0.8rem;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+
+  &:focus-visible {
+    outline: 2px solid $chocolate-500;
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: wait;
+  }
+}
+
+.cancelButton {
+  border: 1px solid $banana-200;
+  color: $chocolate-700;
+  background: white;
+
+  &:hover:not(:disabled) {
+    border-color: $chocolate-500;
+    background: $banana-100;
+  }
+}
+
+.submitButton {
+  min-width: 6.5rem;
+  border: 1px solid $chocolate-500;
+  color: white;
+  background: $chocolate-500;
+  box-shadow: 0 10px 20px -9px rgb(96 53 31 / 65%);
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    background: $chocolate-600;
+    box-shadow: 0 13px 24px -10px rgb(96 53 31 / 75%);
+  }
 }
 
 @keyframes fadeIn {
@@ -212,6 +361,19 @@ $muted: #806a58;
     padding: 1.25rem;
     border-radius: 1.25rem;
   }
+
+  .content {
+    padding: 1rem;
+  }
+
+  .form {
+    grid-template-columns: minmax(0, 1fr) 5.5rem;
+  }
+
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -220,7 +382,10 @@ $muted: #806a58;
     animation: none;
   }
 
-  .closeButton {
+  .closeButton,
+  .input,
+  .cancelButton,
+  .submitButton {
     transition: none;
   }
 }

@@ -445,7 +445,7 @@ $slate-800: #3b261b;
   box-shadow: 0 18px 40px -16px rgb(42 22 15 / 55%);
   backdrop-filter: blur(8px);
   pointer-events: none;
-  animation: noticeInOut 1s ease both;
+  animation: noticeInOut 2s ease-out both;
 }
 
 .noticeIcon {
@@ -490,15 +490,15 @@ $slate-800: #3b261b;
     transform: translateY(0.65rem);
   }
 
-  15%,
-  78% {
+  10%,
+  70% {
     opacity: 1;
     transform: translateY(0);
   }
 
   100% {
     opacity: 0;
-    transform: translateY(0.35rem);
+    transform: translateY(0.25rem);
   }
 }
 

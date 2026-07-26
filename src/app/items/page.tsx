@@ -47,6 +47,11 @@ export default function ItemsPage() {
     setIsQuickCreateModalOpen(false);
   }
 
+  function handleItemCreated(item: ItemResponse) {
+    setItems((currentItems) => [...currentItems, item]);
+    setIsQuickCreateModalOpen(false);
+  }
+
   async function retryPageData() {
     setIsLoading(true);
     setErrorMessage(null);
@@ -286,6 +291,7 @@ export default function ItemsPage() {
         isOpen={isQuickCreateModalOpen}
         location={selectedLocation}
         onClose={closeQuickCreateModal}
+        onCreated={handleItemCreated}
       />
     </main>
   );

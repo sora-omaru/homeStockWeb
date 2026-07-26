@@ -10,6 +10,12 @@ import ItemQuickModal from "../component/itemQuickCreateModal";
 import ItemCard from "./itemsCard";
 import styles from "./page.module.scss";
 
+type AddedItemNotice = {
+  id: number;
+  itemName: string;
+  locationName: string;
+};
+
 function BoxIcon({ className = "" }: { className?: string }) {
   return (
     <svg
@@ -37,6 +43,8 @@ export default function ItemsPage() {
   const [selectedLocation, setSelectedLocation] =
     useState<LocationResponseDto | null>(null);
   const [isQuickCreateModalOpen, setIsQuickCreateModalOpen] = useState(false);
+  const [addedItemNotice, setAddedItemNotice] =
+    useState<AddedItemNotice | null>(null);
 
   function openQuickCreateModal(location: LocationResponseDto | null) {
     setSelectedLocation(location);
@@ -49,6 +57,11 @@ export default function ItemsPage() {
 
   function handleItemCreated(item: ItemResponse) {
     setItems((currentItems) => [...currentItems, item]);
+    setAddedItemNotice({
+      id: Date.now(),
+      itemName: item.name,
+      locationName: selectedLocation?.name ?? "保管場所 未設定",
+    });
     setIsQuickCreateModalOpen(false);
   }
 
@@ -71,6 +84,16 @@ export default function ItemsPage() {
       setIsLoading(false);
     }
   }
+  //TODO 後でコンポーネントにする
+  useEffect(() => {
+    if (!addedItemNotice) return;
+
+    const timeoutId = window.setTimeout(() => {
+      setAddedItemNotice(null);
+    }, 2000);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [addedItemNotice]);
 
   useEffect(() => {
     let isActive = true;
@@ -293,6 +316,27 @@ export default function ItemsPage() {
         onClose={closeQuickCreateModal}
         onCreated={handleItemCreated}
       />
+      {/* //TODO コンポーネントにする */}
+      {addedItemNotice && (
+        <div
+          className={styles.addedItemNotice}
+          key={addedItemNotice.id}
+          role="status"
+          aria-live="polite"
+        >
+          <span className={styles.noticeIcon} aria-hidden="true">
+            ✓
+          </span>
+          <div className={styles.noticeBody}>
+            <p className={styles.noticeTitle}>
+              「{addedItemNotice.itemName}」を追加しました
+            </p>
+            <p className={styles.noticeLocation}>
+              追加先：{addedItemNotice.locationName}
+            </p>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

@@ -428,6 +428,80 @@ $slate-800: #3b261b;
   }
 }
 
+.addedItemNotice {
+  position: fixed;
+  z-index: 90;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  display: flex;
+  width: min(calc(100vw - 3rem), 24rem);
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid rgb(245 213 107 / 85%);
+  border-radius: 1rem;
+  color: $slate-800;
+  background: rgb(255 251 234 / 96%);
+  box-shadow: 0 18px 40px -16px rgb(42 22 15 / 55%);
+  backdrop-filter: blur(8px);
+  pointer-events: none;
+  animation: noticeInOut 1s ease both;
+}
+
+.noticeIcon {
+  display: grid;
+  width: 2.2rem;
+  height: 2.2rem;
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: 0.7rem;
+  color: white;
+  background: $emerald-600;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.noticeBody {
+  min-width: 0;
+}
+
+.noticeTitle,
+.noticeLocation {
+  overflow: hidden;
+  margin: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.noticeTitle {
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.noticeLocation {
+  margin-top: 0.2rem;
+  color: $slate-500;
+  font-size: 0.72rem;
+}
+
+@keyframes noticeInOut {
+  0% {
+    opacity: 0;
+    transform: translateY(0.65rem);
+  }
+
+  15%,
+  78% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(0.35rem);
+  }
+}
+
 @keyframes pulse {
   50% { opacity: 0.55; }
 }
@@ -483,6 +557,13 @@ $slate-800: #3b261b;
   .groupAddButton {
     width: 100%;
   }
+
+  .addedItemNotice {
+    right: 1rem;
+    bottom: 1rem;
+    left: 1rem;
+    width: auto;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -497,6 +578,10 @@ $slate-800: #3b261b;
   }
 
   .skeleton {
+    animation: none;
+  }
+
+  .addedItemNotice {
     animation: none;
   }
 }

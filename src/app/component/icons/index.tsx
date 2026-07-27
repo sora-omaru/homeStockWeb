@@ -1,12 +1,16 @@
-export function BoxIcon({ className = "" }: { className?: string }) {
+import type { SVGProps } from "react";
+
+type IconProps = SVGProps<SVGSVGElement>;
+
+export function BoxIcon(props: IconProps) {
   return (
     <svg
       aria-hidden="true"
-      className={className}
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
       strokeWidth="1.8"
+      {...props}
     >
       <path
         strokeLinecap="round"
@@ -17,7 +21,7 @@ export function BoxIcon({ className = "" }: { className?: string }) {
   );
 }
 
-export function ArrowLeftIcon() {
+export function ArrowLeftIcon(props: IconProps) {
   return (
     <svg
       aria-hidden="true"
@@ -25,8 +29,24 @@ export function ArrowLeftIcon() {
       viewBox="0 0 24 24"
       stroke="currentColor"
       strokeWidth="2"
+      {...props}
     >
       <path strokeLinecap="round" strokeLinejoin="round" d="m15 18-6-6 6-6" />
+    </svg>
+  );
+}
+
+export function ChevronDownIcon(props: IconProps) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth="2"
+      {...props}
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" d="m6 9 6 6 6-6" />
     </svg>
   );
 }

@@ -1,7 +1,8 @@
+import { BoxIcon } from "@/app/component/icons";
 import type { ItemCategory } from "@/types/item-category";
 import type { ItemResponse } from "@/types/item";
-import styles from "./itemsCard.module.scss";
 import Link from "next/link";
+import styles from "./itemsCard.module.scss";
 
 const categoryLabels: Record<ItemCategory, string> = {
   FOOD: "食品",
@@ -11,24 +12,6 @@ const categoryLabels: Record<ItemCategory, string> = {
   MEDICINE: "医薬品",
   OTHER: "その他",
 };
-
-function BoxIcon() {
-  return (
-    <svg
-      aria-hidden="true"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth="1.8"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="m21 8-9 5-9-5m9 5v9m8-13.5v7a2 2 0 0 1-1 1.73l-6 3.5a2 2 0 0 1-2 0l-6-3.5A2 2 0 0 1 4 15.5v-7a2 2 0 0 1 1-1.73l6-3.5a2 2 0 0 1 2 0l6 3.5a2 2 0 0 1 1 1.73Z"
-      />
-    </svg>
-  );
-}
 
 function LocationIcon() {
   return (

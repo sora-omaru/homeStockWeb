@@ -1,8 +1,8 @@
+import { BoxIcon } from "@/app/component/icons";
 import Link from "next/link";
 import type { SubmitEvent } from "react";
 import { getStockStatus, type ItemFormValues } from "../_lib/item-form";
 import styles from "../page.module.scss";
-import { BoxIcon } from "./icons";
 import LocationSelect from "@/app/component/locationSelect";
 import { LocationResponseDto } from "@/types/location/location";
 import CategorySelect from "@/app/component/categorySelect";

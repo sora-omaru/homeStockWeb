@@ -2,8 +2,9 @@
 
 import { LocationResponseDto } from "@/types/location/location";
 import { useEffect, useRef, useState } from "react";
-import styles from "./locationSelect.module.scss";
+import { ChevronDownIcon } from "../icons";
 import { LocationCreateModal } from "../locationCreateModal";
+import styles from "./locationSelect.module.scss";
 
 type LocationSelectProps = {
   locations: LocationResponseDto[];
@@ -108,20 +109,7 @@ export default function LocationSelect({
                 ? "読み込み中..."
                 : (selectedLocation?.name ?? "保管場所を設定しない")}
             </span>
-            <svg
-              aria-hidden="true"
-              className={isOpen ? styles.chevronOpen : ""}
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m6 9 6 6 6-6"
-              />
-            </svg>
+            <ChevronDownIcon className={isOpen ? styles.chevronOpen : ""} />
           </button>
 
           {isOpen && (

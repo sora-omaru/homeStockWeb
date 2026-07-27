@@ -2,6 +2,7 @@
 
 import { ItemCategory } from "@/types/item-category";
 import { useEffect, useRef, useState } from "react";
+import { ChevronDownIcon } from "../icons";
 import styles from "./categorySelect.module.scss";
 
 type CategorySelectProps = {
@@ -68,16 +69,7 @@ export default function CategorySelect({
         <span className={selectedCategory ? "" : styles.placeholder}>
           {selectedCategory?.label ?? "選択してください"}
         </span>
-        <svg
-          aria-hidden="true"
-          className={isOpen ? styles.chevronOpen : ""}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth="2"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="m6 9 6 6 6-6" />
-        </svg>
+        <ChevronDownIcon className={isOpen ? styles.chevronOpen : ""} />
       </button>
 
       {isOpen && (

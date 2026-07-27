@@ -1,7 +1,7 @@
+import { ArrowLeftIcon, BoxIcon } from "@/app/component/icons";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import styles from "../page.module.scss";
-import { ArrowLeftIcon, BoxIcon } from "./icons";
 
 export function ItemPageLayout({ children }: { children: ReactNode }) {
   return (

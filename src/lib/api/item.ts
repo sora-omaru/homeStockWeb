@@ -34,3 +34,7 @@ export async function createItem(
     body: request,
   });
 }
+
+export async function deleteItem(itemId: number): Promise<void> {
+  await apiClient(`/api/v1/items`, { method: "DELETE" });
+}

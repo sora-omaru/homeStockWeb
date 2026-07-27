@@ -63,6 +63,11 @@ function CalendarIcon() {
     </svg>
   );
 }
+type ItemCardProps = {
+  item: ItemResponse;
+  onDelete: (item: number) => void;
+  isDeleting: boolean;
+};
 
 function formatDate(value: string) {
   const date = new Date(value);
@@ -76,84 +81,95 @@ function formatDate(value: string) {
   }).format(date);
 }
 
-export default function ItemCard({ item }: { item: ItemResponse }) {
+export default function ItemCard({
+  item,
+  onDelete,
+  isDeleting,
+}: ItemCardProps) {
   const isOutOfStock = item.quantity === 0;
   const isLowStock = item.quantity > 0 && item.quantity <= item.minQuantity;
   const targetQuantity = Math.max(item.minQuantity * 2, item.quantity, 1);
   const stockPercentage = Math.min((item.quantity / targetQuantity) * 100, 100);
 
   return (
-      <article className={styles.card}>
-        <div className={styles.cardHeader}>
-          <div className={styles.itemIdentity}>
-            <span className={styles.itemIcon}>
-              <BoxIcon />
-            </span>
-            <div className={styles.itemText}>
-              <p className={styles.category}>{categoryLabels[item.category]}</p>
-              <h2 className={styles.itemName} title={item.name}>
-                {item.name}
-              </h2>
-            </div>
-          </div>
-          <span
-            className={`${styles.status} ${
-              isOutOfStock
-                ? styles.statusNone
-                : isLowStock
-                  ? styles.statusLow
-                  : styles.statusGood
-            }`}
-          >
-            {isOutOfStock ? "在庫なし" : isLowStock ? "残りわずか" : "在庫あり"}
+    <article className={styles.card}>
+      <div className={styles.cardHeader}>
+        <div className={styles.itemIdentity}>
+          <span className={styles.itemIcon}>
+            <BoxIcon />
           </span>
+          <div className={styles.itemText}>
+            <p className={styles.category}>{categoryLabels[item.category]}</p>
+            <h2 className={styles.itemName} title={item.name}>
+              {item.name}
+            </h2>
+          </div>
         </div>
+        <span
+          className={`${styles.status} ${
+            isOutOfStock
+              ? styles.statusNone
+              : isLowStock
+                ? styles.statusLow
+                : styles.statusGood
+          }`}
+        >
+          {isOutOfStock ? "在庫なし" : isLowStock ? "残りわずか" : "在庫あり"}
+        </span>
+      </div>
 
-        <div className={styles.stockPanel}>
-          <div className={styles.stockTop}>
-            <div>
-              <p className={styles.stockLabel}>現在の在庫</p>
-              <p className={styles.quantity}>
-                {item.quantity}
-                <span className={styles.unit}>個</span>
-              </p>
-            </div>
-            <p className={styles.minimum}>
-              最低在庫 <strong>{item.minQuantity}個</strong>
+      <div className={styles.stockPanel}>
+        <div className={styles.stockTop}>
+          <div>
+            <p className={styles.stockLabel}>現在の在庫</p>
+            <p className={styles.quantity}>
+              {item.quantity}
+              <span className={styles.unit}>個</span>
             </p>
           </div>
-          <div className={styles.progress}>
-            <div
-              className={`${styles.progressBar} ${
-                isLowStock ? styles.progressBarLow : styles.progressBarGood
-              }`}
-              style={{ width: `${stockPercentage}%` }}
-            />
-          </div>
+          <p className={styles.minimum}>
+            最低在庫 <strong>{item.minQuantity}個</strong>
+          </p>
         </div>
+        <div className={styles.progress}>
+          <div
+            className={`${styles.progressBar} ${
+              isLowStock ? styles.progressBarLow : styles.progressBarGood
+            }`}
+            style={{ width: `${stockPercentage}%` }}
+          />
+        </div>
+      </div>
 
-        <div className={styles.meta}>
-          <p className={styles.metaRow}>
-            <span className={styles.metaIcon}>
-              <LocationIcon />
-            </span>
-            <span>{item.locationName ?? "保管場所 未設定"}</span>
-          </p>
-          <p className={styles.metaRow}>
-            <span className={styles.metaIcon}>
-              <CalendarIcon />
-            </span>
-            <span>
-              {item.expirationDate
-                ? `期限 ${formatDate(item.expirationDate)}`
-                : "期限 未設定"}
-            </span>
-          </p>
-        </div>
-        <Link href={`/items/${item.id}/edit`} className={styles.cardLink}>
-          編集する
-          <span aria-hidden="true">→</span>
-        </Link>
-      </article>
+      <div className={styles.meta}>
+        <p className={styles.metaRow}>
+          <span className={styles.metaIcon}>
+            <LocationIcon />
+          </span>
+          <span>{item.locationName ?? "保管場所 未設定"}</span>
+        </p>
+        <p className={styles.metaRow}>
+          <span className={styles.metaIcon}>
+            <CalendarIcon />
+          </span>
+          <span>
+            {item.expirationDate
+              ? `期限 ${formatDate(item.expirationDate)}`
+              : "期限 未設定"}
+          </span>
+        </p>
+      </div>
+      <Link href={`/items/${item.id}/edit`} className={styles.cardLink}>
+        編集する
+        <span aria-hidden="true">→</span>
+      </Link>
+      <button
+        type="button"
+        onClick={() => onDelete(item.id)}
+        disabled={isDeleting}
+      >
+        削除
+      </button>
+    </article>
   );
 }

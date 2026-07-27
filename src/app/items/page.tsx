@@ -1,6 +1,6 @@
 "use client";
 
-import { getItems } from "@/lib/api/item";
+import { deleteItem, getItems } from "@/lib/api/item";
 import { getLocations } from "@/lib/api/location/location";
 import { ItemResponse } from "@/types/item";
 import { LocationResponseDto } from "@/types/location/location";
@@ -46,6 +46,7 @@ export default function ItemsPage() {
   const [addedItemNotice, setAddedItemNotice] =
     useState<AddedItemNotice | null>(null);
 
+  const [isDeleting, setIsDeleteing] = useState<boolean>(false);
   function openQuickCreateModal(location: LocationResponseDto | null) {
     setSelectedLocation(location);
     setIsQuickCreateModalOpen(true);
@@ -63,6 +64,14 @@ export default function ItemsPage() {
       locationName: selectedLocation?.name ?? "保管場所 未設定",
     });
     setIsQuickCreateModalOpen(false);
+  }
+  async function handleDelete(itemId: number) {
+    try {
+      setIsDeleteing(true);
+      await deleteItem(itemId);
+
+      setItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
+    } catch {}
   }
 
   async function retryPageData() {
@@ -266,7 +275,12 @@ export default function ItemsPage() {
                 ) : (
                   <div className={styles.grid}>
                     {group.items.map((item) => (
-                      <ItemCard key={item.id} item={item} />
+                      <ItemCard
+                        key={item.id}
+                        item={item}
+                        onDelete={handleDelete}
+                        isDeleting={isDeleting}
+                      />
                     ))}
                   </div>
                 )}
@@ -303,7 +317,12 @@ export default function ItemsPage() {
 
                 <div className={styles.grid}>
                   {unassignedItems.map((item) => (
-                    <ItemCard key={item.id} item={item} />
+                    <ItemCard
+                      key={item.id}
+                      item={item}
+                      onDelete={handleDelete}
+                      isDeleting={isDeleting}
+                    />
                   ))}
                 </div>
               </section>

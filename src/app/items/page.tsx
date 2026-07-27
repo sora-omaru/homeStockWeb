@@ -1,11 +1,12 @@
 "use client";
 
 import { deleteItem, getItems } from "@/lib/api/item";
+import { getItemDeleteErrorMessage } from "@/lib/api/error/error-item";
 import { getLocations } from "@/lib/api/location/location";
 import { ItemResponse } from "@/types/item";
 import { LocationResponseDto } from "@/types/location/location";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ItemQuickModal from "../component/itemQuickCreateModal";
 import ItemCard from "./itemsCard";
 import styles from "./page.module.scss";
@@ -45,6 +46,8 @@ export default function ItemsPage() {
   const [isQuickCreateModalOpen, setIsQuickCreateModalOpen] = useState(false);
   const [addedItemNotice, setAddedItemNotice] =
     useState<AddedItemNotice | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const deleteErrorRef = useRef<HTMLDivElement>(null);
 
   const [isDeleting, setIsDeleteing] = useState<boolean>(false);
   function openQuickCreateModal(location: LocationResponseDto | null) {
@@ -67,11 +70,16 @@ export default function ItemsPage() {
   }
   async function handleDelete(itemId: number) {
     try {
+      setDeleteError(null);
       setIsDeleteing(true);
       await deleteItem(itemId);
 
       setItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
-    } catch {}
+    } catch (error) {
+      setDeleteError(getItemDeleteErrorMessage(error));
+    } finally {
+      setIsDeleteing(false);
+    }
   }
 
   async function retryPageData() {
@@ -103,6 +111,16 @@ export default function ItemsPage() {
 
     return () => window.clearTimeout(timeoutId);
   }, [addedItemNotice]);
+
+  useEffect(() => {
+    if (!deleteError) return;
+
+    deleteErrorRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+    deleteErrorRef.current?.focus({ preventScroll: true });
+  }, [deleteError]);
 
   useEffect(() => {
     let isActive = true;
@@ -185,6 +203,18 @@ export default function ItemsPage() {
             </Link>
           </div>
         </header>
+
+        {deleteError && (
+          <div
+            className={styles.deleteError}
+            ref={deleteErrorRef}
+            role="alert"
+            tabIndex={-1}
+          >
+            <span aria-hidden="true">!</span>
+            <p>{deleteError}</p>
+          </div>
+        )}
 
         {isLoading ? (
           <section

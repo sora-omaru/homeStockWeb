@@ -130,6 +130,36 @@ $slate-800: #3b261b;
   gap: 0.75rem;
 }
 
+.deleteError {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding: 0.875rem 1rem;
+  border: 1px solid #f5c2c7;
+  border-radius: 1rem;
+  color: #842029;
+  background: rgb(248 215 218 / 90%);
+
+  span {
+    display: grid;
+    width: 1.75rem;
+    height: 1.75rem;
+    flex-shrink: 0;
+    place-items: center;
+    border-radius: 50%;
+    color: white;
+    background: #842029;
+    font-weight: 800;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+}
+
 .count {
   display: flex;
   align-items: center;

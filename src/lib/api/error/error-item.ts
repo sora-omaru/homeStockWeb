@@ -13,3 +13,16 @@ export function getItemCreateErrorMessage(error: unknown) {
 
   return error.message || defaultCreateErrorMessage;
 }
+
+const defaultDeleteErrorMessage =
+  "商品の削除に失敗しました。時間をおいて再度お試しください。";
+
+export function getItemDeleteErrorMessage(error: unknown) {
+  if (!(error instanceof ApiError)) return defaultDeleteErrorMessage;
+
+  // if (error.code === ErrorCode.ITEM_NOT_FOUND) {
+  //   // return error.message || "商品無し。";
+  // }
+
+  return error.message || defaultDeleteErrorMessage;
+}

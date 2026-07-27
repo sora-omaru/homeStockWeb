@@ -16,3 +16,9 @@ export async function createLocation(
     body: request,
   });
 }
+
+export async function deleteLocation(locationId: number): Promise<void> {
+  return apiClient(`/api/v1/location/${locationId}`, {
+    method: "DELETE",
+  });
+}

@@ -2,7 +2,7 @@
 
 import { deleteItem, getItems } from "@/lib/api/item";
 import { getItemDeleteErrorMessage } from "@/lib/api/error/error-item";
-import { getLocations } from "@/lib/api/location/location";
+import { deleteLocation, getLocations } from "@/lib/api/location/location";
 import { ItemResponse } from "@/types/item";
 import { LocationResponseDto } from "@/types/location/location";
 import Link from "next/link";
@@ -11,6 +11,8 @@ import { BoxIcon } from "../component/icons";
 import ItemQuickModal from "../component/itemQuickCreateModal";
 import ItemCard from "./itemsCard";
 import styles from "./page.module.scss";
+import { getLocationDeleteErrorMessage } from "@/lib/api/error/error-location";
+import { groupEnd } from "console";
 
 type AddedItemNotice = {
   id: number;
@@ -59,6 +61,23 @@ export default function ItemsPage() {
       setItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
     } catch (error) {
       setDeleteError(getItemDeleteErrorMessage(error));
+    } finally {
+      setIsDeleteing(false);
+    }
+  }
+
+  async function handleLocationDelete(locationId: number) {
+    try {
+      setDeleteError(null);
+      setIsDeleteing(true);
+      await deleteLocation(locationId);
+
+      setLocations((prevLocations) =>
+        prevLocations.filter((location) => location.id !== locationId),
+      );
+    } catch (error) {
+      console.error(error);
+      setDeleteError(getLocationDeleteErrorMessage(error));
     } finally {
       setIsDeleteing(false);
     }
@@ -276,6 +295,13 @@ export default function ItemsPage() {
                     onClick={() => openQuickCreateModal(group.location)}
                   >
                     ＋追加
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.groupAddButton}
+                    onClick={() => void handleLocationDelete(group.location.id)}
+                  >
+                    保管場所の削除
                   </button>
                 </header>
 

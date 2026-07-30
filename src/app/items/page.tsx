@@ -2,7 +2,11 @@
 
 import { deleteItem, getItems } from "@/lib/api/item";
 import { getItemDeleteErrorMessage } from "@/lib/api/error/error-item";
-import { deleteLocation, getLocations } from "@/lib/api/location/location";
+import {
+  createLocation,
+  deleteLocation,
+  getLocations,
+} from "@/lib/api/location/location";
 import { ItemResponse } from "@/types/item";
 import { LocationResponseDto } from "@/types/location/location";
 import Link from "next/link";
@@ -11,7 +15,11 @@ import { BoxIcon } from "../component/icons";
 import ItemQuickModal from "../component/itemQuickCreateModal";
 import ItemCard from "./itemsCard";
 import styles from "./page.module.scss";
-import { getLocationDeleteErrorMessage } from "@/lib/api/error/error-location";
+import {
+  getLocationCreateErrorMessage,
+  getLocationDeleteErrorMessage,
+} from "@/lib/api/error/error-location";
+import { LocationCreateModal } from "../component/locationCreateModal";
 
 type AddedItemNotice = {
   id: number;
@@ -31,6 +39,12 @@ export default function ItemsPage() {
     useState<AddedItemNotice | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const deleteErrorRef = useRef<HTMLDivElement>(null);
+  const [isLocationCreateModalOpen, setIsLocationCreateModalOpen] =
+    useState(false);
+  const [isLocationCreating, setIsLocationCreating] = useState(false);
+  const [locationCreateError, setLocationCreateError] = useState<string | null>(
+    null,
+  );
 
   const [isDeleting, setIsDeleteing] = useState<boolean>(false);
   function openQuickCreateModal(location: LocationResponseDto | null) {
@@ -79,6 +93,37 @@ export default function ItemsPage() {
       setDeleteError(getLocationDeleteErrorMessage(error));
     } finally {
       setIsDeleteing(false);
+    }
+  }
+
+  function openLocationCreateModal() {
+    setLocationCreateError(null);
+    setIsLocationCreateModalOpen(true);
+  }
+
+  function closeLocationCreateModal() {
+    if (isLocationCreating) return;
+
+    setLocationCreateError(null);
+    setIsLocationCreateModalOpen(false);
+  }
+
+  async function handleLocationCreate(name: string) {
+    setLocationCreateError(null);
+    setIsLocationCreating(true);
+
+    try {
+      const createdLocation = await createLocation({ name });
+      setLocations((currentLocations) => [
+        ...currentLocations,
+        createdLocation,
+      ]);
+      setIsLocationCreateModalOpen(false);
+    } catch (error) {
+      console.error(error);
+      setLocationCreateError(getLocationCreateErrorMessage(error));
+    } finally {
+      setIsLocationCreating(false);
     }
   }
 
@@ -197,6 +242,14 @@ export default function ItemsPage() {
                 <span>アイテム</span>
               </div>
             )}
+            <button
+              type="button"
+              className={styles.locationAddButton}
+              onClick={openLocationCreateModal}
+            >
+              <span aria-hidden="true">＋</span>
+              保管場所
+            </button>
             <Link href="/items/new" className={styles.addButton}>
               <span aria-hidden="true">＋</span>
               Itemを追加
@@ -249,6 +302,14 @@ export default function ItemsPage() {
             <p className={styles.stateText}>
               Itemを整理する保管場所を登録してください。
             </p>
+            <button
+              type="button"
+              className={styles.emptyAddButton}
+              onClick={openLocationCreateModal}
+            >
+              <span aria-hidden="true">＋</span>
+              最初の保管場所を追加
+            </button>
           </section>
         ) : (
           <section
@@ -378,6 +439,13 @@ export default function ItemsPage() {
         location={selectedLocation}
         onClose={closeQuickCreateModal}
         onCreated={handleItemCreated}
+      />
+      <LocationCreateModal
+        isOpen={isLocationCreateModalOpen}
+        onClose={closeLocationCreateModal}
+        onCreate={(name) => void handleLocationCreate(name)}
+        error={locationCreateError}
+        isSubmitting={isLocationCreating}
       />
       {/* //TODO コンポーネントにする */}
       {addedItemNotice && (

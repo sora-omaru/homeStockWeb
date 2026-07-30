@@ -189,7 +189,8 @@ $slate-800: #3b261b;
 }
 
 .addButton,
-.emptyAddButton {
+.emptyAddButton,
+.locationAddButton {
   display: inline-flex;
   min-height: 3.25rem;
   align-items: center;
@@ -215,6 +216,22 @@ $slate-800: #3b261b;
     transform: translateY(-1px);
     background: $emerald-700;
     box-shadow: 0 14px 26px -11px rgb(122 67 39 / 70%);
+  }
+}
+
+.locationAddButton {
+  border-color: rgb(122 67 39 / 18%);
+  color: $emerald-800;
+  background: rgb(255 255 255 / 72%);
+  box-shadow: 0 8px 20px -14px rgb(122 67 39 / 45%);
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+
+  &:hover {
+    border-color: $emerald-200;
+    color: $emerald-950;
+    background: white;
+    box-shadow: 0 12px 24px -16px rgb(122 67 39 / 55%);
   }
 }
 
@@ -593,8 +610,13 @@ $slate-800: #3b261b;
   }
 
   .count,
-  .addButton {
+  .addButton,
+  .locationAddButton {
     flex: 1;
+  }
+
+  .count {
+    display: none;
   }
 
   .grid {
@@ -631,7 +653,8 @@ $slate-800: #3b261b;
 @media (prefers-reduced-motion: reduce) {
   .retry,
   .addButton,
-  .emptyAddButton {
+  .emptyAddButton,
+  .locationAddButton {
     transition: none;
   }
 

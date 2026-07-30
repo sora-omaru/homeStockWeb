@@ -1,6 +1,7 @@
 import {
   LocationCreateRequestDto,
   LocationResponseDto,
+  UpdateLocationRequestDto,
 } from "@/types/location/location";
 import { apiClient } from "../client";
 
@@ -20,5 +21,15 @@ export async function createLocation(
 export async function deleteLocation(locationId: number): Promise<void> {
   return apiClient(`/api/v1/locations/${locationId}`, {
     method: "DELETE",
+  });
+}
+
+export async function updateLocation(
+locationId: number,
+  request: UpdateLocationRequestDto,
+): Promise<LocationResponseDto> {
+  return apiClient(`/api/v1/locations/${locationId}`, {
+    method: "PUT",
+    body:request
   });
 }

@@ -6,3 +6,7 @@ export type LocationResponseDto = {
 export type LocationCreateRequestDto = {
   name: string;
 };
+
+export type UpdateLocationRequestDto = {
+  name: string;
+};

@@ -13,3 +13,10 @@ export type MeResponse = {
   publicId: string;
   displayName: string;
 };
+
+export type RegisterUserResponseDto = {
+  email: string;
+  password: string;
+  passwordConfirm: string;
+  displayName: string;
+};

@@ -291,12 +291,141 @@ $slate-800: #3b261b;
   letter-spacing: 0.15em;
 }
 
+.locationDetails {
+  min-width: 0;
+}
+
+.locationNameRow {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .locationTitle {
   overflow: hidden;
   margin: 0;
   color: $emerald-950;
   font-size: 1.15rem;
   text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.locationEditButton {
+  flex-shrink: 0;
+  padding: 0.2rem 0.45rem;
+  border: 0;
+  border-radius: 0.45rem;
+  color: $slate-500;
+  background: transparent;
+  font-size: 0.68rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: color 160ms ease, background 160ms ease;
+
+  &:hover:not(:disabled) {
+    color: $emerald-800;
+    background: $emerald-100;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+  }
+}
+
+.locationEdit {
+  min-width: min(30rem, 55vw);
+}
+
+.locationEditControls {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.locationEditInput {
+  width: min(18rem, 32vw);
+  min-width: 8rem;
+  height: 2.5rem;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid $emerald-200;
+  border-radius: 0.7rem;
+  color: $slate-800;
+  background: white;
+  font-size: 0.875rem;
+  font-weight: 700;
+  box-shadow: inset 0 1px 2px rgb(42 22 15 / 4%);
+
+  &:focus {
+    border-color: $emerald-600;
+    outline: 0;
+    box-shadow: 0 0 0 3px rgb(214 158 46 / 16%);
+  }
+
+  &[aria-invalid="true"] {
+    border-color: #c85c55;
+  }
+
+  &:disabled {
+    background: rgb(255 255 255 / 55%);
+  }
+}
+
+.locationSaveButton,
+.locationCancelButton {
+  min-height: 2.5rem;
+  padding: 0.5rem 0.7rem;
+  border-radius: 0.7rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+.locationSaveButton {
+  border: 1px solid $emerald-600;
+  color: white;
+  background: $emerald-600;
+
+  &:hover:not(:disabled) {
+    background: $emerald-700;
+  }
+}
+
+.locationCancelButton {
+  border: 1px solid $emerald-200;
+  color: $emerald-800;
+  background: white;
+
+  &:hover:not(:disabled) {
+    border-color: $emerald-600;
+    background: $emerald-100;
+  }
+}
+
+.locationEditError {
+  margin: 0.4rem 0 0;
+  color: #a93832;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip: rect(0 0 0 0);
   white-space: nowrap;
 }
 
@@ -633,6 +762,33 @@ $slate-800: #3b261b;
     flex-direction: column;
   }
 
+  .locationIdentity {
+    align-items: flex-start;
+  }
+
+  .locationDetails,
+  .locationEdit {
+    min-width: 0;
+  }
+
+  .locationDetails {
+    flex: 1;
+  }
+
+  .locationEditControls {
+    flex-wrap: wrap;
+  }
+
+  .locationEditInput {
+    width: 100%;
+    flex-basis: 100%;
+  }
+
+  .locationSaveButton,
+  .locationCancelButton {
+    flex: 1;
+  }
+
   .locationActions {
     width: 100%;
   }
@@ -659,7 +815,10 @@ $slate-800: #3b261b;
   }
 
   .groupAddButton,
-  .locationDeleteButton {
+  .locationDeleteButton,
+  .locationEditButton,
+  .locationSaveButton,
+  .locationCancelButton {
     transition: none;
   }
 

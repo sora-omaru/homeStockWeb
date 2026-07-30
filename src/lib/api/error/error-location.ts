@@ -26,3 +26,16 @@ export function getLocationDeleteErrorMessage(error: unknown) {
 
   return error.message || defaultDeleteErrorMessage;
 }
+
+const defaultUpdateErrorMessage =
+  "保存場所の更新に失敗しました。時間をおいて再度お試しください。";
+
+export function getLocationUpdateErrorMessage(error: unknown) {
+  if (!(error instanceof ApiError)) return defaultUpdateErrorMessage;
+
+  if (error.code === ErrorCode.LOCATION_ALREADY_EXISTS) {
+    return error.message || "この保存場所はすでに存在しています";
+  }
+
+  return error.message || defaultUpdateErrorMessage;
+}

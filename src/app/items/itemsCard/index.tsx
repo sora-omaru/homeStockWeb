@@ -142,17 +142,21 @@ export default function ItemCard({
           </span>
         </p>
       </div>
-      <Link href={`/items/${item.id}/edit`} className={styles.cardLink}>
-        編集する
-        <span aria-hidden="true">→</span>
-      </Link>
-      <button
-        type="button"
-        onClick={() => onDelete(item.id)}
-        disabled={isDeleting}
-      >
-        削除
-      </button>
+      <div className={styles.cardActions}>
+        <Link href={`/items/${item.id}/edit`} className={styles.cardLink}>
+          編集する
+          <span aria-hidden="true">→</span>
+        </Link>
+        <button
+          type="button"
+          className={styles.deleteButton}
+          onClick={() => onDelete(item.id)}
+          disabled={isDeleting}
+          aria-label={`${item.name}を削除`}
+        >
+          {isDeleting ? "処理中" : "削除"}
+        </button>
+      </div>
     </article>
   );
 }

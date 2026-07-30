@@ -86,16 +86,27 @@ $slate-800: #3b261b;
   white-space: nowrap;
 }
 
-.cardLink {
+.cardActions {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 0.5rem;
   margin-top: auto;
   padding-top: 1rem;
+  border-top: 1px solid rgb(245 213 107 / 38%);
+}
+
+.cardLink {
+  display: flex;
+  min-height: 2.5rem;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.75rem;
+  border-radius: 0.75rem;
   color: $emerald-700;
   font-size: 0.8rem;
   font-weight: 700;
-  transition: color 160ms ease;
+  transition: color 160ms ease, background 160ms ease;
 
   span {
     transition: transform 160ms ease;
@@ -103,10 +114,34 @@ $slate-800: #3b261b;
 
   &:hover {
     color: $emerald-800;
+    background: $emerald-100;
 
     span {
       transform: translateX(3px);
     }
+  }
+}
+
+.deleteButton {
+  min-height: 2.5rem;
+  padding: 0 0.75rem;
+  border: 1px solid transparent;
+  border-radius: 0.75rem;
+  color: #9f3a35;
+  background: transparent;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease;
+
+  &:hover {
+    border-color: rgb(159 58 53 / 18%);
+    background: #fff1f0;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
   }
 }
 
@@ -249,7 +284,8 @@ $slate-800: #3b261b;
 @media (prefers-reduced-motion: reduce) {
   .card,
   .cardLink,
-  .cardLink span {
+  .cardLink span,
+  .deleteButton {
     transition: none;
   }
 }

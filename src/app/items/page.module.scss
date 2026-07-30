@@ -245,6 +245,7 @@ $slate-800: #3b261b;
 .locationIdentity {
   display: flex;
   min-width: 0;
+  flex: 1;
   align-items: center;
   gap: 0.75rem;
 }
@@ -298,7 +299,15 @@ $slate-800: #3b261b;
   font-variant-numeric: tabular-nums;
 }
 
-.groupAddButton {
+.locationActions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.groupAddButton,
+.locationDeleteButton {
   display: inline-flex;
   min-height: 2.5rem;
   flex-shrink: 0;
@@ -312,12 +321,30 @@ $slate-800: #3b261b;
   background: white;
   font-size: 0.75rem;
   font-weight: 700;
+  cursor: pointer;
   transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
 
   &:hover {
     transform: translateY(-1px);
     border-color: $emerald-600;
     background: $emerald-100;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+    transform: none;
+  }
+}
+
+.locationDeleteButton {
+  border-color: transparent;
+  color: #9f3a35;
+  background: transparent;
+
+  &:hover {
+    border-color: rgb(159 58 53 / 18%);
+    background: rgb(255 241 240 / 75%);
   }
 }
 
@@ -584,8 +611,13 @@ $slate-800: #3b261b;
     flex-direction: column;
   }
 
-  .groupAddButton {
+  .locationActions {
     width: 100%;
+  }
+
+  .groupAddButton,
+  .locationDeleteButton {
+    flex: 1;
   }
 
   .addedItemNotice {
@@ -603,7 +635,8 @@ $slate-800: #3b261b;
     transition: none;
   }
 
-  .groupAddButton {
+  .groupAddButton,
+  .locationDeleteButton {
     transition: none;
   }
 

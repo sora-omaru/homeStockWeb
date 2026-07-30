@@ -12,7 +12,6 @@ import ItemQuickModal from "../component/itemQuickCreateModal";
 import ItemCard from "./itemsCard";
 import styles from "./page.module.scss";
 import { getLocationDeleteErrorMessage } from "@/lib/api/error/error-location";
-import { groupEnd } from "console";
 
 type AddedItemNotice = {
   id: number;
@@ -289,20 +288,26 @@ export default function ItemsPage() {
                     </span>
                   </div>
 
-                  <button
-                    type="button"
-                    className={styles.groupAddButton}
-                    onClick={() => openQuickCreateModal(group.location)}
-                  >
-                    ＋追加
-                  </button>
-                  <button
-                    type="button"
-                    className={styles.groupAddButton}
-                    onClick={() => void handleLocationDelete(group.location.id)}
-                  >
-                    保管場所の削除
-                  </button>
+                  <div className={styles.locationActions}>
+                    <button
+                      type="button"
+                      className={styles.groupAddButton}
+                      onClick={() => openQuickCreateModal(group.location)}
+                    >
+                      <span aria-hidden="true">＋</span>
+                      Itemを追加
+                    </button>
+                    <button
+                      type="button"
+                      className={styles.locationDeleteButton}
+                      onClick={() =>
+                        void handleLocationDelete(group.location.id)
+                      }
+                      disabled={isDeleting}
+                    >
+                      保管場所を削除
+                    </button>
+                  </div>
                 </header>
 
                 {group.items.length === 0 ? (

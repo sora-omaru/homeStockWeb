@@ -88,6 +88,47 @@ $emerald-950: #2a160f;
     background: white;
     box-shadow: 0 0 0 4px #fff1a8;
   }
+
+  &[aria-invalid="true"] {
+    border-color: #c85c55;
+    background: #fff8f7;
+  }
+
+  &:disabled {
+    cursor: wait;
+    opacity: 0.65;
+  }
+}
+
+.submitError {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid rgb(200 92 85 / 32%);
+  border-radius: 0.85rem;
+  color: #842029;
+  background: rgb(255 241 240 / 85%);
+
+  span {
+    display: grid;
+    width: 1.4rem;
+    height: 1.4rem;
+    flex-shrink: 0;
+    place-items: center;
+    border-radius: 50%;
+    color: white;
+    background: #a93832;
+    font-size: 0.7rem;
+    font-weight: 800;
+  }
+
+  p {
+    margin: 0.1rem 0 0;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.4;
+  }
 }
 
 .submit {
@@ -106,6 +147,13 @@ $emerald-950: #2a160f;
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 16px 28px -10px rgb(91 52 30 / 45%);
+  }
+
+  &:disabled {
+    cursor: wait;
+    opacity: 0.6;
+    transform: none;
+    box-shadow: none;
   }
 }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { getMe, login } from "@/lib/api/auth/auth";
+import { getLoginErrorMessage } from "@/lib/api/error/error-login";
 import Link from "next/link";
 import { FormEvent, useState } from "react";
 import styles from "./page.module.scss";
@@ -9,15 +10,26 @@ import { useRouter } from "next/navigation";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const router = useRouter();
 
   async function handleLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    await login({ email, password });
-    await getMe();
+    try {
+      setSubmitError(null);
+      setIsSubmitting(true);
 
-    router.push("/items");
+      await login({ email: email.trim(), password });
+      await getMe();
+
+      router.push("/items");
+    } catch (error) {
+      setSubmitError(getLoginErrorMessage(error));
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -30,7 +42,11 @@ export default function LoginPage() {
         <h1 className={styles.title}>ログイン</h1>
         <p className={styles.description}>おうちのストックを確認しましょう。</p>
 
-        <form className={styles.form} onSubmit={handleLogin}>
+        <form
+          className={styles.form}
+          onSubmit={handleLogin}
+          aria-busy={isSubmitting}
+        >
           <label className={styles.field}>
             メールアドレス
             <input
@@ -40,7 +56,13 @@ export default function LoginPage() {
               placeholder="name@example.com"
               autoComplete="email"
               required
-              onChange={(event) => setEmail(event.target.value)}
+              disabled={isSubmitting}
+              aria-invalid={Boolean(submitError)}
+              aria-describedby={submitError ? "login-error" : undefined}
+              onChange={(event) => {
+                setEmail(event.target.value);
+                setSubmitError(null);
+              }}
             />
           </label>
           <label className={styles.field}>
@@ -52,11 +74,29 @@ export default function LoginPage() {
               placeholder="パスワードを入力"
               autoComplete="current-password"
               required
-              onChange={(event) => setPassword(event.target.value)}
+              disabled={isSubmitting}
+              aria-invalid={Boolean(submitError)}
+              aria-describedby={submitError ? "login-error" : undefined}
+              onChange={(event) => {
+                setPassword(event.target.value);
+                setSubmitError(null);
+              }}
             />
           </label>
-          <button className={styles.submit} type="submit">
-            ログイン
+
+          {submitError && (
+            <div id="login-error" className={styles.submitError} role="alert">
+              <span aria-hidden="true">!</span>
+              <p>{submitError}</p>
+            </div>
+          )}
+
+          <button
+            className={styles.submit}
+            type="submit"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "ログイン中…" : "ログイン"}
           </button>
         </form>
         <p className={styles.registerPrompt}>

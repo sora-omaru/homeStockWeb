@@ -16,10 +16,16 @@ export default function Home() {
           食品や日用品のストックを、やさしい一覧画面でまとめて管理。買い忘れも、買いすぎも減らせます。
         </p>
         <div className={styles.actions}>
-          <Link href="/items" className={`${styles.button} ${styles.buttonPrimary}`}>
-            Item一覧を見る
+          <Link
+            href="/register"
+            className={`${styles.button} ${styles.buttonPrimary}`}
+          >
+            アカウントを作成
           </Link>
-          <Link href="/login" className={`${styles.button} ${styles.buttonSecondary}`}>
+          <Link
+            href="/login"
+            className={`${styles.button} ${styles.buttonSecondary}`}
+          >
             ログイン
           </Link>
         </div>

@@ -59,6 +59,10 @@ export default function LoginPage() {
             ログイン
           </button>
         </form>
+        <p className={styles.registerPrompt}>
+          はじめてご利用ですか？
+          <Link href="/register">アカウントを作成</Link>
+        </p>
       </section>
     </main>
   );

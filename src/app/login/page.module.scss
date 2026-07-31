@@ -109,6 +109,25 @@ $emerald-950: #2a160f;
   }
 }
 
+.registerPrompt {
+  margin: 1.5rem 0 0;
+  color: #806a58;
+  font-size: 0.78rem;
+  text-align: center;
+
+  a {
+    margin-left: 0.4rem;
+    color: $emerald-700;
+    font-weight: 800;
+
+    &:hover {
+      color: $emerald-950;
+      text-decoration: underline;
+      text-underline-offset: 0.2rem;
+    }
+  }
+}
+
 @media (max-width: 479px) {
   .card {
     padding: 1.75rem;

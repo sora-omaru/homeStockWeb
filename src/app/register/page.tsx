@@ -1,8 +1,7 @@
 "use client";
 
 import { getMe, register } from "@/lib/api/auth/auth";
-import { ApiError } from "@/lib/api/error/api-error";
-import { ErrorCode } from "@/lib/api/error/errocode";
+import { getRegisterErrorDetails } from "@/lib/api/error/error-register";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
@@ -71,32 +70,16 @@ export default function RegisterPage() {
       //登録APIで認証Cookieも設定されるため、そのままItem一覧へ移動する
       router.replace("/items");
     } catch (error) {
-      if (error instanceof ApiError) {
-        if (error.code === ErrorCode.EMAIL_ALREADY_EXISTS) {
-          setFieldErrors({
-            email:
-              error.message || "このメールアドレスは既に登録されています。",
-          });
-          return;
-        }
+      const registerError = getRegisterErrorDetails(error);
 
-        if (error.code === ErrorCode.PASSWORD_MISMATCH) {
-          setFieldErrors({
-            passwordConfirm:
-              error.message || "確認用パスワードが一致しません。",
-          });
-          return;
-        }
-
-        setSubmitError(
-          error.message || "アカウント登録に失敗しました。再度お試しください。",
-        );
+      if (registerError.field) {
+        setFieldErrors({
+          [registerError.field]: registerError.message,
+        });
         return;
       }
 
-      setSubmitError(
-        "通信中にエラーが発生しました。時間をおいて再度お試しください。",
-      );
+      setSubmitError(registerError.message);
     } finally {
       setIsSubmitting(false);
     }

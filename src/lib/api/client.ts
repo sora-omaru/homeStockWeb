@@ -1,4 +1,3 @@
-import { env } from "@/lib/env";
 import { ApiError, ApiErrorResponse } from "./error/api-error";
 
 type ApiClientOptions = {
@@ -11,9 +10,9 @@ export async function apiClient<TResponse>(
   path: string,
   options: ApiClientOptions = {},
 ): Promise<TResponse> {
-  const response = await fetch(`${env.apiBaseUrl}${path}`, {
+  const response = await fetch(path, {
     method: options.method ?? "GET",
-    //これのおかげでaccess_token(CookieName)が自動で送られる
+    //同一オリジンのNext.jsプロキシへCookieを含めてリクエストする
     credentials: "include",
     headers: {
       "Content-Type": "application/json",

@@ -1,5 +1,17 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Environment variables
+
+The browser sends API requests to the same-origin `/api/v1/*` path. Next.js
+proxies those requests to the backend configured below:
+
+```bash
+API_SERVER_URL=http://localhost:8080
+```
+
+Set `API_SERVER_URL` to the public backend URL in the production environment.
+Do not include `/api/v1` or a trailing slash.
+
 ## Getting Started
 
 First, run the development server:

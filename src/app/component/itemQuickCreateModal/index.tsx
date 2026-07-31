@@ -148,9 +148,14 @@ export default function ItemQuickModal({
                 min={0}
                 step={1}
                 value={quantity}
-                onChange={(e) =>
-                  setQuantity(Math.max(0, Number(e.target.value)))
-                }
+                onFocus={(event) => event.currentTarget.select()}
+                onChange={(event) => {
+                  const normalizedValue = event.target.value.replace(
+                    /^0+(?=\d)/,
+                    "",
+                  );
+                  setQuantity(Math.max(0, Number(normalizedValue)));
+                }}
                 disabled={isSubmitting}
               />
             </div>

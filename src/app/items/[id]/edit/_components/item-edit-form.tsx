@@ -105,9 +105,14 @@ export function ItemEditForm({
               min="0"
               value={values.quantity}
               required
-              onChange={(event) =>
-                onChange("quantity", Number(event.target.value))
-              }
+              onFocus={(event) => event.currentTarget.select()}
+              onChange={(event) => {
+                const normalizedValue = event.target.value.replace(
+                  /^0+(?=\d)/,
+                  "",
+                );
+                onChange("quantity", Number(normalizedValue));
+              }}
             />
             <span>個</span>
           </div>
@@ -124,9 +129,14 @@ export function ItemEditForm({
               min="0"
               value={values.minQuantity}
               required
-              onChange={(event) =>
-                onChange("minQuantity", Number(event.target.value))
-              }
+              onFocus={(event) => event.currentTarget.select()}
+              onChange={(event) => {
+                const normalizedValue = event.target.value.replace(
+                  /^0+(?=\d)/,
+                  "",
+                );
+                onChange("minQuantity", Number(normalizedValue));
+              }}
             />
             <span>個</span>
           </div>

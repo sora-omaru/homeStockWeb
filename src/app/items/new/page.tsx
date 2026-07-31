@@ -244,9 +244,14 @@ export default function NewItem() {
                     value={quantity}
                     min={1}
                     required
-                    onChange={(event) =>
-                      setQuantity(Number(event.target.value))
-                    }
+                    onFocus={(event) => event.currentTarget.select()}
+                    onChange={(event) => {
+                      const normalizedValue = event.target.value.replace(
+                        /^0+(?=\d)/,
+                        "",
+                      );
+                      setQuantity(Number(normalizedValue));
+                    }}
                   />
                   <span>個</span>
                 </div>
@@ -260,9 +265,14 @@ export default function NewItem() {
                     value={minQuantity}
                     min={0}
                     required
-                    onChange={(event) =>
-                      setMinQuantity(Number(event.target.value))
-                    }
+                    onFocus={(event) => event.currentTarget.select()}
+                    onChange={(event) => {
+                      const normalizedValue = event.target.value.replace(
+                        /^0+(?=\d)/,
+                        "",
+                      );
+                      setMinQuantity(Number(normalizedValue));
+                    }}
                   />
                   <span>個</span>
                 </div>

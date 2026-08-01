@@ -13,6 +13,7 @@ import { getLocationCreateErrorMessage } from "@/lib/api/error/error-location";
 import LocationSelect from "@/app/component/locationSelect";
 import CategorySelect from "@/app/component/categorySelect";
 import { ArrowLeftIcon, BoxIcon } from "@/app/component/icons";
+import { parseQuantityInput } from "@/lib/quantity-input";
 
 export default function NewItem() {
   const [name, setName] = useState("");
@@ -240,18 +241,14 @@ export default function NewItem() {
                 <div className={styles.numberControl}>
                   <input
                     id="quantity"
-                    type="number"
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     value={quantity}
-                    min={1}
                     required
-                    onFocus={(event) => event.currentTarget.select()}
-                    onChange={(event) => {
-                      const normalizedValue = event.target.value.replace(
-                        /^0+(?=\d)/,
-                        "",
-                      );
-                      setQuantity(Number(normalizedValue));
-                    }}
+                    onChange={(event) =>
+                      setQuantity(parseQuantityInput(event.target.value))
+                    }
                   />
                   <span>個</span>
                 </div>
@@ -261,18 +258,14 @@ export default function NewItem() {
                 <div className={styles.numberControl}>
                   <input
                     id="min-quantity"
-                    type="number"
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     value={minQuantity}
-                    min={0}
                     required
-                    onFocus={(event) => event.currentTarget.select()}
-                    onChange={(event) => {
-                      const normalizedValue = event.target.value.replace(
-                        /^0+(?=\d)/,
-                        "",
-                      );
-                      setMinQuantity(Number(normalizedValue));
-                    }}
+                    onChange={(event) =>
+                      setMinQuantity(parseQuantityInput(event.target.value))
+                    }
                   />
                   <span>個</span>
                 </div>

@@ -6,6 +6,7 @@ import styles from "../page.module.scss";
 import LocationSelect from "@/app/component/locationSelect";
 import { LocationResponseDto } from "@/types/location/location";
 import CategorySelect from "@/app/component/categorySelect";
+import { parseQuantityInput } from "@/lib/quantity-input";
 
 type ItemEditFormProps = {
   values: ItemFormValues;
@@ -101,18 +102,14 @@ export function ItemEditForm({
             <input
               id="quantity"
               className={styles.quantity}
-              type="number"
-              min="0"
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
               value={values.quantity}
               required
-              onFocus={(event) => event.currentTarget.select()}
-              onChange={(event) => {
-                const normalizedValue = event.target.value.replace(
-                  /^0+(?=\d)/,
-                  "",
-                );
-                onChange("quantity", Number(normalizedValue));
-              }}
+              onChange={(event) =>
+                onChange("quantity", parseQuantityInput(event.target.value))
+              }
             />
             <span>個</span>
           </div>
@@ -125,18 +122,17 @@ export function ItemEditForm({
             <input
               id="minQuantity"
               className={`${styles.quantity} ${styles.minimumQuantity}`}
-              type="number"
-              min="0"
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
               value={values.minQuantity}
               required
-              onFocus={(event) => event.currentTarget.select()}
-              onChange={(event) => {
-                const normalizedValue = event.target.value.replace(
-                  /^0+(?=\d)/,
-                  "",
-                );
-                onChange("minQuantity", Number(normalizedValue));
-              }}
+              onChange={(event) =>
+                onChange(
+                  "minQuantity",
+                  parseQuantityInput(event.target.value),
+                )
+              }
             />
             <span>個</span>
           </div>

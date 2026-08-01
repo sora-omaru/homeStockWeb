@@ -9,6 +9,7 @@ import CategorySelect from "../categorySelect";
 import { createItem } from "@/lib/api/item";
 import { getItemCreateErrorMessage } from "@/lib/api/error/error-item";
 import { ItemResponse } from "@/types/item";
+import { parseQuantityInput } from "@/lib/quantity-input";
 
 type ItemQuickModalProps = {
   isOpen: boolean;
@@ -144,18 +145,13 @@ export default function ItemQuickModal({
               <input
                 className={`${styles.input} ${styles.quantityInput}`}
                 id="quick-item-quantity"
-                type="number"
-                min={0}
-                step={1}
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 value={quantity}
-                onFocus={(event) => event.currentTarget.select()}
-                onChange={(event) => {
-                  const normalizedValue = event.target.value.replace(
-                    /^0+(?=\d)/,
-                    "",
-                  );
-                  setQuantity(Math.max(0, Number(normalizedValue)));
-                }}
+                onChange={(event) =>
+                  setQuantity(parseQuantityInput(event.target.value))
+                }
                 disabled={isSubmitting}
               />
             </div>

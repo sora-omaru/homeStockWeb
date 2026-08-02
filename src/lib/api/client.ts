@@ -1,7 +1,7 @@
 import { ApiError, ApiErrorResponse } from "./error/api-error";
 
 type ApiClientOptions = {
-  method?: "GET" | "POST" | "PUT" | "DELETE";
+  method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
   body?: unknown;
   signal?: AbortSignal;
 };

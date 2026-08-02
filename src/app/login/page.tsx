@@ -26,8 +26,6 @@ export default function LoginPage() {
 
       router.push("/items");
     } catch (error) {
-      //TODO 原因調査が完了したら一時デバッグログを削除する
-      console.error("ログイン処理に失敗しました", error);
       setSubmitError(getLoginErrorMessage(error));
     } finally {
       setIsSubmitting(false);

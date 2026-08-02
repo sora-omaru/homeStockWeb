@@ -26,3 +26,12 @@ export function getItemDeleteErrorMessage(error: unknown) {
 
   return error.message || defaultDeleteErrorMessage;
 }
+
+const defaultQuantityUpdateErrorMessage =
+  "数量の更新に失敗しました。時間をおいて再度お試しください。";
+
+export function getItemQuantityUpdateErrorMessage(error: unknown) {
+  if (!(error instanceof ApiError)) return defaultQuantityUpdateErrorMessage;
+
+  return error.message || defaultQuantityUpdateErrorMessage;
+}

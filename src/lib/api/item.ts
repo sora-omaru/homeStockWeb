@@ -44,7 +44,7 @@ export async function updateItemQuantity(
   itemId: number,
   request: UpdateItemQuantity,
 ): Promise<void> {
-  return apiClient<void>(`/items/${itemId}/quantity`, {
+  return apiClient<void>(`/api/v1/items/${itemId}/quantity`, {
     method: "PATCH",
     body: request,
   });

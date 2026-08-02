@@ -1,7 +1,10 @@
 "use client";
 
-import { deleteItem, getItems } from "@/lib/api/item";
-import { getItemDeleteErrorMessage } from "@/lib/api/error/error-item";
+import { deleteItem, getItems, updateItemQuantity } from "@/lib/api/item";
+import {
+  getItemDeleteErrorMessage,
+  getItemQuantityUpdateErrorMessage,
+} from "@/lib/api/error/error-item";
 import {
   createLocation,
   deleteLocation,
@@ -35,6 +38,15 @@ export default function ItemsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [locations, setLocations] = useState<LocationResponseDto[]>([]);
+
+  //どのitemの数量を更新しているかを管理する状態
+  const [updatingQuantityItemId, setUpdatingQuantityItemId] = useState<
+    number | null
+  >(null);
+  const [quantityUpdateError, setQuantityUpdateError] = useState<{
+    itemId: number;
+    message: string;
+  } | null>(null);
 
   //一覧からItemを追加する際に、追加先のLocationをモーダルへ渡す
   const [selectedLocation, setSelectedLocation] =
@@ -104,6 +116,29 @@ export default function ItemsPage() {
       setLocationUpdateError(getLocationUpdateErrorMessage(error));
     } finally {
       setIsLocationUpdating(false);
+    }
+  }
+  //入力値を検証し数量のみを変更する
+  async function handleQuantityChange(itemId: number, newQuantity: number) {
+    if (newQuantity < 0 || updatingQuantityItemId !== null) return;
+
+    try {
+      setQuantityUpdateError(null);
+      setUpdatingQuantityItemId(itemId);
+      await updateItemQuantity(itemId, { quantity: newQuantity });
+
+      setItems((prevItems) =>
+        prevItems.map((item) =>
+          item.id === itemId ? { ...item, quantity: newQuantity } : item,
+        ),
+      );
+    } catch (error) {
+      setQuantityUpdateError({
+        itemId,
+        message: getItemQuantityUpdateErrorMessage(error),
+      });
+    } finally {
+      setUpdatingQuantityItemId(null);
     }
   }
 
@@ -507,8 +542,7 @@ export default function ItemsPage() {
                             className={styles.locationEditButton}
                             onClick={() => startLocationEdit(group.location)}
                             disabled={
-                              isLocationUpdating ||
-                              editingLocationId !== null
+                              isLocationUpdating || editingLocationId !== null
                             }
                             aria-label={`${group.location.name}の名前を編集`}
                           >
@@ -557,6 +591,18 @@ export default function ItemsPage() {
                         item={item}
                         onDelete={handleDelete}
                         isDeleting={isDeleting}
+                        onQuantityChange={handleQuantityChange}
+                        isQuantityUpdating={
+                          updatingQuantityItemId === item.id
+                        }
+                        isQuantityUpdateDisabled={
+                          updatingQuantityItemId !== null
+                        }
+                        quantityUpdateError={
+                          quantityUpdateError?.itemId === item.id
+                            ? quantityUpdateError.message
+                            : null
+                        }
                       />
                     ))}
                   </div>
@@ -600,6 +646,16 @@ export default function ItemsPage() {
                       item={item}
                       onDelete={handleDelete}
                       isDeleting={isDeleting}
+                      onQuantityChange={handleQuantityChange}
+                      isQuantityUpdating={updatingQuantityItemId === item.id}
+                      isQuantityUpdateDisabled={
+                        updatingQuantityItemId !== null
+                      }
+                      quantityUpdateError={
+                        quantityUpdateError?.itemId === item.id
+                          ? quantityUpdateError.message
+                          : null
+                      }
                     />
                   ))}
                 </div>

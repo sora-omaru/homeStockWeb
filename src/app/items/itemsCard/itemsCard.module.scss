@@ -193,12 +193,52 @@ $slate-800: #3b261b;
 }
 
 .quantity {
-  margin: 0.125rem 0 0;
+  min-width: 3.75rem;
+  margin: 0;
   color: $emerald-800;
-  font-size: 1.875rem;
+  font-size: 1.65rem;
   font-weight: 800;
   letter-spacing: -0.025em;
+  text-align: center;
   font-variant-numeric: tabular-nums;
+}
+
+.quantityControl {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.3rem;
+}
+
+.quantityButton {
+  display: grid;
+  width: 2.15rem;
+  height: 2.15rem;
+  flex-shrink: 0;
+  place-items: center;
+  border: 1px solid $emerald-200;
+  border-radius: 0.7rem;
+  color: $emerald-800;
+  background: white;
+  font-size: 1.05rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    border-color: $emerald-600;
+    background: $emerald-100;
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
 }
 
 .unit {
@@ -219,6 +259,18 @@ $slate-800: #3b261b;
     color: $slate-800;
     font-variant-numeric: tabular-nums;
   }
+}
+
+.quantityMessage {
+  min-height: 1rem;
+  margin-top: 0.4rem;
+  color: $slate-500;
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+
+.quantityError {
+  color: #a93832;
 }
 
 .progress {
@@ -285,7 +337,8 @@ $slate-800: #3b261b;
   .card,
   .cardLink,
   .cardLink span,
-  .deleteButton {
+  .deleteButton,
+  .quantityButton {
     transition: none;
   }
 }

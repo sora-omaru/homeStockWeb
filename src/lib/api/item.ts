@@ -1,6 +1,7 @@
 import {
   ItemCreateRequest,
   ItemResponse,
+  UpdateItemQuantity,
   UpdateItemRequest,
 } from "@/types/item";
 import { apiClient } from "./client";
@@ -37,4 +38,14 @@ export async function createItem(
 
 export async function deleteItem(itemId: number): Promise<void> {
   await apiClient(`/api/v1/items/${itemId}`, { method: "DELETE" });
+}
+
+export async function updateItemQuantity(
+  itemId: number,
+  request: UpdateItemQuantity,
+): Promise<void> {
+  return apiClient<void>(`/items/${itemId}/quantity`, {
+    method: "PATCH",
+    body: request,
+  });
 }

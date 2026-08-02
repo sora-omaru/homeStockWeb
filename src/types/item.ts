@@ -31,3 +31,7 @@ export type ItemCreateRequest = {
   expirationDate: string | null;
   memo: string | null;
 };
+
+export type UpdateItemQuantity = {
+  quantity: number;
+};

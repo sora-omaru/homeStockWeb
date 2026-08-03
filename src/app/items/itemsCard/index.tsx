@@ -50,7 +50,7 @@ type ItemCardProps = {
   item: ItemResponse;
   onDelete: (item: number) => void;
   isDeleting: boolean;
-  onQuantityChange: (itemId: number, quantity: number) => Promise<void>;
+  onQuantityChange: (itemId: number, quantity: number) => void;
   isQuantityUpdating: boolean;
   isQuantityUpdateDisabled: boolean;
   quantityUpdateError: string | null;

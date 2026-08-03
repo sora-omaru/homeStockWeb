@@ -20,6 +20,80 @@ $emerald-950: #2a160f;
   backdrop-filter: blur(24px);
 }
 
+.authCheckCard {
+  display: grid;
+  justify-items: center;
+  padding-block: 3.25rem;
+  text-align: center;
+}
+
+.authCheckIcon {
+  position: relative;
+  display: grid;
+  width: 4.5rem;
+  height: 4.5rem;
+  place-items: center;
+  border: 1px solid rgb(245 213 107 / 80%);
+  border-radius: 50%;
+  background: rgb(255 249 219 / 75%);
+  box-shadow: 0 12px 30px -18px rgb(91 52 30 / 55%);
+
+  &::before,
+  span {
+    position: absolute;
+    border-radius: 50%;
+    content: "";
+  }
+
+  &::before {
+    inset: 0.75rem;
+    border: 3px solid rgb(122 67 39 / 16%);
+    border-top-color: $emerald-600;
+    animation: auth-check-spin 900ms linear infinite;
+  }
+
+  span {
+    width: 0.45rem;
+    height: 0.45rem;
+    background: $emerald-600;
+  }
+}
+
+.authCheckEyebrow {
+  margin: 1.5rem 0 0;
+  color: $emerald-600;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+}
+
+.authCheckTitle {
+  margin: 0.65rem 0 0;
+  color: $emerald-950;
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.authCheckDescription {
+  margin: 0.65rem 0 0;
+  color: #806a58;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+@keyframes auth-check-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .authCheckIcon::before {
+    animation: none;
+  }
+}
+
 .backLink {
   color: $emerald-700;
   font-size: 0.875rem;

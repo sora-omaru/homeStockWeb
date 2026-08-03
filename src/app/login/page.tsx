@@ -3,7 +3,7 @@
 import { getMe, login } from "@/lib/api/auth/auth";
 import { getLoginErrorMessage } from "@/lib/api/error/error-login";
 import Link from "next/link";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import styles from "./page.module.scss";
 import { useRouter } from "next/navigation";
 
@@ -12,7 +12,45 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const router = useRouter();
+
+  //すでにログイン済みの場合、ログイン画面をスキップする
+  useEffect(() => {
+    async function checkAuthentication() {
+      try {
+        await getMe();
+        router.replace("/items");
+      } catch {
+        setIsCheckingAuth(false);
+      }
+    }
+    checkAuthentication();
+  }, [router]);
+
+  if (isCheckingAuth) {
+    return (
+      <main className={styles.main}>
+        <section
+          className={`${styles.card} ${styles.authCheckCard}`}
+          aria-busy="true"
+        >
+          <div className={styles.authCheckIcon} aria-hidden="true">
+            <span />
+          </div>
+          <div role="status" aria-live="polite">
+            <p className={styles.authCheckEyebrow}>BANANA STOCK</p>
+            <h1 className={styles.authCheckTitle}>
+              ログイン状態を確認しています
+            </h1>
+            <p className={styles.authCheckDescription}>
+              このまま少しだけお待ちください。
+            </p>
+          </div>
+        </section>
+      </main>
+    );
+  }
 
   async function handleLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

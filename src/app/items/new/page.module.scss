@@ -286,6 +286,7 @@ $slate-800: #3b261b;
   .fieldGrid,
   .stockPanel { grid-template-columns: 1fr; }
   .fieldWide { grid-column: auto; }
+  .dateField { width: min(100%, 18rem); }
   .stockPanel { padding: 1.15rem; }
   .stockField + .stockField { padding-top: 1rem; padding-left: 0; border-top: 1px solid $emerald-200; border-left: 0; }
   .footer { align-items: stretch; flex-direction: column; padding: 1.25rem; }

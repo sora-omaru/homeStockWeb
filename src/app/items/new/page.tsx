@@ -284,7 +284,7 @@ export default function NewItem() {
             </div>
 
             <div className={styles.fieldGrid}>
-              <div className={styles.field}>
+              <div className={`${styles.field} ${styles.dateField}`}>
                 <label htmlFor="expiration-date">賞味期限・使用期限</label>
                 <input
                   id="expiration-date"

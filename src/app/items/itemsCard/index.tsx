@@ -1,7 +1,10 @@
+"use client";
+
 import { BoxIcon } from "@/app/component/icons";
 import type { ItemCategory } from "@/types/item-category";
 import type { ItemResponse } from "@/types/item";
 import Link from "next/link";
+import { useId, useState } from "react";
 import styles from "./itemsCard.module.scss";
 
 const categoryLabels: Record<ItemCategory, string> = {
@@ -77,129 +80,165 @@ export default function ItemCard({
   isQuantityUpdateDisabled,
   quantityUpdateError,
 }: ItemCardProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const contentId = useId();
   const isOutOfStock = item.quantity === 0;
   const isLowStock = item.quantity > 0 && item.quantity <= item.minQuantity;
   const targetQuantity = Math.max(item.minQuantity * 2, item.quantity, 1);
   const stockPercentage = Math.min((item.quantity / targetQuantity) * 100, 100);
 
   return (
-    <article className={styles.card}>
-      <div className={styles.cardHeader}>
-        <div className={styles.itemIdentity}>
-          <span className={styles.itemIcon}>
-            <BoxIcon />
-          </span>
-          <div className={styles.itemText}>
-            <p className={styles.category}>{categoryLabels[item.category]}</p>
-            <h2 className={styles.itemName} title={item.name}>
-              {item.name}
-            </h2>
-          </div>
-        </div>
-        <span
-          className={`${styles.status} ${
-            isOutOfStock
-              ? styles.statusNone
-              : isLowStock
-                ? styles.statusLow
-                : styles.statusGood
-          }`}
-        >
-          {isOutOfStock ? "在庫なし" : isLowStock ? "残りわずか" : "在庫あり"}
+    <article className={`${styles.card} ${isOpen ? styles.cardOpen : ""}`}>
+      <button
+        type="button"
+        className={styles.cardSummary}
+        onClick={() => setIsOpen((currentIsOpen) => !currentIsOpen)}
+        aria-expanded={isOpen}
+        aria-controls={contentId}
+      >
+        <span className={styles.summaryName} title={item.name}>
+          {item.name}
         </span>
-      </div>
+        <span className={styles.summaryQuantity}>
+          {item.quantity}<span>個</span>
+        </span>
+        <span className={styles.summaryToggle} aria-hidden="true" />
+      </button>
 
-      <div className={styles.stockPanel}>
-        <div className={styles.stockTop}>
-          <div>
-            <p className={styles.stockLabel}>現在の在庫</p>
-            <div className={styles.quantityControl}>
-              <button
-                type="button"
-                className={styles.quantityButton}
-                onClick={() =>
-                  void onQuantityChange(item.id, item.quantity - 1)
-                }
-                disabled={
-                  item.quantity === 0 ||
-                  isQuantityUpdateDisabled ||
-                  isDeleting
-                }
-                aria-label={`${item.name}の在庫を1個減らす`}
+      <div
+        id={contentId}
+        className={`${styles.expandRegion} ${
+          isOpen ? styles.expandRegionOpen : ""
+        }`}
+        aria-hidden={!isOpen}
+      >
+        <div className={styles.expandClip}>
+          <div className={styles.cardContent}>
+            <div className={styles.cardHeader}>
+              <div className={styles.itemIdentity}>
+                <span className={styles.itemIcon}>
+                  <BoxIcon />
+                </span>
+                <div className={styles.itemText}>
+                  <p className={styles.category}>
+                    {categoryLabels[item.category]}
+                  </p>
+                  <h2 className={styles.itemName} title={item.name}>
+                    {item.name}
+                  </h2>
+                </div>
+              </div>
+              <span
+                className={`${styles.status} ${
+                  isOutOfStock
+                    ? styles.statusNone
+                    : isLowStock
+                      ? styles.statusLow
+                      : styles.statusGood
+                }`}
               >
-                <span aria-hidden="true">−</span>
-              </button>
-              <p className={styles.quantity} aria-live="polite">
-                {item.quantity}
-                <span className={styles.unit}>個</span>
+                {isOutOfStock
+                  ? "在庫なし"
+                  : isLowStock
+                    ? "残りわずか"
+                    : "在庫あり"}
+              </span>
+            </div>
+
+            <div className={styles.stockPanel}>
+              <div className={styles.stockTop}>
+                <div>
+                  <p className={styles.stockLabel}>現在の在庫</p>
+                  <div className={styles.quantityControl}>
+                    <button
+                      type="button"
+                      className={styles.quantityButton}
+                      onClick={() =>
+                        void onQuantityChange(item.id, item.quantity - 1)
+                      }
+                      disabled={
+                        item.quantity === 0 ||
+                        isQuantityUpdateDisabled ||
+                        isDeleting
+                      }
+                      aria-label={`${item.name}の在庫を1個減らす`}
+                    >
+                      <span aria-hidden="true">−</span>
+                    </button>
+                    <p className={styles.quantity} aria-live="polite">
+                      {item.quantity}
+                      <span className={styles.unit}>個</span>
+                    </p>
+                    <button
+                      type="button"
+                      className={styles.quantityButton}
+                      onClick={() =>
+                        void onQuantityChange(item.id, item.quantity + 1)
+                      }
+                      disabled={isQuantityUpdateDisabled || isDeleting}
+                      aria-label={`${item.name}の在庫を1個増やす`}
+                    >
+                      <span aria-hidden="true">＋</span>
+                    </button>
+                  </div>
+                </div>
+                <p className={styles.minimum}>
+                  最低在庫 <strong>{item.minQuantity}個</strong>
+                </p>
+              </div>
+              <div className={styles.quantityMessage} aria-live="polite">
+                {isQuantityUpdating && <span>数量を更新中…</span>}
+                {quantityUpdateError && (
+                  <span className={styles.quantityError} role="alert">
+                    {quantityUpdateError}
+                  </span>
+                )}
+              </div>
+              <div className={styles.progress}>
+                <div
+                  className={`${styles.progressBar} ${
+                    isLowStock ? styles.progressBarLow : styles.progressBarGood
+                  }`}
+                  style={{ width: `${stockPercentage}%` }}
+                />
+              </div>
+            </div>
+
+            <div className={styles.meta}>
+              <p className={styles.metaRow}>
+                <span className={styles.metaIcon}>
+                  <LocationIcon />
+                </span>
+                <span>{item.locationName ?? "保管場所 未設定"}</span>
               </p>
+              <p className={styles.metaRow}>
+                <span className={styles.metaIcon}>
+                  <CalendarIcon />
+                </span>
+                <span>
+                  {item.expirationDate
+                    ? `期限 ${formatDate(item.expirationDate)}`
+                    : "期限 未設定"}
+                </span>
+              </p>
+            </div>
+            <div className={styles.cardActions}>
+              <Link href={`/items/${item.id}/edit`} className={styles.cardLink}>
+                編集する
+                <span aria-hidden="true">→</span>
+              </Link>
               <button
                 type="button"
-                className={styles.quantityButton}
-                onClick={() =>
-                  void onQuantityChange(item.id, item.quantity + 1)
-                }
-                disabled={isQuantityUpdateDisabled || isDeleting}
-                aria-label={`${item.name}の在庫を1個増やす`}
+                className={styles.deleteButton}
+                onClick={() => onDelete(item.id)}
+                disabled={isDeleting}
+                aria-label={`${item.name}を削除`}
               >
-                <span aria-hidden="true">＋</span>
+                {isDeleting ? "処理中" : "削除"}
               </button>
             </div>
           </div>
-          <p className={styles.minimum}>
-            最低在庫 <strong>{item.minQuantity}個</strong>
-          </p>
         </div>
-        <div className={styles.quantityMessage} aria-live="polite">
-          {isQuantityUpdating && <span>数量を更新中…</span>}
-          {quantityUpdateError && (
-            <span className={styles.quantityError} role="alert">
-              {quantityUpdateError}
-            </span>
-          )}
-        </div>
-        <div className={styles.progress}>
-          <div
-            className={`${styles.progressBar} ${
-              isLowStock ? styles.progressBarLow : styles.progressBarGood
-            }`}
-            style={{ width: `${stockPercentage}%` }}
-          />
-        </div>
-      </div>
-
-      <div className={styles.meta}>
-        <p className={styles.metaRow}>
-          <span className={styles.metaIcon}>
-            <LocationIcon />
-          </span>
-          <span>{item.locationName ?? "保管場所 未設定"}</span>
-        </p>
-        <p className={styles.metaRow}>
-          <span className={styles.metaIcon}>
-            <CalendarIcon />
-          </span>
-          <span>
-            {item.expirationDate
-              ? `期限 ${formatDate(item.expirationDate)}`
-              : "期限 未設定"}
-          </span>
-        </p>
-      </div>
-      <div className={styles.cardActions}>
-        <Link href={`/items/${item.id}/edit`} className={styles.cardLink}>
-          編集する
-          <span aria-hidden="true">→</span>
-        </Link>
-        <button
-          type="button"
-          className={styles.deleteButton}
-          onClick={() => onDelete(item.id)}
-          disabled={isDeleting}
-          aria-label={`${item.name}を削除`}
-        >
-          {isDeleting ? "処理中" : "削除"}
-        </button>
       </div>
     </article>
   );

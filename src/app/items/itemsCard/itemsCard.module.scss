@@ -8,11 +8,7 @@ $slate-500: #806a58;
 $slate-800: #3b261b;
 
 .card {
-  display: flex;
   min-width: 0;
-  min-height: 18rem;
-  flex-direction: column;
-  padding: 1.5rem;
   border: 1px solid rgb(255 255 255 / 75%);
   border-radius: 1.5rem;
   background: rgb(255 255 255 / 90%);
@@ -23,9 +19,96 @@ $slate-800: #3b261b;
     box-shadow 250ms ease;
 
   &:hover {
-    transform: translateY(-4px);
     box-shadow: 0 24px 58px -28px rgb(91 52 30 / 70%);
   }
+}
+
+.cardOpen {
+  .summaryToggle {
+    transform: rotate(225deg);
+  }
+}
+
+.expandRegion {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 280ms ease,
+    opacity 180ms ease;
+}
+
+.expandRegionOpen {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.expandClip {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.cardSummary {
+  display: flex;
+  min-height: 5rem;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  border: 0;
+  border-radius: inherit;
+  color: $slate-800;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 3px solid rgb(214 158 46 / 45%);
+    outline-offset: 3px;
+  }
+}
+
+.summaryName {
+  overflow: hidden;
+  min-width: 0;
+  flex: 1;
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.summaryQuantity {
+  flex-shrink: 0;
+  color: $emerald-800;
+  font-size: 1.25rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+
+  span {
+    margin-left: 0.2rem;
+    color: $emerald-600;
+    font-size: 0.75rem;
+  }
+}
+
+.summaryToggle {
+  width: 0.65rem;
+  height: 0.65rem;
+  flex-shrink: 0;
+  border-right: 2px solid $emerald-600;
+  border-bottom: 2px solid $emerald-600;
+  transform: rotate(45deg);
+  transition: transform 280ms ease;
+}
+
+.cardContent {
+  display: flex;
+  min-height: 18rem;
+  flex-direction: column;
+  padding: 1.5rem;
+  border-top: 1px solid rgb(245 213 107 / 38%);
 }
 
 .cardHeader,
@@ -328,7 +411,8 @@ $slate-800: #3b261b;
 }
 
 @media (max-width: 639px) {
-  .card {
+  .cardSummary,
+  .cardContent {
     padding: 1.25rem;
   }
 }
@@ -338,7 +422,9 @@ $slate-800: #3b261b;
   .cardLink,
   .cardLink span,
   .deleteButton,
-  .quantityButton {
+  .quantityButton,
+  .summaryToggle,
+  .expandRegion {
     transition: none;
   }
 }

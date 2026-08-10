@@ -130,6 +130,118 @@ $slate-800: #3b261b;
   gap: 0.75rem;
 }
 
+.searchPanel {
+  margin: -0.75rem 0 2rem;
+}
+
+.searchForm {
+  display: flex;
+  max-width: 42rem;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem;
+  border: 1px solid rgb(122 67 39 / 14%);
+  border-radius: 1.1rem;
+  background: rgb(255 255 255 / 78%);
+  box-shadow: 0 12px 30px -24px rgb(42 22 15 / 55%);
+  backdrop-filter: blur(8px);
+
+  &:focus-within {
+    border-color: $emerald-200;
+    box-shadow: 0 0 0 3px rgb(214 158 46 / 12%);
+  }
+}
+
+.searchIcon {
+  display: grid;
+  width: 2.5rem;
+  flex-shrink: 0;
+  place-items: center;
+  color: $slate-500;
+
+  svg {
+    width: 1.15rem;
+    height: 1.15rem;
+  }
+}
+
+.searchInput {
+  min-width: 0;
+  min-height: 2.5rem;
+  flex: 1;
+  border: 0;
+  outline: 0;
+  color: $slate-800;
+  background: transparent;
+  font: inherit;
+
+  &::placeholder {
+    color: rgb(128 106 88 / 72%);
+  }
+}
+
+.searchButton,
+.searchClearButton,
+.clearResultsButton {
+  min-height: 2.5rem;
+  padding: 0.55rem 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+.searchButton {
+  border: 1px solid $emerald-600;
+  color: white;
+  background: $emerald-600;
+}
+
+.searchClearButton {
+  border: 0;
+  color: $slate-500;
+  background: transparent;
+}
+
+.searchSummary,
+.searchError {
+  margin: 0.65rem 0 0 0.5rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.searchSummary { color: $slate-500; }
+.searchError { color: #a93832; }
+
+.searchEmptyIcon {
+  display: grid;
+  width: 3.5rem;
+  height: 3.5rem;
+  margin: 0 auto;
+  place-items: center;
+  border-radius: 1rem;
+  color: $emerald-700;
+  background: $emerald-100;
+  font-size: 1.75rem;
+}
+
+.searchEmpty {
+  border-color: rgb(245 213 107 / 75%);
+}
+
+.clearResultsButton {
+  margin-top: 1.5rem;
+  border: 1px solid $emerald-200;
+  color: $emerald-800;
+  background: white;
+}
+
 .deleteError {
   display: flex;
   align-items: center;
@@ -736,6 +848,24 @@ $slate-800: #3b261b;
   .headerActions {
     width: 100%;
     align-items: stretch;
+  }
+
+  .searchPanel {
+    margin-top: 0;
+  }
+
+  .searchForm {
+    width: 100%;
+  }
+
+  .searchIcon {
+    width: 2rem;
+  }
+
+  .searchButton,
+  .searchClearButton {
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
   }
 
   .count,

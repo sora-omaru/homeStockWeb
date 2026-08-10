@@ -37,6 +37,12 @@ export default function ItemsPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [locations, setLocations] = useState<LocationResponseDto[]>([]);
 
+  //検索用state
+  const [keyword, setKeyword] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
+
   const {
     handleQuantityChange,
     initializeQuantities,
@@ -282,16 +288,61 @@ export default function ItemsPage() {
 
   //取得済みのLocation IDを使い、ItemをLocationごとのグループへ振り分ける
   const knownLocationIds = new Set(locations.map((location) => location.id));
-  const locationGroups = locations.map((location) => ({
-    location,
-    items: items.filter((item) => item.locationId === location.id),
-  }));
+  const isSearchActive = searchQuery.length > 0;
+  const locationGroups = locations
+    .map((location) => ({
+      location,
+      items: items.filter((item) => item.locationId === location.id),
+    }))
+    .filter((group) => !isSearchActive || group.items.length > 0);
 
   //Location未設定、または削除済みLocationを参照しているItemを別グループにする
   const unassignedItems = items.filter(
     (item) =>
       item.locationId === null || !knownLocationIds.has(item.locationId),
   );
+
+  //検索用メソッド
+  async function handleSearch(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const trimmedKeyword = keyword.trim();
+    if (!trimmedKeyword) {
+      await handleClearSearch();
+      return;
+    }
+
+    try {
+      setIsSearching(true);
+      setSearchError(null);
+      const result = await getItems(trimmedKeyword);
+      setItems(result);
+      setSearchQuery(trimmedKeyword);
+    } catch (error) {
+      console.error(error);
+      setSearchError("検索できませんでした。もう一度お試しください。");
+    } finally {
+      setIsSearching(false);
+    }
+  }
+
+  // 検索解除用メソッド
+  async function handleClearSearch() {
+    try {
+      setIsSearching(true);
+      setSearchError(null);
+      const allItems = await getItems();
+
+      setKeyword("");
+      setSearchQuery("");
+      setItems(allItems);
+    } catch (error) {
+      console.error(error);
+      setSearchError("一覧に戻せませんでした。もう一度お試しください。");
+    } finally {
+      setIsSearching(false);
+    }
+  }
 
   //TODO 未設定ItemもlocationGroupsへ統合する場合に使用する
   // if (unassignedItems.length > 0) {
@@ -351,6 +402,57 @@ export default function ItemsPage() {
           </div>
         </header>
 
+        <div className={styles.searchPanel}>
+          <form className={styles.searchForm} onSubmit={handleSearch} role="search">
+            <label className={styles.visuallyHidden} htmlFor="item-search">
+              アイテム名で検索
+            </label>
+            <span className={styles.searchIcon} aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="11" cy="11" r="7" />
+                <path strokeLinecap="round" d="m16.5 16.5 4 4" />
+              </svg>
+            </span>
+            <input
+              id="item-search"
+              className={styles.searchInput}
+              type="search"
+              value={keyword}
+              onChange={(event) => setKeyword(event.target.value)}
+              placeholder="アイテム名を入力"
+              disabled={isSearching}
+            />
+            {isSearchActive && (
+              <button
+                type="button"
+                className={styles.searchClearButton}
+                onClick={() => void handleClearSearch()}
+                disabled={isSearching}
+              >
+                クリア
+              </button>
+            )}
+            <button
+              type="submit"
+              className={styles.searchButton}
+              disabled={isSearching || !keyword.trim()}
+            >
+              {isSearching ? "検索中…" : "検索"}
+            </button>
+          </form>
+
+          {isSearchActive && !searchError && (
+            <p className={styles.searchSummary} role="status">
+              「{searchQuery}」の検索結果：{items.length}件
+            </p>
+          )}
+          {searchError && (
+            <p className={styles.searchError} role="alert">
+              {searchError}
+            </p>
+          )}
+        </div>
+
         {deleteError && (
           <div
             className={styles.deleteError}
@@ -389,6 +491,22 @@ export default function ItemsPage() {
               className={styles.retry}
             >
               もう一度試す
+            </button>
+          </section>
+        ) : isSearchActive && items.length === 0 ? (
+          <section className={`${styles.state} ${styles.searchEmpty}`}>
+            <span className={styles.searchEmptyIcon} aria-hidden="true">⌕</span>
+            <h2 className={styles.stateTitle}>該当するアイテムはありません</h2>
+            <p className={styles.stateText}>
+              別のキーワードで検索するか、検索をクリアしてください。
+            </p>
+            <button
+              type="button"
+              className={styles.clearResultsButton}
+              onClick={() => void handleClearSearch()}
+              disabled={isSearching}
+            >
+              すべてのアイテムを表示
             </button>
           </section>
         ) : locations.length === 0 && unassignedItems.length === 0 ? (

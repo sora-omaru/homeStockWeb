@@ -6,8 +6,15 @@ import {
 } from "@/types/item";
 import { apiClient } from "./client";
 
-export async function getItems(): Promise<ItemResponse[]> {
-  return apiClient<ItemResponse[]>("/api/v1/items");
+export async function getItems(keyword?: string): Promise<ItemResponse[]> {
+  const params = new URLSearchParams();
+
+  if (keyword?.trim()) {
+    params.set("keyword", keyword.trim());
+  }
+  const query = params.toString();
+
+  return apiClient(`/api/v1/items${query ? `?${query}` : ""}`);
 }
 
 export async function getItem(

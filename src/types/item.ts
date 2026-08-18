@@ -46,3 +46,7 @@ export type ItemCreateRequest = {
 export type UpdateItemQuantity = {
   quantity: number;
 };
+
+export type UpdateItemPercentage = {
+  percentage: number;
+};

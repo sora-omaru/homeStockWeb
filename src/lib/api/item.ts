@@ -1,8 +1,9 @@
 import {
   ItemCreateRequest,
   ItemResponse,
+  UpdateItemPercentage,
   UpdateItemQuantity,
-  UpdateItemRequest,
+  UpdateItemRequest
 } from "@/types/item";
 import { apiClient } from "./client";
 
@@ -52,6 +53,16 @@ export async function updateItemQuantity(
   request: UpdateItemQuantity,
 ): Promise<void> {
   return apiClient<void>(`/api/v1/items/${itemId}/quantity`, {
+    method: "PATCH",
+    body: request,
+  });
+}
+
+export async function updateItemPercentage(
+  itemId: number,
+  request: UpdateItemPercentage,
+): Promise<void> {
+  return apiClient<void>(`/api/v1/items/${itemId}/percentage`, {
     method: "PATCH",
     body: request,
   });

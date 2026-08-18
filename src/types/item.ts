@@ -5,6 +5,9 @@ export type ItemResponse = {
   name: string;
   quantity: number;
   minQuantity: number;
+  stockType: "QUANTITY" | "PERCENTAGE";
+  stockPercentage: number | null;
+  minPercentage: number | null;
   category: ItemCategory;
   locationId: number | null;
   locationName: string | null;
@@ -15,6 +18,9 @@ export type ItemResponse = {
 export type UpdateItemRequest = {
   name: string;
   quantity: number;
+  stockType: "QUANTITY" | "PERCENTAGE";
+  stockPercentage: number | null;
+  minPercentage: number | null;
   minQuantity: number;
   category: ItemCategory;
   locationId: number | null;
@@ -26,6 +32,9 @@ export type ItemCreateRequest = {
   name: string;
   quantity: number;
   minQuantity: number;
+  stockType: "QUANTITY" | "PERCENTAGE";
+  stockPercentage: number | null;
+  minPercentage: number | null;
   category: ItemCategory;
   locationId: number | null;
   expirationDate: string | null;

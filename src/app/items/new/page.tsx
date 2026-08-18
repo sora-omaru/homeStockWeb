@@ -14,11 +14,15 @@ import LocationSelect from "@/app/component/locationSelect";
 import CategorySelect from "@/app/component/categorySelect";
 import { ArrowLeftIcon, BoxIcon } from "@/app/component/icons";
 import { parseQuantityInput } from "@/lib/quantity-input";
+import type { StockType } from "@/types/item";
 
 export default function NewItem() {
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [minQuantity, setMinQuantity] = useState(0);
+  const [stockType, setStockType] = useState<StockType>("QUANTITY");
+  const [stockPercentage, setStockPercentage] = useState(100);
+  const [minPercentage, setMinPercentage] = useState(20);
   const [category, setCategory] = useState<ItemCategory | "">("");
   const [expirationDate, setExpirationDate] = useState("");
   const [memo, setMemo] = useState("");
@@ -90,8 +94,11 @@ export default function NewItem() {
     try {
       await createItem({
         name,
-        quantity,
-        minQuantity,
+        quantity: stockType === "QUANTITY" ? quantity : null,
+        minQuantity: stockType === "QUANTITY" ? minQuantity : null,
+        stockType,
+        stockPercentage: stockType === "PERCENTAGE" ? stockPercentage : null,
+        minPercentage: stockType === "PERCENTAGE" ? minPercentage : null,
         category,
         locationId: locationId,
         expirationDate: expirationDate || null,
@@ -100,6 +107,9 @@ export default function NewItem() {
       setName("");
       setQuantity(1);
       setMinQuantity(0);
+      setStockType("QUANTITY");
+      setStockPercentage(100);
+      setMinPercentage(20);
       setCategory("");
       setExpirationDate("");
       setMemo("");
@@ -230,12 +240,25 @@ export default function NewItem() {
             <div className={styles.sectionHeading}>
               <span className={styles.step}>02</span>
               <div>
-                <h2>在庫数</h2>
-                <p>現在の数と、買い足す目安を設定できます。</p>
+                <h2>在庫</h2>
+                <p>個数または残量の割合で、買い足す目安を設定できます。</p>
               </div>
             </div>
 
+            <fieldset className={styles.stockTypeSelector}>
+              <legend>管理方法</legend>
+              <label>
+                <input type="radio" name="stock-type" value="QUANTITY" checked={stockType === "QUANTITY"} onChange={() => setStockType("QUANTITY")} />
+                個数で管理
+              </label>
+              <label>
+                <input type="radio" name="stock-type" value="PERCENTAGE" checked={stockType === "PERCENTAGE"} onChange={() => setStockType("PERCENTAGE")} />
+                割合で管理
+              </label>
+            </fieldset>
+
             <div className={styles.stockPanel}>
+              {stockType === "QUANTITY" ? <>
               <div className={styles.stockField}>
                 <label htmlFor="quantity">現在の在庫</label>
                 <div className={styles.numberControl}>
@@ -271,6 +294,23 @@ export default function NewItem() {
                 </div>
                 <p className={styles.hint}>この数になる前に買い足す目安です</p>
               </div>
+              </> : <>
+              <div className={styles.stockField}>
+                <label htmlFor="stock-percentage">現在の残量</label>
+                <div className={styles.numberControl}>
+                  <input id="stock-percentage" type="number" min="0" max="100" value={stockPercentage} required onChange={(event) => setStockPercentage(Math.min(parseQuantityInput(event.target.value), 100))} />
+                  <span>%</span>
+                </div>
+              </div>
+              <div className={styles.stockField}>
+                <label htmlFor="min-percentage">最低残量</label>
+                <div className={styles.numberControl}>
+                  <input id="min-percentage" type="number" min="0" max="100" value={minPercentage} required onChange={(event) => setMinPercentage(Math.min(parseQuantityInput(event.target.value), 100))} />
+                  <span>%</span>
+                </div>
+                <p className={styles.hint}>この割合になる前に買い足す目安です</p>
+              </div>
+              </>}
             </div>
           </section>
 

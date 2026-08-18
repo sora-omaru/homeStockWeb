@@ -113,8 +113,11 @@ export function useItemEdit(itemId: number) {
     try {
       const item = await updateItem(itemId, {
         name: formValues.name,
-        quantity: formValues.quantity,
-        minQuantity: formValues.minQuantity,
+        quantity: formValues.stockType === "QUANTITY" ? formValues.quantity : null,
+        minQuantity: formValues.stockType === "QUANTITY" ? formValues.minQuantity : null,
+        stockType: formValues.stockType,
+        stockPercentage: formValues.stockType === "PERCENTAGE" ? formValues.stockPercentage : null,
+        minPercentage: formValues.stockType === "PERCENTAGE" ? formValues.minPercentage : null,
         category: formValues.category,
         locationId: formValues.locationId,
         expirationDate: formValues.expirationDate || null,

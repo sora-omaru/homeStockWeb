@@ -39,7 +39,9 @@ export function useItemQuantityUpdate({
 
   const initializeQuantities = useCallback((items: ItemResponse[]) => {
     items.forEach((item) => {
-      confirmedQuantitiesRef.current.set(item.id, item.quantity);
+      if (item.stockType === "QUANTITY" && item.quantity !== null) {
+        confirmedQuantitiesRef.current.set(item.id, item.quantity);
+      }
     });
   }, []);
 

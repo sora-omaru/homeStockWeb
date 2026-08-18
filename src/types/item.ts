@@ -1,11 +1,13 @@
 import { ItemCategory } from "./item-category";
 
+export type StockType = "QUANTITY" | "PERCENTAGE";
+
 export type ItemResponse = {
   id: number;
   name: string;
-  quantity: number;
-  minQuantity: number;
-  stockType: "QUANTITY" | "PERCENTAGE";
+  quantity: number | null;
+  minQuantity: number | null;
+  stockType: StockType;
   stockPercentage: number | null;
   minPercentage: number | null;
   category: ItemCategory;
@@ -17,11 +19,11 @@ export type ItemResponse = {
 
 export type UpdateItemRequest = {
   name: string;
-  quantity: number;
-  stockType: "QUANTITY" | "PERCENTAGE";
+  quantity: number | null;
+  stockType: StockType;
   stockPercentage: number | null;
   minPercentage: number | null;
-  minQuantity: number;
+  minQuantity: number | null;
   category: ItemCategory;
   locationId: number | null;
   expirationDate: string | null;
@@ -30,9 +32,9 @@ export type UpdateItemRequest = {
 
 export type ItemCreateRequest = {
   name: string;
-  quantity: number;
-  minQuantity: number;
-  stockType: "QUANTITY" | "PERCENTAGE";
+  quantity: number | null;
+  minQuantity: number | null;
+  stockType: StockType;
   stockPercentage: number | null;
   minPercentage: number | null;
   category: ItemCategory;

@@ -82,10 +82,19 @@ export default function ItemCard({
 }: ItemCardProps) {
   const [isOpen, setIsOpen] = useState(false);
   const contentId = useId();
-  const isOutOfStock = item.quantity === 0;
-  const isLowStock = item.quantity > 0 && item.quantity <= item.minQuantity;
-  const targetQuantity = Math.max(item.minQuantity * 2, item.quantity, 1);
-  const stockPercentage = Math.min((item.quantity / targetQuantity) * 100, 100);
+  const isPercentage = item.stockType === "PERCENTAGE";
+  const currentStock = isPercentage
+    ? (item.stockPercentage ?? 0)
+    : (item.quantity ?? 0);
+  const minimumStock = isPercentage
+    ? (item.minPercentage ?? 0)
+    : (item.minQuantity ?? 0);
+  const isOutOfStock = currentStock === 0;
+  const isLowStock = currentStock > 0 && currentStock <= minimumStock;
+  const targetQuantity = Math.max(minimumStock * 2, currentStock, 1);
+  const progressPercentage = isPercentage
+    ? Math.min(currentStock, 100)
+    : Math.min((currentStock / targetQuantity) * 100, 100);
 
   return (
     <article className={`${styles.card} ${isOpen ? styles.cardOpen : ""}`}>
@@ -100,7 +109,7 @@ export default function ItemCard({
           {item.name}
         </span>
         <span className={styles.summaryQuantity}>
-          {item.quantity}<span>個</span>
+          {currentStock}<span>{isPercentage ? "%" : "個"}</span>
         </span>
         <span className={styles.summaryToggle} aria-hidden="true" />
       </button>
@@ -149,15 +158,19 @@ export default function ItemCard({
               <div className={styles.stockTop}>
                 <div>
                   <p className={styles.stockLabel}>現在の在庫</p>
-                  <div className={styles.quantityControl}>
+                  {isPercentage ? (
+                    <p className={styles.quantity} aria-live="polite">
+                      {currentStock}<span className={styles.unit}>%</span>
+                    </p>
+                  ) : <div className={styles.quantityControl}>
                     <button
                       type="button"
                       className={styles.quantityButton}
                       onClick={() =>
-                        void onQuantityChange(item.id, item.quantity - 1)
+                        void onQuantityChange(item.id, currentStock - 1)
                       }
                       disabled={
-                        item.quantity === 0 ||
+                        currentStock === 0 ||
                         isQuantityUpdateDisabled ||
                         isDeleting
                       }
@@ -166,24 +179,24 @@ export default function ItemCard({
                       <span aria-hidden="true">−</span>
                     </button>
                     <p className={styles.quantity} aria-live="polite">
-                      {item.quantity}
+                      {currentStock}
                       <span className={styles.unit}>個</span>
                     </p>
                     <button
                       type="button"
                       className={styles.quantityButton}
                       onClick={() =>
-                        void onQuantityChange(item.id, item.quantity + 1)
+                        void onQuantityChange(item.id, currentStock + 1)
                       }
                       disabled={isQuantityUpdateDisabled || isDeleting}
                       aria-label={`${item.name}の在庫を1個増やす`}
                     >
                       <span aria-hidden="true">＋</span>
                     </button>
-                  </div>
+                  </div>}
                 </div>
                 <p className={styles.minimum}>
-                  最低在庫 <strong>{item.minQuantity}個</strong>
+                  最低在庫 <strong>{minimumStock}{isPercentage ? "%" : "個"}</strong>
                 </p>
               </div>
               <div className={styles.quantityMessage} aria-live="polite">
@@ -199,7 +212,7 @@ export default function ItemCard({
                   className={`${styles.progressBar} ${
                     isLowStock ? styles.progressBarLow : styles.progressBarGood
                   }`}
-                  style={{ width: `${stockPercentage}%` }}
+                  style={{ width: `${progressPercentage}%` }}
                 />
               </div>
             </div>

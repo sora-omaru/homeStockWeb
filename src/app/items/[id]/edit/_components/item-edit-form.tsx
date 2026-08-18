@@ -54,7 +54,9 @@ export function ItemEditForm({
   onLocationCreate,
   onLocationCreateErrorClear
 }: ItemEditFormProps) {
-  const stockStatus = getStockStatus(values.quantity, values.minQuantity);
+  const currentStock = values.stockType === "QUANTITY" ? values.quantity : values.stockPercentage;
+  const minimumStock = values.stockType === "QUANTITY" ? values.minQuantity : values.minPercentage;
+  const stockStatus = getStockStatus(currentStock, minimumStock);
 
   function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -93,7 +95,13 @@ export function ItemEditForm({
         </span>
       </header>
 
-      <section className={styles.stockPanel} aria-label="在庫数">
+      <fieldset className={styles.stockTypeSelector}>
+        <legend>管理方法</legend>
+        <label><input type="radio" name="stock-type" checked={values.stockType === "QUANTITY"} onChange={() => onChange("stockType", "QUANTITY")} />個数で管理</label>
+        <label><input type="radio" name="stock-type" checked={values.stockType === "PERCENTAGE"} onChange={() => onChange("stockType", "PERCENTAGE")} />割合で管理</label>
+      </fieldset>
+      <section className={styles.stockPanel} aria-label="在庫">
+        {values.stockType === "QUANTITY" ? <>
         <div className={styles.stockField}>
           <label htmlFor="quantity" className={styles.stockLabel}>
             現在の在庫
@@ -137,6 +145,22 @@ export function ItemEditForm({
             <span>個</span>
           </div>
         </div>
+        </> : <>
+        <div className={styles.stockField}>
+          <label htmlFor="stockPercentage" className={styles.stockLabel}>現在の残量</label>
+          <div className={styles.numberControl}>
+            <input id="stockPercentage" className={styles.quantity} type="number" min="0" max="100" value={values.stockPercentage} required onChange={(event) => onChange("stockPercentage", Math.min(parseQuantityInput(event.target.value), 100))} />
+            <span>%</span>
+          </div>
+        </div>
+        <div className={styles.stockField}>
+          <label htmlFor="minPercentage" className={styles.stockLabel}>最低残量</label>
+          <div className={styles.numberControl}>
+            <input id="minPercentage" className={`${styles.quantity} ${styles.minimumQuantity}`} type="number" min="0" max="100" value={values.minPercentage} required onChange={(event) => onChange("minPercentage", Math.min(parseQuantityInput(event.target.value), 100))} />
+            <span>%</span>
+          </div>
+        </div>
+        </>}
       </section>
 
       <dl className={styles.details}>

@@ -84,7 +84,7 @@ export function useItemPercentageUpdate({
 
     try {
       await updateItemPercentage(itemId, {
-        percentage: newPercentage,
+       stockPercentage : newPercentage,
       });
 
       confirmedPercentagesRef.current.set(itemId, newPercentage);

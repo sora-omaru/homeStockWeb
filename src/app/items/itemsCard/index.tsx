@@ -54,9 +54,12 @@ type ItemCardProps = {
   onDelete: (item: number) => void;
   isDeleting: boolean;
   onQuantityChange: (itemId: number, quantity: number) => void;
+  onPercentageChange: (itemId: number, percentage: number) => void;
   isQuantityUpdating: boolean;
   isQuantityUpdateDisabled: boolean;
   quantityUpdateError: string | null;
+  isPercentageUpdating: boolean;
+  percentageUpdateError: string | null;
 };
 
 function formatDate(value: string) {
@@ -76,9 +79,12 @@ export default function ItemCard({
   onDelete,
   isDeleting,
   onQuantityChange,
+  onPercentageChange,
   isQuantityUpdating,
   isQuantityUpdateDisabled,
   quantityUpdateError,
+  isPercentageUpdating,
+  percentageUpdateError,
 }: ItemCardProps) {
   const [isOpen, setIsOpen] = useState(false);
   const contentId = useId();
@@ -159,9 +165,24 @@ export default function ItemCard({
                 <div>
                   <p className={styles.stockLabel}>現在の在庫</p>
                   {isPercentage ? (
-                    <p className={styles.quantity} aria-live="polite">
-                      {currentStock}<span className={styles.unit}>%</span>
-                    </p>
+                    <div className={styles.percentageControl}>
+                      <p className={styles.quantity} aria-live="polite">
+                        {currentStock}<span className={styles.unit}>%</span>
+                      </p>
+                      <input
+                        className={styles.percentageRange}
+                        type="range"
+                        min="0"
+                        max="100"
+                        step="1"
+                        value={currentStock}
+                        onChange={(event) =>
+                          onPercentageChange(item.id, Number(event.target.value))
+                        }
+                        disabled={isPercentageUpdating || isDeleting}
+                        aria-label={`${item.name}の残量割合`}
+                      />
+                    </div>
                   ) : <div className={styles.quantityControl}>
                     <button
                       type="button"
@@ -200,10 +221,12 @@ export default function ItemCard({
                 </p>
               </div>
               <div className={styles.quantityMessage} aria-live="polite">
-                {isQuantityUpdating && <span>数量を更新中…</span>}
-                {quantityUpdateError && (
+                {(isQuantityUpdating || isPercentageUpdating) && (
+                  <span>{isPercentage ? "残量を更新中…" : "数量を更新中…"}</span>
+                )}
+                {(quantityUpdateError || percentageUpdateError) && (
                   <span className={styles.quantityError} role="alert">
-                    {quantityUpdateError}
+                    {isPercentage ? percentageUpdateError : quantityUpdateError}
                   </span>
                 )}
               </div>

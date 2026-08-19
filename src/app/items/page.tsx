@@ -1,5 +1,6 @@
 "use client";
 
+import { useItemPercentageUpdate } from "@/hooks/item/useItemPercentageUpdate";
 import { useItemQuantityUpdate } from "@/hooks/item/useItemQuantityUpdate";
 import { getItemDeleteErrorMessage } from "@/lib/api/error/error-item";
 import { deleteItem, getItems } from "@/lib/api/item";
@@ -49,6 +50,12 @@ export default function ItemsPage() {
     updatingQuantityItemIds,
     quantityUpdateError,
   } = useItemQuantityUpdate({ setItems });
+  const {
+    handlePercentageChange,
+    initializePercentages,
+    updatingPercentageItemIds,
+    percentageUpdateError,
+  } = useItemPercentageUpdate({ setItems });
 
   //一覧からItemを追加する際に、追加先のLocationをモーダルへ渡す
   const [selectedLocation, setSelectedLocation] =
@@ -139,6 +146,7 @@ export default function ItemsPage() {
   //作成されたItemを一覧へ追加し、完了通知を表示する
   function handleItemCreated(item: ItemResponse) {
     initializeQuantities([item]);
+    initializePercentages([item]);
     setItems((currentItems) => [...currentItems, item]);
     setAddedItemNotice({
       id: Date.now(),
@@ -228,6 +236,7 @@ export default function ItemsPage() {
 
       setItems(itemsResponse);
       initializeQuantities(itemsResponse);
+      initializePercentages(itemsResponse);
       setLocations(locationsResponse);
     } catch (error) {
       console.error(error);
@@ -271,6 +280,7 @@ export default function ItemsPage() {
 
         setItems(itemsResponse);
         initializeQuantities(itemsResponse);
+        initializePercentages(itemsResponse);
         setLocations(locationResponse);
       })
       .catch((error: unknown) => {
@@ -284,7 +294,7 @@ export default function ItemsPage() {
     return () => {
       isActive = false;
     };
-  }, [initializeQuantities]);
+  }, [initializePercentages, initializeQuantities]);
 
   //取得済みのLocation IDを使い、ItemをLocationごとのグループへ振り分ける
   const knownLocationIds = new Set(locations.map((location) => location.id));
@@ -316,6 +326,8 @@ export default function ItemsPage() {
       setIsSearching(true);
       setSearchError(null);
       const result = await getItems(trimmedKeyword);
+      initializeQuantities(result);
+      initializePercentages(result);
       setItems(result);
       setSearchQuery(trimmedKeyword);
     } catch (error) {
@@ -335,6 +347,8 @@ export default function ItemsPage() {
 
       setKeyword("");
       setSearchQuery("");
+      initializeQuantities(allItems);
+      initializePercentages(allItems);
       setItems(allItems);
     } catch (error) {
       console.error(error);
@@ -685,6 +699,7 @@ export default function ItemsPage() {
                         onDelete={handleDelete}
                         isDeleting={isDeleting}
                         onQuantityChange={handleQuantityChange}
+                        onPercentageChange={handlePercentageChange}
                         isQuantityUpdating={updatingQuantityItemIds.has(
                           item.id,
                         )}
@@ -694,6 +709,14 @@ export default function ItemsPage() {
                         quantityUpdateError={
                           quantityUpdateError?.itemId === item.id
                             ? quantityUpdateError.message
+                            : null
+                        }
+                        isPercentageUpdating={updatingPercentageItemIds.has(
+                          item.id,
+                        )}
+                        percentageUpdateError={
+                          percentageUpdateError?.itemId === item.id
+                            ? percentageUpdateError.message
                             : null
                         }
                       />
@@ -740,6 +763,7 @@ export default function ItemsPage() {
                       onDelete={handleDelete}
                       isDeleting={isDeleting}
                       onQuantityChange={handleQuantityChange}
+                      onPercentageChange={handlePercentageChange}
                       isQuantityUpdating={updatingQuantityItemIds.has(item.id)}
                       isQuantityUpdateDisabled={updatingQuantityItemIds.has(
                         item.id,
@@ -747,6 +771,14 @@ export default function ItemsPage() {
                       quantityUpdateError={
                         quantityUpdateError?.itemId === item.id
                           ? quantityUpdateError.message
+                          : null
+                      }
+                      isPercentageUpdating={updatingPercentageItemIds.has(
+                        item.id,
+                      )}
+                      percentageUpdateError={
+                        percentageUpdateError?.itemId === item.id
+                          ? percentageUpdateError.message
                           : null
                       }
                     />

@@ -48,5 +48,5 @@ export type UpdateItemQuantity = {
 };
 
 export type UpdateItemPercentage = {
-  percentage: number;
+  stockPercentage: number;
 };

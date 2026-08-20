@@ -50,6 +50,8 @@ export default function ItemsPage() {
     updatingQuantityItemIds,
     quantityUpdateError,
   } = useItemQuantityUpdate({ setItems });
+
+  // Percentage商品の楽観的更新・デバウンス保存・更新状態を一覧へ接続する
   const {
     handlePercentageChange,
     initializePercentages,
@@ -145,6 +147,7 @@ export default function ItemsPage() {
 
   //作成されたItemを一覧へ追加し、完了通知を表示する
   function handleItemCreated(item: ItemResponse) {
+    // 更新失敗時に作成直後の値へ戻せるよう、保存済み初期値を記録する
     initializeQuantities([item]);
     initializePercentages([item]);
     setItems((currentItems) => [...currentItems, item]);
@@ -235,6 +238,7 @@ export default function ItemsPage() {
       ]);
 
       setItems(itemsResponse);
+      // 再取得した値を、更新失敗時に戻す保存済み値として記録する
       initializeQuantities(itemsResponse);
       initializePercentages(itemsResponse);
       setLocations(locationsResponse);
@@ -279,6 +283,7 @@ export default function ItemsPage() {
         if (!isActive) return;
 
         setItems(itemsResponse);
+        // 初回取得値を、更新失敗時に戻す保存済み値として記録する
         initializeQuantities(itemsResponse);
         initializePercentages(itemsResponse);
         setLocations(locationResponse);
@@ -326,6 +331,7 @@ export default function ItemsPage() {
       setIsSearching(true);
       setSearchError(null);
       const result = await getItems(trimmedKeyword);
+      // 検索結果からも保存済み値を記録し、更新失敗時の復元に備える
       initializeQuantities(result);
       initializePercentages(result);
       setItems(result);
@@ -347,6 +353,7 @@ export default function ItemsPage() {
 
       setKeyword("");
       setSearchQuery("");
+      // 一覧へ戻した際に保存済み値も最新の取得結果へ更新する
       initializeQuantities(allItems);
       initializePercentages(allItems);
       setItems(allItems);
@@ -693,6 +700,7 @@ export default function ItemsPage() {
                 ) : (
                   <div className={styles.grid}>
                     {group.items.map((item) => (
+                      /* 各カードへ更新処理と、そのItemだけの通信状態・エラーを渡す */
                       <ItemCard
                         key={item.id}
                         item={item}
@@ -757,6 +765,7 @@ export default function ItemsPage() {
 
                 <div className={styles.grid}>
                   {unassignedItems.map((item) => (
+                    /* Location未設定のItemにも同じ割合更新機能を提供する */
                     <ItemCard
                       key={item.id}
                       item={item}

@@ -88,6 +88,8 @@ export default function ItemCard({
 }: ItemCardProps) {
   const [isOpen, setIsOpen] = useState(false);
   const contentId = useId();
+
+  // 在庫の管理方式に応じて、カードに表示する現在値と最低値を切り替える
   const isPercentage = item.stockType === "PERCENTAGE";
   const currentStock = isPercentage
     ? (item.stockPercentage ?? 0)
@@ -165,24 +167,9 @@ export default function ItemCard({
                 <div>
                   <p className={styles.stockLabel}>現在の在庫</p>
                   {isPercentage ? (
-                    <div className={styles.percentageControl}>
-                      <p className={styles.quantity} aria-live="polite">
-                        {currentStock}<span className={styles.unit}>%</span>
-                      </p>
-                      <input
-                        className={styles.percentageRange}
-                        type="range"
-                        min="0"
-                        max="100"
-                        step="1"
-                        value={currentStock}
-                        onChange={(event) =>
-                          onPercentageChange(item.id, Number(event.target.value))
-                        }
-                        disabled={isPercentageUpdating || isDeleting}
-                        aria-label={`${item.name}の残量割合`}
-                      />
-                    </div>
+                    <p className={styles.quantity} aria-live="polite">
+                      {currentStock}<span className={styles.unit}>%</span>
+                    </p>
                   ) : <div className={styles.quantityControl}>
                     <button
                       type="button"
@@ -220,6 +207,7 @@ export default function ItemCard({
                   最低在庫 <strong>{minimumStock}{isPercentage ? "%" : "個"}</strong>
                 </p>
               </div>
+              {/* 管理方式に応じたAPI更新状態とエラーを同じ表示領域へ出す */}
               <div className={styles.quantityMessage} aria-live="polite">
                 {(isQuantityUpdating || isPercentageUpdating) && (
                   <span>{isPercentage ? "残量を更新中…" : "数量を更新中…"}</span>
@@ -230,14 +218,31 @@ export default function ItemCard({
                   </span>
                 )}
               </div>
-              <div className={styles.progress}>
-                <div
-                  className={`${styles.progressBar} ${
-                    isLowStock ? styles.progressBarLow : styles.progressBarGood
-                  }`}
-                  style={{ width: `${progressPercentage}%` }}
+              {isPercentage ? (
+                /* Percentage商品は在庫ゲージ自体を動かして残量を更新する */
+                <input
+                  className={styles.percentageRange}
+                  type="range"
+                  min="0"
+                  max="100"
+                  step="1"
+                  value={currentStock}
+                  onChange={(event) =>
+                    onPercentageChange(item.id, Number(event.target.value))
+                  }
+                  disabled={isPercentageUpdating || isDeleting}
+                  aria-label={`${item.name}の残量割合`}
                 />
-              </div>
+              ) : (
+                <div className={styles.progress}>
+                  <div
+                    className={`${styles.progressBar} ${
+                      isLowStock ? styles.progressBarLow : styles.progressBarGood
+                    }`}
+                    style={{ width: `${progressPercentage}%` }}
+                  />
+                </div>
+              )}
             </div>
 
             <div className={styles.meta}>

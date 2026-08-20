@@ -29,6 +29,10 @@ export default function ItemQuickModal({
   const [category, setCategory] = useState<ItemCategory | "">("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
+  const [stockType, setStockType] = useState<"QUANTITY" | "PERCENTAGE">(
+    "QUANTITY",
+  );
+  const [stockPercentage, setStockPercentage] = useState(100);
 
   if (!isOpen) return null;
 
@@ -51,11 +55,11 @@ export default function ItemQuickModal({
       setCreateError(null);
       const createdItem = await createItem({
         name: itemName.trim(),
-        quantity,
-        minQuantity: 0,
-        stockType: "QUANTITY",
-        stockPercentage: null,
-        minPercentage: null,
+        quantity: stockType === "QUANTITY" ? quantity : null,
+        minQuantity: stockType === "QUANTITY" ? 0 : null,
+        stockType,
+        stockPercentage: stockType === "PERCENTAGE" ? stockPercentage : null,
+        minPercentage: stockType === "PERCENTAGE" ? 0 : null,
         category,
         locationId: location?.id ?? null,
         expirationDate: null,
@@ -127,6 +131,23 @@ export default function ItemQuickModal({
           </div>
 
           <form className={styles.form} onSubmit={handleCreateItem}>
+            <div>
+              <label htmlFor="stock-type">在庫管理方法</label>
+              <select
+                name="stock-type"
+                id="stock-type"
+                className={styles.input}
+                value={stockType}
+                onChange={(e) =>
+                  setStockType(e.target.value as "QUANTITY" | "PERCENTAGE")
+                }
+                disabled={isSubmitting}
+              >
+                <option value="QUANTITY">数量</option>
+                <option value="PERCENTAGE">割合</option>
+              </select>
+            </div>
+
             <div className={styles.field}>
               <label htmlFor="quick-item-name">
                 Item名 <span className={styles.required}>必須</span>
@@ -143,21 +164,39 @@ export default function ItemQuickModal({
               />
             </div>
 
-            <div className={styles.field}>
-              <label htmlFor="quick-item-quantity">数量</label>
-              <input
-                className={`${styles.input} ${styles.quantityInput}`}
-                id="quick-item-quantity"
-                type="text"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                value={quantity}
-                onChange={(event) =>
-                  setQuantity(parseQuantityInput(event.target.value))
-                }
-                disabled={isSubmitting}
-              />
-            </div>
+            {stockType === "QUANTITY" ? (
+              <div className={styles.field}>
+                <label htmlFor="quick-item-quantity">数量</label>
+                <input
+                  className={`${styles.input} ${styles.quantityInput}`}
+                  id="quick-item-quantity"
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  value={quantity}
+                  onChange={(event) =>
+                    setQuantity(parseQuantityInput(event.target.value))
+                  }
+                  disabled={isSubmitting}
+                />
+              </div>
+            ) : (
+              <div className={styles.field}>
+                <label htmlFor="quick-item-percentage">残量</label>
+                <input
+                  className={`${styles.input} ${styles.quantityInput}`}
+                  id="quick-item-percentage"
+                  type="number"
+                  min={0}
+                  max={100}
+                  value={stockPercentage}
+                  onChange={(event) =>
+                    setStockPercentage(Number(event.target.value))
+                  }
+                  disabled={isSubmitting}
+                />
+              </div>
+            )}
 
             <div className={styles.categoryField}>
               <CategorySelect

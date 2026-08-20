@@ -191,7 +191,8 @@ $muted: #806a58;
   border-top: 1px dashed $banana-200;
 }
 
-.field {
+.field,
+.stockTypeField {
   min-width: 0;
 
   label {
@@ -200,6 +201,27 @@ $muted: #806a58;
     color: $ink;
     font-size: 0.8rem;
     font-weight: 700;
+  }
+}
+
+// 管理方法はフォームの先頭で分かりやすいよう、一行を使って表示する
+.stockTypeField {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border: 1px solid rgb(245 213 107 / 70%);
+  border-radius: 0.85rem;
+  background: rgb(255 251 234 / 75%);
+
+  label {
+    margin-bottom: 0;
+  }
+
+  select {
+    cursor: pointer;
   }
 }
 
@@ -368,6 +390,11 @@ $muted: #806a58;
 
   .form {
     grid-template-columns: minmax(0, 1fr) 5.5rem;
+  }
+
+  .stockTypeField {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
   }
 
   .actions {

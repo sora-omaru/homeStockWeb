@@ -131,7 +131,7 @@ export default function ItemQuickModal({
           </div>
 
           <form className={styles.form} onSubmit={handleCreateItem}>
-            <div>
+            <div className={styles.stockTypeField}>
               <label htmlFor="stock-type">在庫管理方法</label>
               <select
                 name="stock-type"
@@ -143,8 +143,8 @@ export default function ItemQuickModal({
                 }
                 disabled={isSubmitting}
               >
-                <option value="QUANTITY">数量</option>
-                <option value="PERCENTAGE">割合</option>
+                <option value="QUANTITY">個数で管理</option>
+                <option value="PERCENTAGE">割合で管理</option>
               </select>
             </div>
 
@@ -166,7 +166,7 @@ export default function ItemQuickModal({
 
             {stockType === "QUANTITY" ? (
               <div className={styles.field}>
-                <label htmlFor="quick-item-quantity">数量</label>
+                <label htmlFor="quick-item-quantity">数量（個）</label>
                 <input
                   className={`${styles.input} ${styles.quantityInput}`}
                   id="quick-item-quantity"
@@ -182,7 +182,7 @@ export default function ItemQuickModal({
               </div>
             ) : (
               <div className={styles.field}>
-                <label htmlFor="quick-item-percentage">残量</label>
+                <label htmlFor="quick-item-percentage">残量（%）</label>
                 <input
                   className={`${styles.input} ${styles.quantityInput}`}
                   id="quick-item-percentage"
